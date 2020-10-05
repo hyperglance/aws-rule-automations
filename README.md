@@ -8,6 +8,8 @@ Configuration in this directory creates Lambda Function, SNS topic, and IAM Poli
 
 [AWS CLI, Installed and Configured with Appropriate Credentials](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
 
+*** Instructions will be amended for Github ***
+
 Clone the repository:
 
 git clone https://[username]@bitbucket.org/hyperglance/terraform-aws-lambda.git
