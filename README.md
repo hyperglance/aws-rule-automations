@@ -1,4 +1,4 @@
-# Async event configuration
+# Hyperglance Event Configuration
 
 Configuration in this directory creates Lambda Function, SNS topic, and IAM Policies for EC2 Tag and Terminate.
 
@@ -14,7 +14,6 @@ $ terraform apply
 
 Note that this example may create resources which cost money. Run `terraform destroy` when you don't need these resources.
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
 | Name | Version |
