@@ -2,12 +2,19 @@
 
 Configuration in this directory creates Lambda Function, SNS topic, and IAM Policies for EC2 Tag and Terminate.
 
-## Pre-Rquisites
+## Pre-Requisites
 
 [Terraform Installed and Available from Command line](https://www.terraform.io/downloads.html)
 
 [AWS CLI, Installed and Configured with Appropriate Credentials](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
- 
+
+Clone the repository:
+
+git clone https://[username]@bitbucket.org/hyperglance/terraform-aws-lambda.git
+
+OR Download a Zip Archive from Bitbucket.
+
+*** Instructions will be amended for Github ***
 
 ## Usage
 
