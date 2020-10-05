@@ -74,4 +74,5 @@ override.tf.json
 
 *.zip
 hg_node
+hg_mode
 **.plan.json*

@@ -19,7 +19,7 @@ module "lambda_function" {
   version = "1.24.0"
 
   function_name = "hyperglance_${random_pet.this.id}-lambda-async"
-  handler       = "index.lambda_handler"
+  handler       = "index.handler"
   runtime       = "nodejs12.x"
 
   source_path = "${path.module}/../files/index.js"
@@ -42,14 +42,20 @@ module "lambda_function" {
   }
 }
 
+resource "aws_sns_topic" "hyperglance" {
+  name_prefix = "hyperglance_${random_pet.this.id}"
+}
+
 resource "aws_lambda_permission" "with_sns" {
   statement_id  = "AllowedExecutionFromSNS"
   action        = "lambda:InvokeFunction"
   function_name = module.lambda_function.this_lambda_function_name
   principal     = "sns.amazonaws.com"
-  source_arn    = aws_sns_topic.async.arn
+  source_arn    = aws_sns_topic.hyperglance.arn
 }
 
-resource "aws_sns_topic" "async" {
-  name_prefix = "hyperglance_${random_pet.this.id}"
+resource "aws_sns_topic_subscription" "topic_hyperglance" {
+  topic_arn = aws_sns_topic.hyperglance.arn
+  protocol  = "lambda"
+  endpoint  = module.lambda_function.this_lambda_function_arn
 }

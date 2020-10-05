@@ -2,14 +2,21 @@
 
 Configuration in this directory creates Lambda Function, SNS topic, and IAM Policies for EC2 Tag and Terminate.
 
+## Pre-Rquisites
+
+[Terraform Installed and Available from Command line](https://www.terraform.io/downloads.html)
+
+[AWS CLI, Installed and Configured with Appropriate Credentials](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
+ 
+
 ## Usage
 
 To run this you need to execute:
 
 ```bash
 $ terraform init
-$ terraform plan
-$ terraform apply
+$ terraform plan -out hg_lambda
+$ terraform apply "hg_lambda"
 ```
 
 Note that this example may create resources which cost money. Run `terraform destroy` when you don't need these resources.
