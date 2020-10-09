@@ -24,8 +24,7 @@ To run this you need to execute:
 
 ```bash
 $ terraform init
-$ terraform plan -out hg_lambda
-$ terraform apply "hg_lambda"
+$ terraform apply
 ```
 
 Note that this example may create resources which cost money. Run `terraform destroy` when you don't need these resources.

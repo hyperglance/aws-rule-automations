@@ -97,3 +97,8 @@ output "s3_object" {
   description = "The map with S3 object data of zip archive deployed (if deployment was from S3)"
   value       = module.lambda_function.s3_object
 }
+
+output "hyperglance_sns_topic_arn" {
+  description = "The ARN of the SNS Topic for use in Hyperglance"
+  value       = aws_sns_topic.hyperglance.arn
+}

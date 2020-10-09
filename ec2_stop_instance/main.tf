@@ -18,7 +18,7 @@ module "lambda_function" {
   source  = "terraform-aws-modules/lambda/aws"
   version = "1.24.0"
 
-  function_name = "hyperglance-terminate-instances"
+  function_name = "hyperglance_stop_ec2_instances"
   handler       = "index.handler"
   runtime       = "nodejs12.x"
 
@@ -43,7 +43,7 @@ module "lambda_function" {
 }
 
 resource "aws_sns_topic" "hyperglance" {
-  name_prefix = "hyperglance-terminate-instance"
+  name_prefix = "hyperglance_stop_ec2_instances"
 }
 
 resource "aws_lambda_permission" "with_sns" {
