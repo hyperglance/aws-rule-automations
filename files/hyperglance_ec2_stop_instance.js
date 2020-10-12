@@ -25,22 +25,18 @@ exports.handler = async (event) => {
     
     await processEachRegion(hgAlert, async (region, resourceIDs) => {
         const EC2 = new AWS.EC2({apiVersion: '2016-11-15', region});
-    
-        // TAGGING
-        /*const tagParams = {
-            Resources: resourceIDs,
-            Tags: [{Key: 'HyperglanceTest', Value: 'HyperglanceTest'}]
-        };
-        
-        await EC2.createTags(tagParams).promise();*/
-        
-        // TERMINATION
-        const terminateParams = {
+        // STOP INSTANCE
+        const stopInstanceParams = {
             InstanceIds: resourceIDs,
-            DryRun: true // set this to true to 'test' the action without actually performing it
+            // Set this to true to 'test' the action without actually performing it
+            DryRun: false,
+            /* Forces the instances to stop. The instances do not have an opportunity to flush file system caches or file system metadata. 
+            If you use this option, you must perform file system check and repair procedures. 
+            This option is not recommended for Windows instances.*/
+            Force: false 
         };
-        
-        await EC2.terminateInstances(terminateParams).promise();
+        // Stop the Instances
+        await EC2.stopInstances(stopInstanceParams).promise();
     });
 };
 
