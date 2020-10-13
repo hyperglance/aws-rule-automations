@@ -4,7 +4,7 @@
 
 This Repository contains terrafom configurations, that deploys an SNS Topic and lambda function that can be used to remediate infrastructure, based on rules configured in [Hyperglance](https://support.hyperglance.com/knowledge/rules-dashboard-view).
 
-:information_source: The deployed functions will only perform action agaisnt resources in the same account, where the function is deployed.
+:information_source: The deployed functions will only perform actions against resources in the same account, where the function is deployed.
 
 ## Pre-Requisites
 
