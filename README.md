@@ -45,7 +45,7 @@ Use the follow User Guide to install the [AWS CLI](https://docs.aws.amazon.com/c
 Once the CLI is installed, [configure](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html) it using `aws configure` :
 
 ```bash
-aws configure
+$ aws configure
 AWS Access Key ID [None]: AKIAIOSFODNN7EXAMPLE
 AWS Secret Access Key [None]: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 Default region name [None]: us-west-2
@@ -67,7 +67,7 @@ Download the [Zip](https://github.com/hyperglance/aws-rule-automations/archive/v
 
 ## Usage
 
-To run this, from the directoryof the function you want to deploy i.e. `cd ec2_stop_instance` you need to execute the following command sequence:
+To run this, from the directory of the function you want to deploy i.e. `cd ec2_stop_instance` you need to execute the following command sequence:
 
 ```bash
 $ terraform init
