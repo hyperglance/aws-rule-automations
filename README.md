@@ -85,6 +85,7 @@ Outputs:
 
 hyperglance_sns_topic_arn = arn:aws:sns:us-east-1:0123456789987:hyperglance_ec2_tag_instance20201013101838932900000001
 ```
+
 Copy everything after the equals `=` and paste it into the ["Notify AWS SNS - Topic ARN"](https://support.hyperglance.com/knowledge/rules-dashboard-view)
 
 >Note: that this may create resources which cost money. Run `terraform destroy` when you don't need these resources.
