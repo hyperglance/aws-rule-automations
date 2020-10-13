@@ -1,4 +1,4 @@
-<img src="files/files/b5dfbb6c-75c8-493b-8c5d-d68b3272cf0f.png" alt="Hyperglance Logo" />
+<img src="fhttps://github.com/hyperglance/aws-rule-automations/blob/master/files/b5dfbb6c-75c8-493b-8c5d-d68b3272cf0f.png" alt="Hyperglance Logo" />
 
 # Hyperglance Rules - Lambda Configuration
 
@@ -63,7 +63,7 @@ $ mkdir code && cd code
 $ git clone https://github.com/hyperglance/aws-terraform-lambda.git
 ```
 
-Download the [Zip]() release, and extract it.
+Download the [Zip](https://github.com/hyperglance/aws-rule-automations/archive/v1.0.zip) release, and extract it.
 
 ## Usage
 
