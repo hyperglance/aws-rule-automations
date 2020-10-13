@@ -1,33 +1,91 @@
-# Hyperglance Event Configuration
+<img src="files/files/b5dfbb6c-75c8-493b-8c5d-d68b3272cf0f.png" alt="Hyperglance Logo" />
 
-Configuration in this directory creates Lambda Function, SNS topic, and IAM Policies for EC2 Tag and Terminate.
+# Hyperglance Rules - Lambda Configuration
+
+This Repository contains terrafom configurations, that deploys an SNS Topic and lambda function that can be used to remediate infrastructure, based on rules configured in [Hyperglance](https://support.hyperglance.com/knowledge/rules-dashboard-view).
 
 ## Pre-Requisites
 
+Please follow the below steps to install the pre-requisites required to deploy the infrastructure.
+
+### Install Terraform
+
+Method 1, Select your operating system from the link below, install terraform, and add it to your `PATH`
+
 [Terraform Installed and Available from Command line](https://www.terraform.io/downloads.html)
 
-[AWS CLI, Installed and Configured with Appropriate Credentials](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
+Method 2, Use homebrew (MAC OS / Linux), chocolately (Windows):
 
-*** Instructions will be amended for Github ***
+[Homebrew](https://brew.sh/):
+
+`brew install terraform`
+
+[Chocolately](https://chocolatey.org/):
+
+`choco install terraform`
+
+> Note: Method 2 takes care of updating your PATH variables and installing any required dependencies
+
+Check Terraform is installed correctly:
+
+```bash
+$ terraform -version
+
+Output:
++ terraform -version
+Terraform v0.13.2
+```
+
+### Install AWS CLI
+
+Use the follow User Guide to install the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html), s elect your operating system from the appropriate topic.
+
+Once the CLI is installed, [configure](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html) it using `aws configure` :
+
+```bash
+aws configure
+AWS Access Key ID [None]: AKIAIOSFODNN7EXAMPLE
+AWS Secret Access Key [None]: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+Default region name [None]: us-west-2
+Default output format [None]: yaml
+```
+
+> Note: The above Access and Secrets are examples, only. Please substitute the values that are appropriate for your environement.
+
+### Clone / Download the repository:
 
 Clone the repository:
 
-git clone https://[username]@bitbucket.org/hyperglance/terraform-aws-lambda.git
+```bash
+$ mkdir code && cd code
+$ git clone https://github.com/hyperglance/aws-terraform-lambda.git
+```
 
-OR Download a Zip Archive from Bitbucket.
-
-*** Instructions will be amended for Github ***
+Download the [Zip]() release, and extract it.
 
 ## Usage
 
-To run this you need to execute:
+To run this, from the directoryof the function you want to deploy i.e. `cd ec2_stop_instance` you need to execute the following command sequence:
 
 ```bash
 $ terraform init
 $ terraform apply
 ```
 
-Note that this example may create resources which cost money. Run `terraform destroy` when you don't need these resources.
+This will ask you to confirm deployment, type `yes` to confirm. You can skip confirmation using `terraform apply -auto-approve`
+
+Once complete, the ARN of the SNS Topic will be returned:
+
+```bash
+Apply complete! Resources: 13 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+hyperglance_sns_topic_arn = arn:aws:sns:us-east-1:0123456789987:hyperglance_ec2_tag_instance20201013101838932900000001
+```
+Copy everything after the equals `=` and paste it into the ["Notify AWS SNS - Topic ARN"](https://support.hyperglance.com/knowledge/rules-dashboard-view)
+
+>Note: that this may create resources which cost money. Run `terraform destroy` when you don't need these resources.
 
 ## Requirements
 
@@ -37,37 +95,22 @@ Note that this example may create resources which cost money. Run `terraform des
 | aws | >= 3.80, < 4.0 |
 | random | ~> 2.30 |
 
-## Providers
-
-| Name | Version |
-|------|---------|
-| aws | >= 3.80, < 4.0 |
-| random | ~> 2.30 |
-
 ## Inputs
 
-No input.
+The following inputs are acccepted, these can be set in `main.tf` of the appropriate function.
+
+| Name | Description | Default | Mandatory |
+|------|-------------|---------|-----------|
+| aws_region | AWS Region to Deploy to | us-east-1 | Y |
+| lambda_function_name | Name of Lambda Function | Function Folder Name | Y |
+| lambda_runtime | Lambda execution environment | nodejs12.x | Y |
+| iam_attach_policy_statements | Attach inline policies | true | N |
+| iam_policy_statement | Policy Definition if iam_attach_policy_statements is true | NONE | N |
+
+>Note: All appropriate paramters are set, you may wish to override the default aws_region.
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| lambda\_cloudwatch\_log\_group\_arn | The ARN of the Cloudwatch Log Group |
-| lambda\_role\_arn | The ARN of the IAM role created for the Lambda Function |
-| lambda\_role\_name | The name of the IAM role created for the Lambda Function |
-| local\_filename | The filename of zip archive deployed (if deployment was from local) |
-| s3\_object | The map with S3 object data of zip archive deployed (if deployment was from S3) |
-| this\_lambda\_function\_arn | The ARN of the Lambda Function |
-| this\_lambda\_function\_invoke\_arn | The Invoke ARN of the Lambda Function |
-| this\_lambda\_function\_kms\_key\_arn | The ARN for the KMS encryption key of Lambda Function |
-| this\_lambda\_function\_last\_modified | The date Lambda Function resource was last modified |
-| this\_lambda\_function\_name | The name of the Lambda Function |
-| this\_lambda\_function\_qualified\_arn | The ARN identifying your Lambda Function Version |
-| this\_lambda\_function\_source\_code\_hash | Base64-encoded representation of raw SHA-256 sum of the zip file |
-| this\_lambda\_function\_source\_code\_size | The size in bytes of the function .zip file |
-| this\_lambda\_function\_version | Latest published version of Lambda Function |
-| this\_lambda\_layer\_arn | The ARN of the Lambda Layer with version |
-| this\_lambda\_layer\_created\_date | The date Lambda Layer resource was created |
-| this\_lambda\_layer\_layer\_arn | The ARN of the Lambda Layer without version |
-| this\_lambda\_layer\_source\_code\_size | The size in bytes of the Lambda Layer .zip file |
-| this\_lambda\_layer\_version | The Lambda Layer version |
+| hyperglance_sns_topic_arn | The ARN of the Hyperglance SNS Topic |
