@@ -6,7 +6,7 @@ This configuration deploys a lambda that tags EC2 Instances based on Hyperglance
 
 By default, the configuration uses the following tags:
 
-```json
+```
   {
     Key: 'HyperglanceTest', 
     Value: 'HyperglanceTest'
@@ -27,7 +27,7 @@ Update and add any additional tags you require, each key/value pairs is surround
 
 The all of the tags sit within the `Tags: [ ]` block:
 
-```json
+```
   Tags: [
     {
       Key: 'Your Tag 1', 
