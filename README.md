@@ -60,7 +60,7 @@ Clone the repository:
 
 ```bash
 $ mkdir code && cd code
-$ git clone https://github.com/hyperglance/aws-terraform-lambda.git
+$ git clone https://github.com/hyperglance/aws-rule-automations.git
 ```
 
 Download the [Zip](https://github.com/hyperglance/aws-rule-automations/archive/v1.0.zip) release, and extract it.
