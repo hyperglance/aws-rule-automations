@@ -76,3 +76,4 @@ override.tf.json
 hg_node
 hg_mode
 **.plan.json*
+genmail.sh
