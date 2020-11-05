@@ -1,5 +1,5 @@
 module "lambda_deploy" {
-  source = "../lambda_module"
+  source = "../modules/aws-lambda"
 
   lambda_function_name = "hyperglance_ec2_stop_instance"
   lambda_source_file   = "hyperglance_ec2_stop_instance.js"
