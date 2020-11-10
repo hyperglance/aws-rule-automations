@@ -1,12 +1,15 @@
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| terraform | >= 0.12.6, < 0.14 |
+| aws | >= 3.8.0, < 4.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| aws | n/a |
+| aws | >= 3.8.0, < 4.0 |
 
 ## Inputs
 
@@ -22,3 +25,4 @@ No requirements.
 ## Outputs
 
 No output.
+
