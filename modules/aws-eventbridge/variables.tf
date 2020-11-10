@@ -13,7 +13,7 @@ variable "event_name" {
 variable "event_description" {
   type        = string
   description = "Event Description"
-  default     = "Triggers a Lambda Function that request the topology from Hyperglance API"
+  default     = "Triggers a Lambda Function that requests the topology from Hyperglance API"
 }
 
 variable "event_schedule" {

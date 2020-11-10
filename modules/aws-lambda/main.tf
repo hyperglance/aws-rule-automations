@@ -22,7 +22,7 @@ module "lambda_function" {
   handler       = "${var.lambda_function_name}.handler"
   runtime       = var.lambda_runtime
 
-  source_path = "${path.module}/../files/${var.lambda_source_file}"
+  source_path = "${path.module}/../functions/${var.lambda_source_file}"
 
   create_async_event_config = false
   attach_async_event_policy = false
