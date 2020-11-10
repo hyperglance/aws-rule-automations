@@ -64,5 +64,5 @@ def hyperglance_requestTopology():
     return hyperglance_saveToS3(result.data);
 
 
-def lambda_handler(event, context):
+def handler(event, context):
     return hyperglance_requestTopology()

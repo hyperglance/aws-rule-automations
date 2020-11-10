@@ -1,3 +1,9 @@
+variable "aws_region" {
+  type        = string
+  description = "AWS Region to Deploy Bucket to"
+  default     = "us-east-1"
+}
+
 variable "create_bucket" {
   type        = bool
   description = "Resource Creation Conditional"
