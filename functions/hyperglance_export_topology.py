@@ -36,7 +36,7 @@ def hyperglance_requestTopology():
     AUTH_TOKEN = os.environ['API_KEY_NAME'] + ':' + os.environ['API_KEY']
 
     JSON = {
-            "datasource": "Datasource_Group",
+            "datasource": os.environ['EXPORT_DATASOURCE'],
             "account": os.environ['EXPORT_ACCOUNT'],
             "id": os.environ['EXPORT_ID']
     }

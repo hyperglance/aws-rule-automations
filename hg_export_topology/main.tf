@@ -28,12 +28,13 @@ module "lambda_deploy" {
   }
 
   environment_variables = {
-    API_KEY        = var.API_KEY,
-    API_KEY_NAME   = var.API_KEY_NAME,
-    BUCKET_NAME    = module.s3_deploy.this_bucket_name,
-    EXPORT_ACCOUNT = var.EXPORT_ACCOUNT,
-    EXPORT_ID      = var.EXPORT_ID,
-    HYPERGLANCE_IP = var.HYPERGLANCE_IP
+    API_KEY           = var.API_KEY,
+    API_KEY_NAME      = var.API_KEY_NAME,
+    BUCKET_NAME       = module.s3_deploy.this_bucket_name,
+    EXPORT_DATASOURCE = var.EXPORT_DATASOURCE
+    EXPORT_ACCOUNT    = var.EXPORT_ACCOUNT,
+    EXPORT_ID         = var.EXPORT_ID,
+    HYPERGLANCE_IP    = var.HYPERGLANCE_IP
   }
 
 }
