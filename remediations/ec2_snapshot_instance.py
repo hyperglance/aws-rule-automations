@@ -2,7 +2,7 @@
 
 ## Snapshots instances identified by configured Hyperglance Rules.
 import os
-import boto3
+from boto3 import session, ec2
 
 ## Stop EC2 Instance
 def hyperglance_action(boto_session, rule, entity, params):
@@ -21,7 +21,7 @@ def hyperglance_action(boto_session, rule, entity, params):
       VolumeId=vol_id,
       DryRun=os.environ['DryRun']
     )
-
+  ## TODO: Add waiter
   result = response['ResponseMetadata']['HTTPStatusCode']
 
   if result >= 400:

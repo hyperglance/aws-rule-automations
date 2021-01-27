@@ -2,8 +2,8 @@
 
 ## Deletes and optionally Snapshots abd RDS Aurora Cluster
 import os
-import boto3
 import uuid
+from boto3 import session, rds
 
 ## Delete DB Cluster
 def hyperglance_action(boto_session, rule, entity, params):
