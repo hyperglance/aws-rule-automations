@@ -1,5 +1,7 @@
 <img src="https://github.com/hyperglance/aws-rule-automations/blob/master/files/b5dfbb6c-75c8-493b-8c5d-d68b3272cf0f.png" alt="Hyperglance Logo" />
 
+![Pylint](https://github.com/hyperglance/aws-rule-automations/workflows/Pylint/badge.svg)
+
 # Hyperglance Rules - Lambda Configuration
 
 This Repository contains terrafom configurations, that deploys an SNS Topic and lambda function that can be used to remediate infrastructure, based on rules configured in [Hyperglance](https://support.hyperglance.com/knowledge/rules-dashboard-view).
