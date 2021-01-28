@@ -2,7 +2,7 @@
 
 ## Deletes a NAT Gateway identified by configured Hyperglance Rules
 import os
-from boto3 import session, ec2
+import boto3
 
 ## Delete NAT Gateway
 def hyperglance_action(boto_session, rule, entity, params):

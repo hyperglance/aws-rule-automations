@@ -1,8 +1,7 @@
 ## ebs_delete_snapshot
 
 ## Deletes Unused Snapshots identified bt configured Hyperglance Rules
-import os
-from boto3 import ec2, session
+import boto3
 
 ## Delete EBS Snapshot
 def hyperglance_action(boto_session, rule, entity, params):

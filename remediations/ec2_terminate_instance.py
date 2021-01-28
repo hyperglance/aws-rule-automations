@@ -2,7 +2,7 @@
 
 ## Terminates and optionally Snapshots instances identified by configured Hyperglance Rules.
 import os
-from boto3 import session, ec2
+import boto3
 import remediations.ec2_snapshot_instance
 
 
