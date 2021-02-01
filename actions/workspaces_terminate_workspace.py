@@ -20,4 +20,4 @@ def hyperglance_action(boto_session, rule, entity, params):
     
   return action_output
 
-
+  
