@@ -1,6 +1,7 @@
 import json
 import logging
-from processing.remediation_routing import *
+from processing.action_routing import *
+from processing.action_list import *
 
 ## Setuo Logger
 logger = logging.getLogger()
