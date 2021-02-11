@@ -54,6 +54,7 @@ def process_event(bucket, action_payload):
     action_account_id = result['account']
 
     ## TODO: Add conditionals
+    ## TODO: Add conditionals to deak with
     boto_session = boto3.Session(region_name=result['region'])
 
 

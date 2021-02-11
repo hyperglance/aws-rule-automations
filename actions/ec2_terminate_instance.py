@@ -3,13 +3,13 @@
 ## Terminates and optionally Snapshots instances identified by configured Hyperglance Rules.
 import os
 import boto3
-import remediations.ec2_snapshot_instance
+import actions.ec2_snapshot_instance
 
 
 ## Stop EC2 Instance
-def hyperglance_action(boto_session, rule, entity, params):
+def hyperglance_action(boto_session, rule, resource_id):
   client = boto_session.client('ec2')
-  ec2_instance = entity['id']
+  ec2_instance = resource_id
 
   if os.environ['SnapShotBeforeTerminate']:
     ec2_snapshot_instance = ec2_snapshot_instance()
