@@ -1,13 +1,36 @@
-## s3_enable_versioning
+"""S3 Enable Versioning
 
-## Enables versioning on S3 Resources identified by configured Hyperglance Rules.
+This action Enables versioning on S3 Buckets, identified as above or below the configured threshold
+by Hyperglance Rule(s)
+
+This action will operate across accounts, where the appropriate IAM Role exists.
+
+"""
+
 import boto3
 from botocore.exceptions import ClientError
 
-## Enables S3 Encryption
-def hyperglance_action(boto_session, rule, entity, params):
+def hyperglance_action(boto_session, rule: str, resource_id: str) -> str:
+  """ Attempts to Enable versioning on an S3 Bucket
+
+  Parameters
+  ----------
+  boto_session : object
+    The boto session to use to invoke the action
+  rule : str
+    Rule name that trigged the action
+  resource_id : str
+    ID of the Resource to trigger the action on
+
+  Returns
+  -------
+  string
+    A string containing the status of the request
+
+  """
+
   client = boto_session.client('s3')
-  bucket_name = entity['id']
+  bucket_name = resource_id
 
   try:
     response = client.put_bucket_versioning(
@@ -20,7 +43,7 @@ def hyperglance_action(boto_session, rule, entity, params):
     result = response['ResponseMetadata']['HTTPStatusCode']
 
     if result >= 400:
-      action_output = "An unexpected error occured, error message: {}".format(str(result))
+      action_output = "An unexpected error occured, error message: {}".format(result)
     else:
       action_output = "Bucket {} enabled for versioning".format(bucket_name)
     
