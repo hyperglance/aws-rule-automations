@@ -35,7 +35,7 @@ def lambda_handler(event, context):
 
   # Try to process the message, and perform actions
   try:
-    return_message = process_event(bucket=payload['data']['s3bucket'], action_payload=payload['data']['key'])
+    return_message = action_routing(bucket=payload['data']['s3bucket'], action_payload=payload['data']['key'])
   except Exception as err:
     logger.error('Failed to process Event %s', err )
     return_message['Failed to Process Event'] = str(err)

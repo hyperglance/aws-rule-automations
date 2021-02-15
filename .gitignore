@@ -83,3 +83,4 @@ settings.json
 
 .payloads
 __pycache__
+.vscode

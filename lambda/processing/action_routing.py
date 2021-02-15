@@ -4,7 +4,9 @@ import re
 import importlib
 import json
 import logging
+import action_list
 from botocore.exceptions import ClientError
+
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -54,13 +56,19 @@ def process_event(bucket, action_payload):
     action_account_id = result['account']
     logger.debug('Account of Resource: %s', action_account_id)
 
-    ## TODO: Add conditionals
-    ## TODO: Add conditionals to deal with multi-account
-    boto_session = boto3.Session(region_name=result['region'])
+    if this_account_id != action_account_id:
+      ## Get session from assume role
+      logger.info('Resource in another account, attempting assume role for account: %s' %action_account_id)
+      boto_session = action_session.get_boto_session(
+        target_account_id=action_account_id, 
+        target_region=result['region']
+      )
+    else:
+      ## It's the same account, grab the session
+      logger.info('Resource is in this account, ')
+      boto_session = boto3.Session(region_name=result['region'])
 
 
-    logger.debug('Instance: %s', result['id'])
-    logger.debug('Account: %s', result['account'])
     ## Run the action!
     try:
       action_to_execute_output = action_to_execute.hyperglance_action(boto_session=boto_session, rule=action_data['name'], resource_id=result['id'])
@@ -69,4 +77,4 @@ def process_event(bucket, action_payload):
       logger.fatal('Could not execute: %s, output from action: %s', action, err)
       continue  
 
-    return True
+    return action_to_execute_output
