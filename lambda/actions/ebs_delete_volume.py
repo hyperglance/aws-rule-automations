@@ -36,7 +36,7 @@ def hyperglance_action(boto_session, rule: str, resource_id: str) -> str:
   )
 
   ## Wait for the deletion to finish
-  waiter = client.get_water('volume_deleted')
+  waiter = client.get_waiter('volume_deleted')
 
   waiter.wait(
     VolumeId=ebs_volume
