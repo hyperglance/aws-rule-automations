@@ -45,9 +45,9 @@ def hyperglance_action(boto_session, rule: str, resource_id: str) -> str:
       rule
       )
 
-  if response['ResponseMetadata']['HTTPStatusCOde'] >= 400:
-    action_output = "Something went wrong with the snapshot for instance {}, abandoning termination".format(ec2_instance)
-    return action_output
+    if response['ResponseMetadata']['HTTPStatusCOde'] >= 400:
+      action_output = "Something went wrong with the snapshot for instance {}, abandoning termination".format(ec2_instance)
+      return action_output
   else:
     response = client.terminate_instances(
       InstanceIds=[ec2_instance], 
@@ -58,6 +58,6 @@ def hyperglance_action(boto_session, rule: str, resource_id: str) -> str:
     if result >= 400:
       action_output = "An unexpected error occured, error message: {}".format(result)
     else:
-      action_output = "Instance {} stopped".format(ec2_instance)
+      action_output = "Instance {} terminated".format(ec2_instance)
 
     return action_output

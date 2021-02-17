@@ -4,7 +4,7 @@ import re
 import importlib
 import json
 import logging
-import action_list
+import processing.action_list
 from botocore.exceptions import ClientError
 
 
@@ -28,10 +28,10 @@ def process_event(bucket, action_payload):
   ## Start Processing the Actions
   action_to_execute_output = ''
   ## TODO: Remove this once the new Payload is available
-  if not 'action' in action_data:
+  if not 'remediation' in action_data:
     action = 'ec2_stop_instance'
   else:
-    action = action_data['action']
+    action = action_data['remediation'][0]
   logger.info('Action Set to: %s', action)
   
   ## For each of the results, execute the action
@@ -77,4 +77,4 @@ def process_event(bucket, action_payload):
       logger.fatal('Could not execute: %s, output from action: %s', action, err)
       continue  
 
-    return action_to_execute_output
+  return action_to_execute_output
