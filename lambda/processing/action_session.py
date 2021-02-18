@@ -27,7 +27,7 @@ def get_boto_session(target_account_id: str, target_region: str='us-east-1') -> 
 
   """
 
-  hyperglance_role = "arn:aws:iam::" + target_account_id + "role/Hyperglance_Actions"
+  hyperglance_role = "arn:aws:iam::" + target_account_id + ":role/Hyperglance_Actions"
   logger.info('Role ARN to use: %s', hyperglance_role)
 
   ## Try and get the credentials for ENV
@@ -49,17 +49,19 @@ def get_boto_session(target_account_id: str, target_region: str='us-east-1') -> 
       action_account_session_creds[target_account_id] = action_role['Credentials']
       action_credentials = action_account_session_creds[target_account_id]
 
+      logger.info('Assumed role: %s', hyperglance_role)
+
     except ClientError as err:
       if err.response['Error']['Code'] == 'AccessDenied':
         logger.error('Unable to Assume role on account: %s, please check that the role exists on the target account', target_account_id)
       else:
         logger.error('An unexpected error occured attempting to assume role for account: %s', target_account_id)
 
-    boto_seesion = boto3.Session(
-      aws_access_key_id=action_credentials['AccessKeyId'],
-      aws_secret_access_key=action_credentials['SecretAccessKey'],
-      aws_session_token=action_credentials['SessionToken'],
-      region_name=target_region
-    )
+  boto_session = boto3.Session(
+    aws_access_key_id=action_credentials['AccessKeyId'],
+    aws_secret_access_key=action_credentials['SecretAccessKey'],
+    aws_session_token=action_credentials['SessionToken'],
+    region_name=target_region
+  )
 
-  return boto_seesion
+  return boto_session
