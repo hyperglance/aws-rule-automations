@@ -37,7 +37,7 @@ def hyperglance_action(boto_session, rule: str, resource_id: str) -> str:
   try:
     response = client.put_public_access_block(
       Bucket=bucket_name,
-      PublicAcessBlockConfiguration={
+      PublicAccessBlockConfiguration={
         'BlockPublicAcls': True,
         'IgnorePublicAcls': True,
         'BlockPublicPolicy': True,
