@@ -4,7 +4,7 @@ import re
 import importlib
 import json
 import logging
-import processing.action_list
+from processing.action_list import *
 from botocore.exceptions import ClientError
 
 
@@ -56,18 +56,23 @@ def process_event(bucket, action_payload):
     action_account_id = result['account']
     logger.debug('Account of Resource: %s', action_account_id)
 
+    ## Check if we have a region, some actions don't have a region, default to us-east-1
+    if not 'region' in result:
+      action_region = 'us-east-1'
+    else:
+      action_region = result['region']
+
     if this_account_id != action_account_id:
       ## Get session from assume role
       logger.info('Resource in another account, attempting assume role for account: %s' %action_account_id)
-      boto_session = action_session.get_boto_session(
+      boto_session = get_boto_session(
         target_account_id=action_account_id, 
-        target_region=result['region']
+        target_region=action_region
       )
     else:
       ## It's the same account, grab the session
       logger.info('Resource is in this account, ')
-      boto_session = boto3.Session(region_name=result['region'])
-
+      boto_session = boto3.Session(region_name=action_region)
 
     ## Run the action!
     try:
