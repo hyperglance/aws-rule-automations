@@ -29,7 +29,7 @@ def hyperglance_action(boto_session, rule: str, resource_id: str) -> str:
 
   """
 
-  client = boto_session('ec2')
+  client = boto_session.client('ec2')
   snapshot_id = resource_id
 
   response = client.delete_snapshot(
@@ -39,7 +39,7 @@ def hyperglance_action(boto_session, rule: str, resource_id: str) -> str:
 
   result = response['ResponseMetadata']['HTTPStatusCode']
   if result >= 400:
-    action_output = "An unexpected error occured, error message:".format(str(result))
+    action_output = "An unexpected error occured, error message:".format(result)
   else:
     action_output = "Snapshot: {} deleted".format(snapshot_id)
   
