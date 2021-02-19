@@ -24,7 +24,7 @@ def process_event(bucket, action_payload):
   ## Read the Payload in from S3
   action_data = get_payload_from_s3(bucket=bucket, key=action_payload)
   logger.debug('Payload From S3 %s', action_data)
-  logger.debug('Rule: %s', action_data['name'])
+  logger.info('Triggering Rule: %s', action_data['name'])
   
   ## Start Processing the Actions
   action_to_execute_output = ''
