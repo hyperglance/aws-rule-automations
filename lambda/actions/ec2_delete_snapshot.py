@@ -8,7 +8,6 @@ This action will operate across accounts, where the appropriate IAM Role exists.
 """
 
 import os
-import boto3
 
 def hyperglance_action(boto_session, rule: str, resource_id: str) -> str:
   """ Attempts to Delete and EC2 Snapshot
