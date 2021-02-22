@@ -11,7 +11,6 @@ This action will operate across accounts, where the appropriate IAM Role exists.
 
 ## Terminates and optionally Snapshots instances identified by configured Hyperglance Rules.
 import os
-import boto3
 import actions.ec2_snapshot_instance
 
 

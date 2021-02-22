@@ -7,7 +7,6 @@ This action will operate across accounts, where the appropriate IAM Role exists.
 
 """
 
-import boto3
 from botocore.exceptions import ClientError
 
 ## Delets Dynamo DB Table

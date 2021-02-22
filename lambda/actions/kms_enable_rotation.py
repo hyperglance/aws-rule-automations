@@ -1,16 +1,15 @@
-"""S3 Enable Versioning
-
-This action Enables versioning on S3 Buckets, identified as above or below the configured threshold
+"""
+This action Enables KMS Key Rotation, identified as above or below the configured threshold
 by Hyperglance Rule(s)
 
 This action will operate across accounts, where the appropriate IAM Role exists.
 
 """
 
-from botocore.exceptions import ClientError
+import boto3
 
 def hyperglance_action(boto_session, rule: str, resource_id: str) -> str:
-  """ Attempts to Enable versioning on an S3 Bucket
+  """ Attempts to enable KMS Key Rotation
 
   Parameters
   ----------
@@ -28,25 +27,19 @@ def hyperglance_action(boto_session, rule: str, resource_id: str) -> str:
 
   """
 
-  client = boto_session.client('s3')
-  bucket_name = resource_id
+  client = boto_session.client('kms')
+  kms_key = resource_id
 
   try:
-    response = client.put_bucket_versioning(
-      Bucket=bucket_name,
-      VersioningConfiguration={
-        'MFADelete': 'Disabled',
-        'Status': 'Enabled'
-      },
+    response = client.enable_key_rotation(
+      KeyId=kms_key
     )
+
     result = response['ResponseMetadata']['HTTPStatusCode']
 
     if result >= 400:
       action_output = "An unexpected error occured, error message: {}".format(result)
     else:
-      action_output = "Bucket {} enabled for versioning".format(bucket_name)
-    
-  except ClientError as err:
-    action_output = "An unexpected Client error Occured, error message: {}".format(err)
+      action_output = "Key: {} rotation enabled".format(kms_key)
 
-  return action_output
+    return action_output

@@ -7,8 +7,6 @@ This action will operate across accounts, where the appropriate IAM Role exists.
 
 """
 
-import boto3
-
 ## Delete EBS Snapshot
 def hyperglance_action(boto_session, rule: str, resource_id: str) -> str:
   """ Attempts to Delete and EBS Volume

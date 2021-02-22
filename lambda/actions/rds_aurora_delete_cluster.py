@@ -9,7 +9,6 @@ This action will operate across accounts, where the appropriate IAM Role exists.
 
 import os
 import uuid
-import boto3
 
 ## Delete RDS Aurora DB Cluster
 def hyperglance_action(boto_session, rule: str, resource_id: str) -> str:

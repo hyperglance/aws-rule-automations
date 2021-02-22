@@ -1,16 +1,17 @@
-"""Workspaces - Terminate Workspace
+"""IAM Disable User Console Password
 
-This action Terminates a Workspace, identified as above or below the configured threshold
+This action Disables a Users console access password, identified as above or below the configured threshold
 by Hyperglance Rule(s)
 
 This action will operate across accounts, where the appropriate IAM Role exists.
 
 """
 
+import boto3
 from botocore.exceptions import ClientError
 
 def hyperglance_action(boto_session, rule: str, resource_id: str) -> str:
-  """ Attempts to Terminate a Workspace
+  """ Attempts to deletes a users console access password
 
   Parameters
   ----------
@@ -27,18 +28,16 @@ def hyperglance_action(boto_session, rule: str, resource_id: str) -> str:
     A string containing the status of the request
 
   """
-  client = boto_session.client('workspaces')
-  workspace_id = resource_id
+
+  client = boto_session.client('iam')
+  user_name = resource_id
 
   try:
-    response = client.terminate_workspaces(
-      WorkspaceId=workspace_id
-    )
-    action_output = "Terminated Workspace ID: {}".format(workspace_id)
+    user_profile = client.LoginProfile(user_name)
+    user_profile.delete()
+    action_output = "User {} console access password was deleted".format(user_name)
 
   except ClientError as err:
-    action_output = "An unexpected error occured, error message {}".format(err)
-    
-  return action_output
-
+    action_output = "An unexpected error occured, error message: {}".format(err)
   
+  return action_output

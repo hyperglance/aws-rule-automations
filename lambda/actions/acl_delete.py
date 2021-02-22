@@ -1,6 +1,5 @@
-"""Workspaces - Terminate Workspace
-
-This action Terminates a Workspace, identified as above or below the configured threshold
+"""
+This action Deletes an Access Control list, identified as above or below the configured threshold
 by Hyperglance Rule(s)
 
 This action will operate across accounts, where the appropriate IAM Role exists.
@@ -10,7 +9,7 @@ This action will operate across accounts, where the appropriate IAM Role exists.
 from botocore.exceptions import ClientError
 
 def hyperglance_action(boto_session, rule: str, resource_id: str) -> str:
-  """ Attempts to Terminate a Workspace
+  """ Attempts to delete an Access Control List
 
   Parameters
   ----------
@@ -27,18 +26,17 @@ def hyperglance_action(boto_session, rule: str, resource_id: str) -> str:
     A string containing the status of the request
 
   """
-  client = boto_session.client('workspaces')
-  workspace_id = resource_id
+
+  client = boto_session.client('ec2')
+  acl_id = resource_id
 
   try:
-    response = client.terminate_workspaces(
-      WorkspaceId=workspace_id
+    client.delete_network_acl(
+      NetworkAclId=acl_id
     )
-    action_output = "Terminated Workspace ID: {}".format(workspace_id)
+    action_output = "Network ACL: {} deleted".format(acl_id)
 
   except ClientError as err:
-    action_output = "An unexpected error occured, error message {}".format(err)
-    
-  return action_output
+    action_output = "An unexpected client error occured, error: {}".format(err)
 
-  
+  return action_output

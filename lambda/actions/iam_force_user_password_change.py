@@ -1,16 +1,16 @@
-"""S3 Enable Versioning
+"""IAM Force User Password Change
 
-This action Enables versioning on S3 Buckets, identified as above or below the configured threshold
+This action Disables a Users console access password, identified as above or below the configured threshold
 by Hyperglance Rule(s)
 
 This action will operate across accounts, where the appropriate IAM Role exists.
 
 """
 
-from botocore.exceptions import ClientError
+import boto3
 
 def hyperglance_action(boto_session, rule: str, resource_id: str) -> str:
-  """ Attempts to Enable versioning on an S3 Bucket
+  """ Attempts to force a user password change
 
   Parameters
   ----------
@@ -28,25 +28,20 @@ def hyperglance_action(boto_session, rule: str, resource_id: str) -> str:
 
   """
 
-  client = boto_session.client('s3')
-  bucket_name = resource_id
+  client = boto_session.client("iam")
+  user_name = resource_id
 
   try:
-    response = client.put_bucket_versioning(
-      Bucket=bucket_name,
-      VersioningConfiguration={
-        'MFADelete': 'Disabled',
-        'Status': 'Enabled'
-      },
+    response = client.update_login_profile(
+      UserName=user_name,
+      PasswordResetRequired=True
     )
+
     result = response['ResponseMetadata']['HTTPStatusCode']
 
     if result >= 400:
       action_output = "An unexpected error occured, error message: {}".format(result)
     else:
-      action_output = "Bucket {} enabled for versioning".format(bucket_name)
-    
-  except ClientError as err:
-    action_output = "An unexpected Client error Occured, error message: {}".format(err)
-
+      action_output = "Password reset enabled for user: {}".format(user_name)
+  
   return action_output

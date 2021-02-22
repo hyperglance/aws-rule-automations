@@ -1,6 +1,5 @@
-"""Workspaces - Terminate Workspace
-
-This action Terminates a Workspace, identified as above or below the configured threshold
+"""
+This action Enables cloudtrail log file validation, identified as above or below the configured threshold
 by Hyperglance Rule(s)
 
 This action will operate across accounts, where the appropriate IAM Role exists.
@@ -10,7 +9,7 @@ This action will operate across accounts, where the appropriate IAM Role exists.
 from botocore.exceptions import ClientError
 
 def hyperglance_action(boto_session, rule: str, resource_id: str) -> str:
-  """ Attempts to Terminate a Workspace
+  """ Attempts to enable cloudtrail log file validation
 
   Parameters
   ----------
@@ -27,18 +26,18 @@ def hyperglance_action(boto_session, rule: str, resource_id: str) -> str:
     A string containing the status of the request
 
   """
-  client = boto_session.client('workspaces')
-  workspace_id = resource_id
+
+  client = boto_session.client('cloudtrail')
+  cloudtrail_name = resource_id
 
   try:
-    response = client.terminate_workspaces(
-      WorkspaceId=workspace_id
+    client.update_trail(
+      Name=cloudtrail_name,
+      EnableLogFileValidation=True
     )
-    action_output = "Terminated Workspace ID: {}".format(workspace_id)
+    action_output = "Cloud trail log file validation enabled on: {}".format(cloudtrail_name)
 
   except ClientError as err:
-    action_output = "An unexpected error occured, error message {}".format(err)
-    
-  return action_output
+    action_output = "An unexpected client error occured, error: {}".format(err)
 
-  
+  return action_output
