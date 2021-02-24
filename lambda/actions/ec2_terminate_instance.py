@@ -7,9 +7,6 @@ This action will operate across accounts, where the appropriate IAM Role exists.
 
 """
 
-## ec2_terminate_instance
-
-## Terminates and optionally Snapshots instances identified by configured Hyperglance Rules.
 import os
 import actions.ec2_snapshot_instance
 
