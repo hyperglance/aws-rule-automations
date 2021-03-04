@@ -19,7 +19,7 @@ def deny_policy_exists(client, policy_arn: str) -> bool:
 def attach_user_policy(client, policy_arn: str, user: str) -> str:
   return "result"
 
-def hyperglance_action(boto_session, rule: str, resource_id: str) -> str:
+def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = [ ]) -> str:
   """ Attempts to delete default policy and set to the LATEST
 
   Parameters
@@ -30,6 +30,8 @@ def hyperglance_action(boto_session, rule: str, resource_id: str) -> str:
     Rule name that trigged the action
   resource_id : str
     ID of the Resource to trigger the action on
+  table : list
+    A list of additional resource values that may be required
 
   Returns
   -------

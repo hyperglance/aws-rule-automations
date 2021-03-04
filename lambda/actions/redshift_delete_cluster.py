@@ -10,7 +10,7 @@ This action will operate across accounts, where the appropriate IAM Role exists.
 import os
 import uuid
 
-def hyperglance_action(boto_session, rule: str, resource_id: str) -> str:
+def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = [ ]) -> str:
   """ Attempts Delete a Redshift Cluster
 
   Parameters
@@ -21,6 +21,8 @@ def hyperglance_action(boto_session, rule: str, resource_id: str) -> str:
     Rule name that trigged the action
   resource_id : str
     ID of the Resource to trigger the action on
+  table : list
+    A list of additional resource values that may be required
 
   Returns
   -------

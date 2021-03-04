@@ -12,7 +12,7 @@ import actions.ec2_snapshot_instance
 
 
 ## Stop EC2 Instance
-def hyperglance_action(boto_session, rule: str, resource_id: str) -> str:
+def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = [ ]) -> str:
   """ Attempts to Terminate an EC2 Instance
 
   Parameters
@@ -23,6 +23,8 @@ def hyperglance_action(boto_session, rule: str, resource_id: str) -> str:
     Rule name that trigged the action
   resource_id : str
     ID of the Resource to trigger the action on
+  table : list
+    A list of additional resource values that may be required
 
   Returns
   -------

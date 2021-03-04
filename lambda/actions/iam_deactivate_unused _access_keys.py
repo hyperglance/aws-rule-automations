@@ -44,7 +44,7 @@ def days_last_used(client, access_key) -> int:
     return (current_date_time - access_key['CreateDate'].replace(tzinfo=None)).days
 
 
-def hyperglance_action(boto_session, rule: str, resource_id: str) -> str:
+def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = [ ]) -> str:
   """ Attempts to delete default policy and set to the LATEST
 
   Parameters
@@ -55,6 +55,8 @@ def hyperglance_action(boto_session, rule: str, resource_id: str) -> str:
     Rule name that trigged the action
   resource_id : str
     ID of the Resource to trigger the action on
+  table : list
+    A list of additional resource values that may be required
 
   Returns
   -------

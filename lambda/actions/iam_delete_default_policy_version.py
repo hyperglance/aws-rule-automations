@@ -96,7 +96,7 @@ def policy_default_version_id(client, policy_arn: str) -> str:
   version_id = client.get_policy(PolicyArn=policy_arn) ['Policy']['DefaultVersionId']
   return version_id
 
-def hyperglance_action(boto_session, rule: str, resource_id: str) -> str:
+def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = [ ]) -> str:
   """ Attempts to delete default policy and set to the LATEST
 
   Parameters
@@ -107,6 +107,8 @@ def hyperglance_action(boto_session, rule: str, resource_id: str) -> str:
     Rule name that trigged the action
   resource_id : str
     ID of the Resource to trigger the action on
+  table : list
+    A list of additional resource values that may be required
 
   Returns
   -------
