@@ -28,9 +28,9 @@ def process_event(bucket, action_payload):
   
   ## Start Processing the Actions
   action_to_execute_output = ''
-  ## TODO: Remove this once the new Payload is available
+
   if not 'remediation' in action_data:
-    action = 'ec2_stop_instance'
+    return "No action to process"
   else:
     action = action_data['remediation'][0]
   logger.info('Action Set to: %s', action)
@@ -77,7 +77,7 @@ def process_event(bucket, action_payload):
 
     ## Run the action!
     try:
-      action_to_execute_output = action_to_execute.hyperglance_action(boto_session=boto_session, rule=action_data['name'], resource_id=result['id'])
+      action_to_execute_output = action_to_execute.hyperglance_action(boto_session=boto_session, rule=action_data['name'], resource_id=result['id'], table=result['entities'])
       logger.info('Executed %s successfully %s', action, action_to_execute_output)
     except Exception as err:
       logger.fatal('Could not execute: %s, output from action: %s', action, err)
