@@ -140,3 +140,18 @@ def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = 
     action_output = "There are no other version other than default for policy: {}".format(policy_arn)
 
   return action_output
+
+
+def info() -> str:
+  INFO = {
+    "displayName": "Delete Default Policy Version",
+    "description": "Deletes the default policy version, and sets latest version as active",
+    "resourceTypes": [
+      "IAM"
+    ],
+    "params": [
+
+    ]
+  }
+
+  return INFO

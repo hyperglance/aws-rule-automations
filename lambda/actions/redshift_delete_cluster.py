@@ -48,3 +48,22 @@ def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = 
     action_output = "Deleted Redshift Cluster: {}".format(cluster)
 
   return action_output
+
+
+def info() -> str:
+  INFO = {
+    "displayName": "Delete Redshift Cluster",
+    "description": "Deletes a Redshift Cluster",
+    "resourceTypes": [
+      "Redshift CLuster"
+    ],
+    "params": [
+      {
+        "name": "SkipSnapshot",
+        "type": "bool",
+        "default": "False"
+      }
+    ]
+  }
+
+  return INFO

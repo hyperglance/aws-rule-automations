@@ -46,3 +46,22 @@ def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = 
     action_output = "Instance {} stopped".format(ec2_instance)
   
   return action_output
+
+
+def info() -> str:
+  INFO = {
+    "displayName": "Stop Instance",
+    "description": "Immediately Stops and EC2 Instance",
+    "resourceTypes": [
+      "EC2 Instance"
+    ],
+    "params": [
+      {
+        "name": "DryRun",
+        "type": "bool",
+        "default": "True"
+      }
+    ]
+  }
+
+  return INFO

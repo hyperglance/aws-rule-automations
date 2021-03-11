@@ -44,3 +44,18 @@ def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = 
     action_output = "An unexpected error occured, error message: {}".format(err)
 
   return action_output
+
+
+def info() -> str:
+  INFO = {
+    "displayName": "Delete EC2 Key Pair",
+    "description": "Deletes a specified EC2 Key Pair",
+    "resourceTypes": [
+      "EC2 Instance"
+    ],
+    "params": [
+
+    ]
+  }
+
+  return INFO

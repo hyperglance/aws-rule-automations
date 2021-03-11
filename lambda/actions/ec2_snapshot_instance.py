@@ -33,11 +33,11 @@ def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = 
   client = boto_session.client('ec2')
   ec2_instance = resource_id
 
-  if len(entity['volumes']) == 0:
+  if len(table[0]['volumes']) == 0:
     action_output = "No EBS Volumes, cannot snapshot {}.".format(ec2_instance)
     return action_output
 
-  for vol in entity['volumes']:
+  for vol in table[0]['volumes']:
     vol_id = vol['volumeId']
     
     response = client.create_snapshot(
@@ -54,3 +54,19 @@ def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = 
     action_output = "Snapshot Creation for Volume: {} started...".format(vol_id)
 
   return action_output
+
+
+def info() -> str:
+  INFO = {
+    "displayName": "Snapshot Instance",
+    "description": "Snapshots attached EBS Volumes",
+    "resourceTypes": [
+      "EBS Volume",
+      "EC2 Instance"
+    ],
+    "params": [
+
+    ]
+  }
+
+  return INFO

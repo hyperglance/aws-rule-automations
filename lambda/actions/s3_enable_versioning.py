@@ -52,3 +52,19 @@ def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = 
     action_output = "An unexpected Client error Occured, error message: {}".format(err)
 
   return action_output
+
+
+def info() -> str:
+  INFO = {
+    "displayName": "Enable S3 Versioning",
+    "description": "Enables Object Versioning",
+    "resourceTypes": [
+      "S3",
+      "S3 Bucket"
+    ],
+    "params": [
+
+    ]
+  }
+
+  return INFO

@@ -43,3 +43,18 @@ def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = 
     action_output = "An unexpected client error occured, error: {}".format(err)
 
   return action_output
+
+
+def info() -> str:
+  INFO = {
+    "displayName": "Enable Cloudtrail Validation",
+    "description": "Enables Cloudtrail Log Validation",
+    "resourceTypes": [
+      "Cloudtrail"
+    ],
+    "params": [
+
+    ]
+  }
+
+  return INFO

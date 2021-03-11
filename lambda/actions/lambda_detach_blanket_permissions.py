@@ -87,3 +87,18 @@ def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = 
     action_output = "An unexpected client error has occured, error: {}".format(err)
 
   return action_output
+
+
+def info() -> str:
+  INFO = {
+    "displayName": "Detach Lambda Permissions",
+    "description": "Detaches Permissions from a Lambda execution role, that allows ALL (*) resources",
+    "resourceTypes": [
+      "IAM"
+    ],
+    "params": [
+
+    ]
+  }
+
+  return INFO

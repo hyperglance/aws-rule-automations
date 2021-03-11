@@ -48,3 +48,18 @@ def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = 
 
   return action_output
   
+
+def info() -> str:
+  INFO = {
+    "displayName": "Revoke Access Key",
+    "description": "Revokes IAM User Access Keys",
+    "resourceTypes": [
+      "IAM User",
+      "IAM"
+    ],
+    "params": [
+
+    ]
+  }
+
+  return INFO

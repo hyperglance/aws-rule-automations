@@ -166,3 +166,18 @@ def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = 
     action_output = "An unexpected client error has occured. error: {}".format(err)
 
   return action_output
+
+
+def info() -> str:
+  INFO = {
+    "displayName": "Quarantine User",
+    "description": "Attaches a DENY ALL policy to the user",
+    "resourceTypes": [
+      "IAM User"
+    ],
+    "params": [
+
+    ]
+  }
+
+  return INFO

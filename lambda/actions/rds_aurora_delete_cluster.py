@@ -48,3 +48,22 @@ def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = 
     action_output = "Deleted Autora Cluster: {}".format(rds_instance)
 
   return action_output
+
+
+def info() -> str:
+  INFO = {
+    "displayName": "Delete Aurora Cluster",
+    "description": "Deletes and Aurora DB Cluster",
+    "resourceTypes": [
+      "RDS"
+    ],
+    "params": [
+      {
+        "name": "SkipAuroraSnapshot",
+        "type": "bool",
+        "default": "False"
+      }
+    ]
+  }
+
+  return INFO

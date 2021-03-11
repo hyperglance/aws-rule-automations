@@ -45,3 +45,18 @@ def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = 
     action_output = "NAT Geteway: {} deleted".format(gateway_id)
 
   return action_output
+
+
+def info() -> str:
+  INFO = {
+    "displayName": "Delete NAT Gateway",
+    "description": "Deletes a specified NAT Gateway",
+    "resourceTypes": [
+      "NAT Gateway"
+    ],
+    "params": [
+
+    ]
+  }
+
+  return INFO

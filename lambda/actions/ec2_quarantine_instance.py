@@ -94,3 +94,18 @@ def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = 
       action_output += "Attached Qurantine Security Group to instance: {}".format(ec2_instance)
 
   return action_output
+
+
+def info() -> str:
+  INFO = {
+    "displayName": "Quarantine EC2 Instance",
+    "description": "Quarantines and EC2 Instance by attaching it to a Security group with no Ingress or Egress rules",
+    "resourceTypes": [
+      "EC2 Instance"
+    ],
+    "params": [
+
+    ]
+  }
+
+  return INFO

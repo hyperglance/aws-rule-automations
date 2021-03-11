@@ -44,3 +44,18 @@ def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = 
     action_output = "Internet Geteway: {} deleted".format(gateway_id)
 
   return action_output
+
+
+def info() -> str:
+  INFO = {
+    "displayName": "Delete Internet Gateway",
+    "description": "Deletes a specified Internet Gateway",
+    "resourceTypes": [
+      "Internet Gateway"
+    ],
+    "params": [
+
+    ]
+  }
+
+  return INFO

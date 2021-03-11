@@ -46,3 +46,19 @@ def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = 
       action_output = "Password reset enabled for user: {}".format(user_name)
   
   return action_output
+
+
+def info() -> str:
+  INFO = {
+    "displayName": "Force Password Change",
+    "description": "Forces user to change their password on next login",
+    "resourceTypes": [
+      "IAM",
+      "IAM User"
+    ],
+    "params": [
+
+    ]
+  }
+
+  return INFO

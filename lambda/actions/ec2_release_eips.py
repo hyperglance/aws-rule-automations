@@ -70,3 +70,19 @@ def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = 
     action_output = "No EIPs found, please check rule configuration"
 
   return action_output
+
+
+def info() -> str:
+  INFO = {
+    "displayName": "Release Elastic IP",
+    "description": "Releases and Elastic IP from associated EC2 Instance",
+    "resourceTypes": [
+      "EC2 Instance",
+      "Elatic IP Address"
+    ],
+    "params": [
+
+    ]
+  }
+
+  return INFO

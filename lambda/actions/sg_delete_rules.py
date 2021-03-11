@@ -84,3 +84,18 @@ def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = 
       action_output += "Security Group: {} ingress rules removed".format(security_group_id)
 
   return action_output
+
+
+def info() -> str:
+  INFO = {
+    "displayName": "Delete Rules",
+    "description": "Removes all Egress and Ingress rules from a Security Group",
+    "resourceTypes": [
+      "Security Group"
+    ],
+    "params": [
+
+    ]
+  }
+
+  return INFO

@@ -44,3 +44,18 @@ def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = 
       action_output = "Key: {} rotation enabled".format(kms_key)
 
     return action_output
+
+  
+def info() -> str:
+  INFO = {
+    "displayName": "Enable KMS Rotation",
+    "description": "Enables rotations of KMS Keys",
+    "resourceTypes": [
+      "IAM"
+    ],
+    "params": [
+
+    ]
+  }
+
+  return INFO

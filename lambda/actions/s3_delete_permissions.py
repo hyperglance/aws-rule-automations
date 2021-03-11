@@ -63,3 +63,19 @@ def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = 
     )
 
   return action_ouptut
+
+
+def info() -> str:
+  INFO = {
+    "displayName": "Delete S3 Permissions",
+    "description": "Deletes all ACLs and Bucket Policies from an S3 bucket",
+    "resourceTypes": [
+      "S3",
+      "S3 Bucket"
+    ],
+    "params": [
+
+    ]
+  }
+
+  return INFO

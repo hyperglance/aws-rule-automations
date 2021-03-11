@@ -42,3 +42,18 @@ def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = 
     action_output = "Load Balancer {} stopped".format(load_balancer)
 
   return action_output
+
+
+def info() -> str:
+  INFO = {
+    "displayName": "Deletes v2 Load Balancer",
+    "description": "Destroys and Elastic Load Balancer (v2)",
+    "resourceTypes": [
+      "Elastic Load Balancer"
+    ],
+    "params": [
+
+    ]
+  }
+
+  return INFO

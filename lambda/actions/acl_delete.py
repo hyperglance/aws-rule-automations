@@ -42,3 +42,17 @@ def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = 
     action_output = "An unexpected client error occured, error: {}".format(err)
 
   return action_output
+
+def info() -> str:
+  INFO = {
+    "displayName": "Delete ACL",
+    "description": "Deletes and Access Control List",
+    "resourceTypes": [
+      "Network ACL"
+    ],
+    "params": [
+
+    ]
+  }
+
+  return INFO

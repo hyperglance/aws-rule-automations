@@ -43,4 +43,19 @@ def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = 
     
   return action_output
 
+
+def info() -> str:
+  INFO = {
+    "displayName": "Terminate Workspace",
+    "description": "Terminates a Running Workspacee",
+    "resourceTypes": [
+      "Workspace"
+    ],
+    "params": [
+
+    ]
+  }
+
+  return INFO
+
   

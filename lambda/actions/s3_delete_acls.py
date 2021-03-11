@@ -57,3 +57,19 @@ def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = 
     action_ouput = "An unexpected client error occured, error: {}".format(err)
 
   return action_ouput
+
+
+def info() -> str:
+  INFO = {
+    "displayName": "Delete S3 ACLs",
+    "description": "Deletes S3 Bucker Access Control Lists",
+    "resourceTypes": [
+      "S3",
+      "S3 Bucket"
+    ],
+    "params": [
+
+    ]
+  }
+
+  return INFO

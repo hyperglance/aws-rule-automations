@@ -96,3 +96,25 @@ def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = 
     action_output = "An unexpected client error has occured, error: {}".format(err)
 
   return action_output
+
+
+def info() -> str:
+  INFO = {
+    "displayName": "Deactivate Keys",
+    "description": "Deactivates Unused Access Keys",
+    "resourceTypes": [
+      "IAM User",
+      "IAM"
+    ],
+    "params": [
+      {
+        "name": "MaxKeyItems",
+        "type": "number",
+        "default": "10",
+        "min": "5",
+        "max": "200"
+      }
+    ]
+  }
+
+  return INFO

@@ -50,3 +50,18 @@ def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = 
     action_output = "EBS Volume: {} deleted".format(ebs_volume)
 
   return action_output
+
+
+def info() -> str:
+  INFO = {
+    "displayName": "Delete EBS Volume",
+    "description": "Deletes a specified EBS Volume",
+    "resourceTypes": [
+      "EBS Volume"
+    ],
+    "params": [
+
+    ]
+  }
+
+  return INFO

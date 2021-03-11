@@ -45,3 +45,18 @@ def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = 
     action_output = "Snapshot: {} deleted".format(snapshot_id)
   
   return action_output
+
+
+def info() -> str:
+  INFO = {
+    "displayName": "Delete EBS Snapshot",
+    "description": "Deletes a specified EBS Snapshot",
+    "resourceTypes": [
+      "EBS Snapshot"
+    ],
+    "params": [
+
+    ]
+  }
+
+  return INFO

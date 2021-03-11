@@ -55,3 +55,18 @@ def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = 
     action_output = "An unexpected Client Error occured, error message: {}".format(err)
 
   return action_output
+
+
+def info() -> str:
+  INFO = {
+    "displayName": "Delete Container Image",
+    "description": "Deletes and ECS Container Image",
+    "resourceTypes": [
+      "ECS Service"
+    ],
+    "params": [
+
+    ]
+  }
+
+  return INFO

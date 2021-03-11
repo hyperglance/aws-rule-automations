@@ -61,3 +61,17 @@ def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = 
     action_output = "An Unexpected Client Error occured, error message: {}".format(err)
 
   return action_output
+
+def info() -> str:
+  INFO = {
+    "displayName": "Set AMI to Private",
+    "description": "Sets and AMI to Private if it is currently Public",
+    "resourceTypes": [
+      "EC2 Instance"
+    ],
+    "params": [
+
+    ]
+  }
+
+  return INFO

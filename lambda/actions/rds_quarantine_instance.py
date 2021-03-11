@@ -101,3 +101,18 @@ def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = 
       action_output += "Attached Quarantine Security Group to RDS Instance: {}".format(rds_db)
 
   return action_output
+
+
+def info() -> str:
+  INFO = {
+    "displayName": "Quarantine RDS Instance",
+    "description": "Quarantines and RDS Instance by applying a DENY ALL Security Group",
+    "resourceTypes": [
+      "EC2 Instance"
+    ],
+    "params": [
+
+    ]
+  }
+
+  return INFO

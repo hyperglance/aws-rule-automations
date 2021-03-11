@@ -50,3 +50,18 @@ def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = 
     action_output = "An unexpected CLient Error Occured {}".format(err)
 
   return action_output
+
+
+def info() -> str:
+  INFO = {
+    "displayName": "Delete Security Group",
+    "description": "Deletes a specified Security Group",
+    "resourceTypes": [
+      "Security Group"
+    ],
+    "params": [
+
+    ]
+  }
+
+  return INFO

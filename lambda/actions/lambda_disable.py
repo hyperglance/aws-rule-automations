@@ -42,3 +42,19 @@ def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = 
     action_output = "An unexpected client error occured, error: {}".format(err)
 
   return action_output
+
+
+def info() -> str:
+  INFO = {
+    "displayName": "Disable Lambda",
+    "description": "Disables a Lambda from Executing",
+    "resourceTypes": [
+      "Lambda",
+      "Lambda Function"
+    ],
+    "params": [
+
+    ]
+  }
+
+  return INFO

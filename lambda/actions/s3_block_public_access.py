@@ -52,3 +52,19 @@ def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = 
     action_output = "An unexpected error occured, error message: {}".format(err)
   
   return action_output
+
+
+def info() -> str:
+  INFO = {
+    "displayName": "Block S3 Public Access",
+    "description": "Blocks all public access to S3 Bucket",
+    "resourceTypes": [
+      "S3",
+      "S3 Bucket"
+    ],
+    "params": [
+
+    ]
+  }
+
+  return INFO
