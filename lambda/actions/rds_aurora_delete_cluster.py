@@ -11,7 +11,7 @@ import os
 import uuid
 
 ## Delete RDS Aurora DB Cluster
-def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = [ ]) -> str:
+def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = [ ], action_params = '') -> str:
   """ Attempts to Delete and Aurora Backed RDS Instance
 
   Parameters

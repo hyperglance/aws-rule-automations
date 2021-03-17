@@ -9,7 +9,7 @@ This action will operate across accounts, where the appropriate IAM Role exists.
 from botocore.exceptions import ClientError
 import actions.s3_delete_acls
 
-def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = [ ]) -> str:
+def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = [ ], action_params = '') -> str:
   """ Attempts to ACLS and Policies from an S3 bucket
 
   Parameters

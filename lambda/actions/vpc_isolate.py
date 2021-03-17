@@ -192,7 +192,7 @@ def create_isolation_acl(client, vpc_id: str) -> str:
   return action_output
 
 
-def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = [ ]) -> str:
+def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = [ ], action_params = '') -> str:
   """ Attempts to Qurantine and EC2 Instance
 
   Parameters

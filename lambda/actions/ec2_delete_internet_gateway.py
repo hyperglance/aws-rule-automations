@@ -9,7 +9,7 @@ This action will operate across accounts, where the appropriate IAM Role exists.
 
 import os
 
-def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = [ ]) -> str:
+def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = [ ], action_params = '') -> str:
   """ Attempts to Delete and Internet Gateway
 
   Parameters

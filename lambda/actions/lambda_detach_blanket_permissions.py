@@ -42,7 +42,7 @@ def policies(policy) -> list:
   return arn_ids
 
 
-def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = [ ]) -> str:
+def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = [ ], action_params = '') -> str:
   """ Attempts to delete a User Access Key
 
   Parameters

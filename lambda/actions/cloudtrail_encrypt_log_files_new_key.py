@@ -149,7 +149,7 @@ def create_key(kms_client, iam_client, target_account: str, cloudTrail_name: str
   return action_output
 
 
-def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = [ ]) -> str:
+def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = [ ], action_params = '') -> str:
   """ Attempts to Enable Encryption on Cloudtrail
 
   Parameters
