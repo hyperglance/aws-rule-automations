@@ -29,58 +29,67 @@ def process_event(bucket, action_payload):
   ## Start Processing the Actions
   action_to_execute_output = ''
 
-  if not 'remediation' in action_data:
-    return "No action to process"
-  else:
-    action = action_data['remediation'][0]
-  logger.info('Action Set to: %s', action)
-  
   ## For each of the results, execute the action
   for index, result in enumerate(action_data['results']):
+    if not 'remediation' in result:
+      return "No Remediation Action Defined, ignoring...."
+    else:
+      action = result['remediation']['name']
+      logger.debug('Action Set to: %s', action)
+    
     try:
       action_to_execute = importlib.import_module(''.join(['actions.', action]), package=None)
     except:
       logger.error('Unable to find action: %s, Please check action tag for errors', action)
       continue
 
-    ## Get the session to pass to the actions
-    try:
-      action_sts = boto3.client('sts')
-      ## Account ID where this functions lambda is running
-      this_account_id = action_sts.get_caller_identity()['Account']
-      logger.debug('Got the account: %s', this_account_id)
-    except ClientError as err:
-      logger.error('Unexpected STS Client Error Occured: %s', err)
-      return False
+    ## For each of Resource, execute the action
+    for entity, resource in enumerate(result['entities']):
 
-    ## Get the account of the Resourece that raised the Alert
-    action_account_id = result['account']
-    logger.debug('Account of Resource: %s', action_account_id)
+      ## Get the session to pass to the actions
+      try:
+        action_sts = boto3.client('sts')
+        ## Account ID where this functions lambda is running
+        this_account_id = action_sts.get_caller_identity()['Account']
+        logger.debug('Got the account: %s', this_account_id)
+      except ClientError as err:
+        logger.error('Unexpected STS Client Error Occured: %s', err)
+        return False
 
-    ## Check if we have a region, some actions don't have a region, default to us-east-1
-    if not 'region' in result:
-      action_region = 'us-east-1'
-    else:
-      action_region = result['region']
+      ## Get the account of the Resourece that raised the Alert
+      action_account_id = resource['account']
+      logger.debug('Account of Resource: %s', action_account_id)
 
-    if this_account_id != action_account_id:
-      ## Get session from assume role
-      logger.info('Resource in another account, attempting assume role for account: %s' %action_account_id)
-      boto_session = get_boto_session(
-        target_account_id=action_account_id, 
-        target_region=action_region
-      )
-    else:
-      ## It's the same account, grab the session
-      logger.info('Resource is in this account, ')
-      boto_session = boto3.Session(region_name=action_region)
+      ## Check if we have a region, some actions don't have a region, default to us-east-1
+      if not 'region' in resource:
+        action_region = 'us-east-1'
+      else:
+        action_region = resource['region']
 
-    ## Run the action!
-    try:
-      action_to_execute_output = action_to_execute.hyperglance_action(boto_session=boto_session, rule=action_data['name'], resource_id=result['id'], table=result['entities'])
-      logger.info('Executed %s successfully %s', action, action_to_execute_output)
-    except Exception as err:
-      logger.fatal('Could not execute: %s, output from action: %s', action, err)
-      continue  
+      if this_account_id != action_account_id:
+        ## Get session from assume role
+        logger.info('Resource in another account, attempting assume role for account: %s' %action_account_id)
+        boto_session = get_boto_session(
+          target_account_id=action_account_id, 
+          target_region=action_region
+        )
+      else:
+        ## It's the same account, grab the session
+        logger.info('Resource is in this account, ')
+        boto_session = boto3.Session(region_name=action_region)
+
+      ## Run the action!
+      try:
+        action_to_execute_output = action_to_execute.hyperglance_action(
+          boto_session=boto_session, 
+          rule=action_data['name'], 
+          resource_id=resource['id'], 
+          table=resource['tables'],
+          action_params=result['params']
+          )
+        logger.info('Executed %s successfully %s', action, action_to_execute_output)
+      except Exception as err:
+        logger.fatal('Could not execute: %s, output from action: %s', action, err)
+        continue  
 
   return action_to_execute_output
