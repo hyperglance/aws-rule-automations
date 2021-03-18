@@ -38,32 +38,10 @@ def hyperglance_action(boto_session, resource_id: str, matched_attributes ='', t
   target_value = matched_attributes.get(target_key)
   new_key = action_params.get('New Key')
 
-  ## Attempt to Delete the offending tag
-  try:
-    response = client.delete_tags(
-      Resources=[
-        resource_id,
-      ],
-      Tags=[
-        {
-          'Key': target_key,
-          'Value': target_value
-        },
-      ]
-    )
-
-    result = response['ResponseMetadata']['HTTPStatusCode']
-
-    if result >= 400:
-      action_output = "An Unexpected error occured, error message: {}".format(result)
-      return action_output
-    else:
-      action_output = "Removed Tag: {} from Resource: {}".format(target_key, resource_id)
-
-  except ClientError as err:
-    action_output = "An unexpected client error occured, error: {}".format(err)
-    return action_output
-
+  if target_key == new_key:
+    ## Skip action
+    return "Target Key: {} is an exact match of New Key: {}, skipping the action".format(target_key, new_key)
+  
   ## Creat the new tag and retain existing value
   try:
     response = client.create_tags(
@@ -81,12 +59,39 @@ def hyperglance_action(boto_session, resource_id: str, matched_attributes ='', t
     result = response['ResponseMetadata']['HTTPStatusCode']
 
     if result >=400:
-      action_output += "An unexpected error occured, error message: {}".format(result)
+      action_output = "An unexpected error occured, error message: {}".format(result)
       return action_output
     else:
-      action_output += "Added Tag: {} with Value: {} to Resource: {}".format(new_key, target_value, resource_id)
+      action_output = "Added Tag: {} with Value: {} to Resource: {}".format(new_key, target_value, resource_id)
   
   except ClientError as err:
     action_output = "An unexpected client error occured, error: {}".format(err)
+  
+  ## Attempt to Delete the offending tag
+  try:
+    response = client.delete_tags(
+      Resources=[
+        resource_id,
+      ],
+      Tags=[
+        {
+          'Key': target_key,
+          'Value': target_value
+        },
+      ]
+    )
+
+    result = response['ResponseMetadata']['HTTPStatusCode']
+
+    if result >= 400:
+      action_output += " An Unexpected error occured, error message: {}".format(result)
+      return action_output
+    else:
+      action_output += " Removed Tag: {} from Resource: {}".format(target_key, resource_id)
+
+  except ClientError as err:
+    action_output = "An unexpected client error occured, error: {}".format(err)
+    return action_output
+
 
   return action_output
