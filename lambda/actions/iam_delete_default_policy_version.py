@@ -133,10 +133,21 @@ def hyperglance_action(boto_session, resource_id: str, matched_attributes ='', t
   ## If default version is not the only version, then use latest version
   if len(policy_versions) > 1:
     ## Get the last version number
-    new_version_id = policy_last_version(policy_versions=policy_versions)
+    new_version_id = policy_last_version(
+      policy_versions=policy_versions
+      )
 
-    action_output = policy_replace_default_version(client=client, policy_arn=policy_arn, new_id=new_version_id)
-    action_output += delete_policy_version(client=client, policy_arn=policy_arn, policy_version_id=policy_default_version_id)
+    action_output = policy_replace_default_version(
+      client=client, 
+      policy_arn=policy_arn, 
+      new_id=new_version_id
+      )
+    
+    action_output += delete_policy_version(
+      client=client, 
+      policy_arn=policy_arn, 
+      policy_version_id=policy_default_version_id
+      )
 
   else: ## User default version
     action_output = "There are no other version other than default for policy: {}".format(policy_arn)

@@ -42,7 +42,7 @@ def hyperglance_action(boto_session, resource_id: str, matched_attributes ='', t
     ec2_snapshot_instance = ec2_snapshot_instance()
     response = ec2_snapshot_instance(
       boto_session, 
-      rule
+      resource_id
       )
 
     if response['ResponseMetadata']['HTTPStatusCOde'] >= 400:

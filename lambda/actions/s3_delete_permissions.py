@@ -60,7 +60,6 @@ def hyperglance_action(boto_session, resource_id: str, matched_attributes ='', t
   try:
     action_ouptut += s3_delete_acls(
       boto_session=boto_session,
-      rule=rule,
       resource_id=resource_id
     )
 

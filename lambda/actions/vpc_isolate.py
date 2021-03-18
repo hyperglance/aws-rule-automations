@@ -75,7 +75,7 @@ def create_deny_policy(boto_session, region: str, vpc_id: str) -> str:
       "Action": "ec2:*",
       "Effect": "Deny",
       "Resource": [
-        "arn:aws:ec2:{}:*vpc/{}".format(region, vpc_id),
+        "arn:aws:ec2:{region}:*vpc/{vpc_id}",
         "arn:aws:ec2:{}:*:security-group/*"
       ],
       "Condition": {
