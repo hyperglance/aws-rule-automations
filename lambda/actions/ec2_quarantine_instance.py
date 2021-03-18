@@ -8,19 +8,21 @@ This action will operate across accounts, where the appropriate IAM Role exists.
 
 from botocore.exceptions import ClientError
 
-def hyperglance_action(boto_session, rule: str, resource_id: str, table: list = [ ], action_params = '') -> str:
+def hyperglance_action(boto_session, resource_id: str, matched_attributes ='', table: list = [ ], action_params = '') -> str:
   """ Attempts to Qurantine and EC2 Instance
 
   Parameters
   ----------
   boto_session : object
     The boto session to use to invoke the action
-  rule : str
-    Rule name that trigged the action
   resource_id : str
     ID of the Resource to trigger the action on
+  matched_attributes : 
+    Matching attributes that caused the rule to trigger
   table : list
     A list of additional resource values that may be required
+  action_params : str
+    Action parameters passed from the Hyperglance UI
 
   Returns
   -------

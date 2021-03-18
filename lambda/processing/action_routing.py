@@ -82,10 +82,10 @@ def process_event(bucket, action_payload):
       try:
         action_to_execute_output = action_to_execute.hyperglance_action(
           boto_session=boto_session, 
-          rule=action_data['name'], 
-          resource_id=resource['id'], 
+          resource_id=resource['id'],
+          matched_attributes=resource['matchedAttributes'], 
           table=resource['tables'],
-          action_params=result['params']
+          action_params=result['remediation']['params']
           )
         logger.info('Executed %s successfully %s', action, action_to_execute_output)
       except Exception as err:
