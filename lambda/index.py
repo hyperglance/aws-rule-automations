@@ -4,7 +4,7 @@ from processing.action_routing import *
 
 ## Setuo Logger
 logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
 DEV_MODE = False  
 
