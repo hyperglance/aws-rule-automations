@@ -39,7 +39,7 @@ def hyperglance_action(boto_session, resource_id: str, matched_attributes ='', t
 
   response = client.delete_db_cluster(
     DBClusterIdentifier=rds_instance,
-    SkipFinalSnapshot=os.getenv("SkipAuroraSnapshot", False).lower() in ['true', '1', 'y', 'yes'],
+    SkipFinalSnapshot=action_params.get('SkipAuroraSnapshot').lower() in ['true', 'y', 'yes'],
     FinalDBSnapshotIdentifier='Snapshot_{}'.format(str(uuid.uuid5(uuid.NAMESPACE_DNS, 'hyperglance')))
   )
 

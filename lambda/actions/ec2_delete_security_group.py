@@ -39,7 +39,7 @@ def hyperglance_action(boto_session, resource_id: str, matched_attributes ='', t
   try:
     response = client.delete_security_group(
       GroupId=sg_id,
-      DryRun=os.getenv("DryRun", 'False').lower() in ['true', '1', 'y', 'yes']
+      DryRun=action_params.get('DryRun').lower() in ['true', 'y', 'yes']
     )
     result = response['ResponseMetadat']['HTTPStatusCode']
 

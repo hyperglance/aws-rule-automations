@@ -42,7 +42,7 @@ def hyperglance_action(boto_session, resource_id: str, matched_attributes ='', t
   response = client.create_snapshot(
     Description="Snapshot created by Hyperglance",
     VolumeId=table[0]['Volume ID'],
-    DryRun=os.getenv("DryRun", 'False').lower() in ['true', '1', 'y', 'yes']
+    DryRun=action_params.get('DryRun').lower() in ['true', 'y', 'yes']
   )
   
   ## Wait for Snapshot

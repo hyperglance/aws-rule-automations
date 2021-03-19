@@ -38,7 +38,7 @@ def hyperglance_action(boto_session, resource_id: str, matched_attributes ='', t
   client = boto_session.client('ec2')
   ec2_instance = resource_id
 
-  if os.getenv("SnapShotBeforeTerminate", 'False').lower() in ['true', '1', 'y', 'yes']:
+  if action_params.get('SnapShotBeforeTerminate').lower() in ['true', 'y', 'yes']:
     ec2_snapshot_instance = ec2_snapshot_instance()
     response = ec2_snapshot_instance(
       boto_session, 
@@ -51,7 +51,7 @@ def hyperglance_action(boto_session, resource_id: str, matched_attributes ='', t
   else:
     response = client.terminate_instances(
       InstanceIds=[ec2_instance], 
-      DryRun=os.getenv("DryRun", 'False').lower() in ['true', '1', 'y', 'yes']
+      DryRun=action_params.get('DryRun').lower() in ['true', 'y', 'yes']
       )
 
     result = response['ResponseMetadata']['HTTPStatusCode']

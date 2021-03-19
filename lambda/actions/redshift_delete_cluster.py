@@ -36,9 +36,11 @@ def hyperglance_action(boto_session, resource_id: str, matched_attributes ='', t
   client = boto_session.client('redshift')
   cluster = resource_id
 
+  
+
   response = client.delete_cluster(
     ClusterIdentifier=cluster,
-    SkipFinalSnapshot=os.getenv("SkipRedshiftSnapshot", False).lower() in ['true', '1', 'y', 'yes'],
+    SkipFinalSnapshot=action_params.get('SkipRedshiftSnapshot').lower() in ['true', 'y', 'yes'],
     FinalClusterIdentifier='Snapshot_{}'.format(str(uuid.uuid5(uuid.NAMESPACE_DNS, 'hyperglance'))),
     FinalClusterSnapshotRetentionPeriod=-1
   )

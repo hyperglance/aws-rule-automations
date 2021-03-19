@@ -48,6 +48,7 @@ def hyperglance_action(boto_session, resource_id: str, matched_attributes ='', t
       Resources=[
         resource_id,
       ],
+      DryRun=action_params.get('DryRun').lower() in ['true', 'y', 'yes'],
       Tags=[
         {
           'Key': new_key,
@@ -73,6 +74,7 @@ def hyperglance_action(boto_session, resource_id: str, matched_attributes ='', t
       Resources=[
         resource_id,
       ],
+      DryRun=action_params.get('DryRun').lower() in ['true', 'y', 'yes'],
       Tags=[
         {
           'Key': target_key,
