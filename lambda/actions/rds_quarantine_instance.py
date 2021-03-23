@@ -105,7 +105,7 @@ def hyperglance_action(boto_session, resource_id: str, matched_attributes ='', t
   return action_output
 
 
-def info() -> str:
+def info() -> dict:
   INFO = {
     "displayName": "Quarantine RDS Instance",
     "description": "Quarantines and RDS Instance by applying a DENY ALL Security Group",

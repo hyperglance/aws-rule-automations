@@ -98,7 +98,7 @@ def hyperglance_action(boto_session, resource_id: str, matched_attributes ='', t
   return action_output
 
 
-def info() -> str:
+def info() -> dict:
   INFO = {
     "displayName": "Quarantine EC2 Instance",
     "description": "Quarantines and EC2 Instance by attaching it to a Security group with no Ingress or Egress rules",

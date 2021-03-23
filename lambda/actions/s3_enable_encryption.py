@@ -61,7 +61,7 @@ def hyperglance_action(boto_session, resource_id: str, matched_attributes ='', t
   return action_output
 
 
-def info() -> str:
+def info() -> dict:
   INFO = {
     "displayName": "Enable S3 Encryption",
     "description": "Enables AES265 Encryption on S3 Bucket Objects",

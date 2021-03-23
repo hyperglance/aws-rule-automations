@@ -91,7 +91,7 @@ def hyperglance_action(boto_session, resource_id: str, matched_attributes ='', t
   return action_output
 
 
-def info() -> str:
+def info() -> dict:
   INFO = {
     "displayName": "Detach Lambda Permissions",
     "description": "Detaches Permissions from a Lambda execution role, that allows ALL (*) resources",

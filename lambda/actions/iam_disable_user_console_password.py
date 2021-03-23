@@ -46,7 +46,7 @@ def hyperglance_action(boto_session, resource_id: str, matched_attributes ='', t
   return action_output
 
 
-def info() -> str:
+def info() -> dict:
   INFO = {
     "displayName": "Disable Console Access",
     "description": "Disables a users console access, but leaves programmatic access intact",

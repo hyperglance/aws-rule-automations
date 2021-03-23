@@ -54,7 +54,7 @@ def hyperglance_action(boto_session, resource_id: str, matched_attributes ='', t
   return action_output
 
 
-def info() -> str:
+def info() -> dict:
   INFO = {
     "displayName": "Delete Redshift Cluster",
     "description": "Deletes a Redshift Cluster",

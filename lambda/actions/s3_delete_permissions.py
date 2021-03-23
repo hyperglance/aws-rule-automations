@@ -66,7 +66,7 @@ def hyperglance_action(boto_session, resource_id: str, matched_attributes ='', t
   return action_ouptut
 
 
-def info() -> str:
+def info() -> dict:
   INFO = {
     "displayName": "Delete S3 Permissions",
     "description": "Deletes all ACLs and Bucket Policies from an S3 bucket",

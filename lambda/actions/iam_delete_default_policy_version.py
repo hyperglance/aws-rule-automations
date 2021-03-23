@@ -155,7 +155,7 @@ def hyperglance_action(boto_session, resource_id: str, matched_attributes ='', t
   return action_output
 
 
-def info() -> str:
+def info() -> dict:
   INFO = {
     "displayName": "Delete Default Policy Version",
     "description": "Deletes the default policy version, and sets latest version as active",
