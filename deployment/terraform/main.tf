@@ -6,9 +6,9 @@ provider "aws" {
 # DEPLOY HYPERGLANCE ACTION RESOURCES
 # ---------------------------------------------------------------------------------------------------------------------
 
-module "hyperglance_actions" {
-  source = "git@github.com:hyperglance/terraform-aws-hyperglance.git//modules/hyperglance-actions"
+module "hyperglance_automations" {
+  source = "git@github.com:hyperglance/terraform-aws-hyperglance.git//modules/hyperglance-automations"
 
-  action_list_source    = "../../.payloads/HGRemediationActions.json"
-  function_payload_path = "../../lambda/Hyperglance_Actions.zip"
+  automation_list_source    = "../../.payloads/HyperglanceAutomations.json"
+  function_payload_path = "../../lambda/Hyperglance_Automations.zip"
 }

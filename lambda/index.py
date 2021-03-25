@@ -1,6 +1,6 @@
 import json
 import logging
-from processing.action_routing import *
+from processing.automation_routing import *
 
 ## Setuo Logger
 logger = logging.getLogger()
@@ -8,7 +8,7 @@ logger.setLevel(logging.INFO)
 
 DEV_MODE = False  
 
-# Get SNS from Hyperglance, read file from SNS and Triggrt Actions
+# Get SNS from Hyperglance, read file from SNS and Trigger the automations
 def lambda_handler(event, context):
   
   payload = ''
@@ -32,9 +32,9 @@ def lambda_handler(event, context):
   logger.debug('Bucket: %s', payload['data']['s3bucket'])
   logger.debug('File: %s', payload['data']['key'])
 
-  # Try to process the message, and perform actions
+  # Try to process the message, and perform automations
   try:
-    return_message = process_event(bucket=payload['data']['s3bucket'], action_payload=payload['data']['key'])
+    return_message = process_event(bucket=payload['data']['s3bucket'], automation_payload=payload['data']['key'])
   except Exception as err:
     logger.error('Failed to process Event %s', err )
     return_message['Failed to Process Event'] = str(err)
