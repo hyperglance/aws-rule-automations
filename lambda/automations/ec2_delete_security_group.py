@@ -41,7 +41,7 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
       GroupId=sg_id,
       DryRun=automation_params.get('DryRun').lower() in ['true', 'y', 'yes']
     )
-    result = response['ResponseMetadat']['HTTPStatusCode']
+    result = response['ResponseMetadata']['HTTPStatusCode']
 
     if result >= 400:
       automation_output = "An unexpected error occurred, error message {}".format(result)

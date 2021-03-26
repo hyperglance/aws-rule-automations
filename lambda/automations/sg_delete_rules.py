@@ -37,7 +37,7 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
 
   ## Get the Security Group Details
   security_group_description = client.describe_security_groups(
-    GroupIds=security_group_id
+    GroupIds=[security_group_id]
   )
 
   ## Extract Ingress and Egress Rules for processing
