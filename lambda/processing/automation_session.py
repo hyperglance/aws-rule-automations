@@ -27,7 +27,7 @@ def get_boto_session(target_account_id: str, target_region: str='us-east-1') -> 
 
   """
 
-  hyperglance_role = "arn:aws:iam::" + target_account_id + ":role/Hyperglance_automations"
+  hyperglance_role = "arn:aws:iam::" + target_account_id + ":role/Hyperglance_Automations"
   logger.info('Role ARN to use: %s', hyperglance_role)
 
   ## Try and get the credentials for ENV
