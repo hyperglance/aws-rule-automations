@@ -4,7 +4,6 @@ import re
 import importlib
 import json
 import logging
-from processing.automation_list import *
 from processing.automation_session import *
 from botocore.exceptions import ClientError
 
@@ -79,6 +78,12 @@ def process_event(bucket, automation_payload):
         logger.info('Resource is in this account, ')
         boto_session = boto3.Session(region_name=automation_region)
 
+      ## Check if the Payload has sent params
+      if not result['automation']['params']:
+        action_params = ''
+      else:
+        action_params = result['automation']['params']
+
       ## Run the automation!
       try:
         automation_to_execute_output = automation_to_execute.hyperglance_automation(
@@ -86,7 +91,7 @@ def process_event(bucket, automation_payload):
           resource_id=resource['id'],
           matched_attributes=resource['matchedAttributes'], 
           table=resource['tables'],
-          automation_params=result['automation']['params']
+          automation_params=action_params
           )
         logger.info('Executed %s successfully %s', automation, automation_to_execute_output)
       except Exception as err:
