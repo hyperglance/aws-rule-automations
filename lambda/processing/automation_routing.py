@@ -79,7 +79,7 @@ def process_event(bucket, automation_payload):
         boto_session = boto3.Session(region_name=automation_region)
 
       ## Check if the Payload has sent params
-      if not 'params' in result:
+      if not 'params' in result['automation']:
         logger.debug('No Params Sent')
         action_params = ''
       else:
