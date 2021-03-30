@@ -3,7 +3,7 @@
     {
       "name": "acl_delete",
       "displayName": "Delete ACL",
-      "description": "Deletes and Access Control List",
+      "description": "Deletes an Access Control List",
       "resourceTypes": [
         "Network ACL"
       ],
@@ -393,12 +393,46 @@
     {
       "name": "iam_role_attach_policy",
       "displayName": "Attach Policy to Role",
-      "description": "Attaches an existing policy to an IAM role,",
+      "description": "Attaches an existing policy to an IAM role",
       "resourceTypes": [
         "IAM"
       ],
       "params": [
-  
+        {
+          "name": "Policy",
+          "type": "string",
+          "default": ""
+        }
+      ]
+    },
+    {
+      "name": "iam_user_attach_policy",
+      "displayName": "Attach Policy to User",
+      "description": "Attaches an existing policy to an IAM User",
+      "resourceTypes": [
+        "IAM"
+      ],
+      "params": [
+        {
+          "name": "Policy",
+          "type": "string",
+          "default": ""
+        }
+      ]
+    },
+    {
+      "name": "iam_user_detach_group",
+      "displayName": "Detach User from Group",
+      "description": "Detaches a user from a specifid User Group",
+      "resourceTypes": [
+        "IAM"
+      ],
+      "params": [
+        {
+          "name": "Group",
+          "type": "string",
+          "default": ""
+        }
       ]
     },
     {
@@ -418,6 +452,17 @@
       "description": "Detaches Permissions from a Lambda execution role, that allows ALL (*) resources",
       "resourceTypes": [
         "IAM"
+      ],
+      "params": [
+  
+      ]
+    },
+    {
+      "name": "lambda_detach_external_layers",
+      "displayName": "Detach Lambda Layers",
+      "description": "Detaches Lambda Layers from Function",
+      "resourceTypes": [
+        "Lambda"
       ],
       "params": [
   

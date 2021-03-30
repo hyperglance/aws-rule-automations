@@ -1,6 +1,6 @@
-"""IAM Attach Policy to Role
+"""IAM Attach Policy to User
 
-This automation attaches a policy to an IAM Role, identified as above or below the configured threshold
+This automation attaches a policy to an IAM User, identified as above or below the configured threshold
 by Hyperglance Rule(s)
 
 This automation will operate across accounts, where the appropriate IAM Role exists.
@@ -9,7 +9,7 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 from botocore.exceptions import ClientError
 
-def attach_policy_to_role(client, role, policy_arn) -> str:
+def attach_policy_to_user(client, user_name, policy_arn) -> str:
   """ Attempts to attach the policy to the role
 
   Parameters
@@ -30,11 +30,11 @@ def attach_policy_to_role(client, role, policy_arn) -> str:
   """
 
   try:
-    response = client.attach_role_policy(
-      RoleName=role,
-      
+    response = client.attach_user_policy(
+      UserName=user_name,
+      PolicyArn=policy_arn
     )
-    automation_ouput = "Policy attached to role {} successfully".format(role)
+    automation_ouput = "Policy attached to user: {} successfully".format(user_name)
 
   except ClientError as err:
     automation_ouput = "An unexpected client error has occured, error: {}".format(err)
@@ -83,7 +83,7 @@ def policy_exists(client, policy_arn):
 
 
 def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='', table: list = [ ], automation_params = '') -> str:
-  """ Attempts to attach an IAM policy to an IAM Role
+  """ Attempts to attach an IAM policy to an IAM User
 
   Parameters
   ----------
@@ -105,9 +105,9 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
 
   """
 
-  client = boto_session.cliet('iam')
+  client = boto_session.client('iam')
 
-  role = resource_id
+  user_name = resource_id
   account_id = table[0]['account']
   policy_arn = automation_params.get('Policy')
 
@@ -116,13 +116,13 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
       client=client,
       policy_arn=policy_arn
     )
-
+    
     automation_output = output
 
     if policy_exists:
-      automation_output += attach_policy_to_role(
+      automation_output += attach_policy_to_user(
         client=client,
-        role=role
+        policy_arn=policy_arn
       )
     else:
       return automation_output
@@ -132,11 +132,10 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
 
   return automation_output
 
-
 def info() -> dict:
   INFO = {
-    "displayName": "Attach policy to Role",
-    "description": "Attaches an existing policy to an IAM role.",
+    "displayName": "Attach policy to User",
+    "description": "Attaches an existing policy to an IAM User.",
     "resourceTypes": [
       "IAM"
     ],
