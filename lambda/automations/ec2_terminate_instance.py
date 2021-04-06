@@ -7,7 +7,6 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 
-import os
 import automations.ec2_snapshot_instance
 
 

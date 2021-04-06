@@ -496,6 +496,26 @@
       ]
     },
     {
+      "name": "rds_aurora_delete_cluster",
+      "displayName": "Delete RDS DB Instance",
+      "description": "Deletes an RDS DB Instance",
+      "resourceTypes": [
+        "RDS"
+      ],
+      "params": [
+        {
+          "name": "SkipSnapshot",
+          "type": "bool",
+          "default": "False"
+        },
+        {
+          "name": "DeleteBackups",
+          "type": "bool",
+          "default": "False"
+        }
+      ]
+    },
+    {
       "name": "rds_quarantine_instance",
       "displayName": "Quarantine RDS Instance",
       "description": "Quarantines and RDS Instance by applying a DENY ALL Security Group",
