@@ -41,7 +41,7 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
   waiter = client.get_waiter('volume_deleted')
 
   waiter.wait(
-    VolumeId=ebs_volume
+    VolumeIds=[ebs_volume]
   )
 
   result = response['ResponseMetadata']['HTTPStatusCode']
