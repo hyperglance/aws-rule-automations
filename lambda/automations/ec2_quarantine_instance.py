@@ -95,8 +95,10 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
     else:
       automation_output += "Attached Qurantine Security Group to instance: {}".format(ec2_instance)
 
-  return automation_output
+  except ClientError as err:
+    automation_output += "An unexpected client error occured, error: {}".format(err)
 
+  return automation_output
 
 def info() -> dict:
   INFO = {
