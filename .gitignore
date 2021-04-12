@@ -55,6 +55,8 @@ Thumbs.db
 # .tfstate files
 *.tfstate
 *.tfstate.*
+.terraform.lock.hcl
+
 
 # Crash log files
 crash.log
@@ -68,14 +70,20 @@ crash.log
 # Ignore override files as they are usually used to override resources locally and so
 # are not checked in
 override.tf
-override.tf.json
+override.tf.
 *_override.tf
 *_override.tf.jso
 
 *.zip
 hg_node
 hg_mode
-**.plan.json*
+**.plan.*
 genmail.sh
 
 builds
+settings.json
+
+.payloads
+__pycache__
+.vscode
+*Prod*
