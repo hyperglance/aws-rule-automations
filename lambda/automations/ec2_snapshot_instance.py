@@ -34,14 +34,10 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
 
   client = boto_session.client('ec2')
   ec2_instance = resource_id
-
-  if len(table[0]['Volume ID']) == 0:
-    automation_output = "No EBS Volumes, cannot snapshot {}.".format(ec2_instance)
-    return automation_output
     
   response = client.create_snapshot(
     Description="Snapshot created by Hyperglance",
-    VolumeId=table[0]['Volume ID'],
+    VolumeId=matched_attributes.get('Volume ID'),
     DryRun=automation_params.get('DryRun').lower() in ['true', 'y', 'yes']
   )
   
@@ -51,7 +47,7 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
   waiter.wait(
     Filters=[
       {
-        'volume-id': table[0]['Volume ID']
+        'volume-id': automation_params.get('Volume ID')
       }
     ]
   )
@@ -61,7 +57,7 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
   if result >= 400:
     automation_output = "An unexpected error occured, error message: {}".format(result)
   else:
-    automation_output = "Snapshot Creation for Volume: {} started...".format(table[0]['Volume ID'])
+    automation_output = "Snapshot Creation for Volume: {} started...".format(matched_attributes.get('Volume ID'))
 
   return automation_output
 
