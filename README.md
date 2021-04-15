@@ -69,7 +69,7 @@ Download the [Zip](https://github.com/hyperglance/aws-rule-automations/archive/r
 
 ## Usage
 
-To deploy the automation stack, from the `deployment/terrafrom/automations` directory execute the following command sequence:
+To deploy the automation stack, from the `deployment/terraform/automations` directory execute the following command sequence:
 
 ```bash
 $ terraform init
