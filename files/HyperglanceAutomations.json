@@ -306,6 +306,11 @@
           "default": "10",
           "min": "5",
           "max": "200"
+        },
+        {
+          "name": "MaxDaysUsed",
+          "type": "Number",
+          "default": "90"
         }
       ]
     },

@@ -70,13 +70,13 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
   client = boto_session.client('iam')
   iam_username = resource_id
 
-  max_days_unused = os.getenv("KeysMaxDaysUnused")
+  max_days_unused = automation_params.get('MaxDaysUsed')
 
   try:
     ## Get all the access keys for the user
     iam_user_access_keys = client.list_access_keys(
       UserName=iam_username,
-      MaxItems=os.getenv("MaxKeyItems")
+      MaxItems=automation_params.get('MaxKeyItems')
     )
 
     for key in iam_user_access_keys:
@@ -115,6 +115,11 @@ def info() -> dict:
         "default": "10",
         "min": "5",
         "max": "200"
+      },
+      {
+        "name": "MaxDaysUsed",
+        "type": "Number",
+        "default": "90"
       }
     ]
   }
