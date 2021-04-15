@@ -74,7 +74,6 @@ override.tf.
 *_override.tf
 *_override.tf.jso
 
-*.zip
 hg_node
 hg_mode
 **.plan.*
