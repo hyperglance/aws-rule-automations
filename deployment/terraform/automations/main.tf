@@ -3,12 +3,12 @@ provider "aws" {
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
-# DEPLOY HYPERGLANCE ACTION RESOURCES
+# DEPLOY HYPERGLANCE AUTOMATION RESOURCES
 # ---------------------------------------------------------------------------------------------------------------------
 
 module "hyperglance_automations" {
   source = "git@github.com:hyperglance/terraform-aws-hyperglance.git//modules/hyperglance-automations"
 
   hyperglance_automation_list    = "../../files/HyperglanceAutomations.json"
-  lambda_package = "git@github.com:hyperglance/terraform-aws-hyperglance.git//lambda"
+  lambda_package = "../../lambda"
 }

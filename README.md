@@ -2,11 +2,9 @@
 
 ![Pylint](https://github.com/hyperglance/aws-rule-automations/workflows/Pylint/badge.svg)
 
-# Hyperglance Rules - Lambda Configuration
+# Hyperglance Rule Automations - Lambda Configuration
 
 This Repository contains terrafom configurations, that deploys an SNS Topic and lambda function that can be used to remediate infrastructure, based on rules configured in [Hyperglance](https://support.hyperglance.com/knowledge/rules-dashboard-view).
-
-:information_source: The deployed functions will only perform automations against resources in the same account, where the function is deployed.
 
 ## Pre-Requisites
 
@@ -56,6 +54,8 @@ Default output format [None]: yaml
 
 > Note: The above Access and Secrets are examples, only. Please substitute the values that are appropriate for your environement.
 
+Alternatively, credentials can be provided in the terraform file, or managed by [Leapp](https://github.com/Noovolari/leapp) or similar.
+
 ### Clone / Download the repository:
 
 Clone the repository:
@@ -65,11 +65,11 @@ $ mkdir code && cd code
 $ git clone https://github.com/hyperglance/aws-rule-automations.git
 ```
 
-Download the [Zip](https://github.com/hyperglance/aws-rule-automations/archive/v1.1.zip) release, and extract it.
+Download the [Zip](https://github.com/hyperglance/aws-rule-automations/archive/refs/tags/v2.1-beta.zip) release, and extract it.
 
 ## Usage
 
-To run this, from the directory of the function you want to deploy i.e. `cd ec2_stop_instance` you need to execute the following command sequence:
+To deploy the automation stack, from the `deployment/terrafrom/automations` directory execute the following command sequence:
 
 ```bash
 $ terraform init
@@ -78,19 +78,35 @@ $ terraform apply
 
 This will ask you to confirm deployment, type `yes` to confirm. You can skip confirmation using `terraform apply -auto-approve`
 
-Once complete, the ARN of the SNS Topic will be returned:
+Once complete, the bucket name and Topic ARN required by Hyperglance will be returned:
 
 ```bash
-Apply complete! Resources: 13 added, 0 changed, 0 destroyed.
+Apply complete! Resources: 8 added, 0 changed, 0 destroyed.
 
 Outputs:
 
-hyperglance_sns_topic_arn = arn:aws:sns:us-east-1:0123456789987:hyperglance_ec2_tag_instance20201013101838932900000001
+bucket_name = "hyperglance-automations-lucky-marmoset"
+topic_arn = "arn:aws:sns:us-east-1:001234567891011:hyperglance-automations-lucky-marmoset"
 ```
 
-Copy everything after the equals `=` and paste it into the ["Notify AWS SNS - Topic ARN"](https://support.hyperglance.com/knowledge/rules-dashboard-view)
+Copy these to the Notification configuration page
 
->Note: that this may create resources which cost money. Run `terraform destroy` when you don't need these resources.
+### Cross Account
+
+If you plan to execute Automations on any other account, that is not the one you have deployed the stack to, you will need to deploy the role to each account
+
+An example of the x-account role deployment, can be found in `deployment/terraform/xaccount_role` if you have more than one target account, it is best to copy this folder and rename it with the account name, to keep the state seperate.
+
+>Note: Please ensure to update the `lambda_account_id` parameter with a valid AWS Account ID, where the the Automation lambda is located, otherwise x-account automations may fail.
+
+When ready, execute:
+
+```bash
+$ terraform init
+$ terraform apply
+```
+
+>Note: terraform will create resources which cost money. Run `terraform destroy` when you don't need these resources.
 
 ## Requirements
 
@@ -100,22 +116,9 @@ Copy everything after the equals `=` and paste it into the ["Notify AWS SNS - To
 | aws | >= 3.80, < 4.0 |
 | random | ~> 2.30 |
 
-## Inputs
-
-The following inputs are acccepted, these can be set in `main.tf` of the appropriate function.
-
-| Name | Description | Default | Mandatory |
-|------|-------------|---------|-----------|
-| aws_region | AWS Region to Deploy to | us-east-1 | Y |
-| lambda_function_name | Name of Lambda Function | Function Folder Name | Y |
-| lambda_runtime | Lambda execution environment | nodejs12.x | Y |
-| iam_attach_policy_statements | Attach inline policies | true | N |
-| iam_policy_statement | Policy Definition if iam_attach_policy_statements is true | NONE | N |
-
->Note: All appropriate paramters are set, you may wish to override the default aws_region.
-
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| hyperglance_sns_topic_arn | The ARN of the Hyperglance SNS Topic |
+| topic_arn | The ARN of the Hyperglance SNS Topic |
+| bucket_name | The bucket name where Automation Payloads will be delievered |
