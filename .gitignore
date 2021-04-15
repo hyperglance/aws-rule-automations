@@ -73,8 +73,9 @@ override.tf
 override.tf.
 *_override.tf
 *_override.tf.jso
-
+*.vscode
 *.zip
+launch.json
 hg_node
 hg_mode
 **.plan.*
