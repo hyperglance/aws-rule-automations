@@ -197,7 +197,7 @@
       "description": "Releases and Elastic IP from associated EC2 Instance",
       "resourceTypes": [
         "EC2 Instance",
-        "Elatic IP Address"
+        "Elastic IP Address"
       ],
       "params": [
   
@@ -462,7 +462,7 @@
       "displayName": "Detach Lambda Layers",
       "description": "Detaches Lambda Layers from Function",
       "resourceTypes": [
-        "Lambda"
+        "Lambda Function"
       ],
       "params": [
   
@@ -531,7 +531,7 @@
       "displayName": "Delete Redshift Cluster",
       "description": "Deletes a Redshift Cluster",
       "resourceTypes": [
-        "Redshift CLuster"
+        "Redshift Cluster"
       ],
       "params": [
         {
