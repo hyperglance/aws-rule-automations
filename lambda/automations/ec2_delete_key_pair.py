@@ -33,7 +33,7 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
   """
 
   client = boto_session.client('ec2')
-  keypair = resource_id
+  keypair = automation_params.get('Key Name')
 
   try:
     response = client.delete_key_pair(
