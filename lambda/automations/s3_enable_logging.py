@@ -110,7 +110,6 @@ def info() -> dict:
     "displayName": "Enable Access Logging",
     "description": "Enables Access Logging for S3 Buckets",
     "resourceTypes": [
-      "S3",
       "S3 Bucket"
     ],
     "params": [

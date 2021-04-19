@@ -79,8 +79,7 @@ def info() -> dict:
     "displayName": "Release Elastic IP",
     "description": "Releases and Elastic IP from associated EC2 Instance",
     "resourceTypes": [
-      "EC2 Instance",
-      "Elatic IP Address"
+      "EC2 Instance"
     ],
     "params": [
 

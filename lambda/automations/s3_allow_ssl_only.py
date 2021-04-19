@@ -243,7 +243,6 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
       "displayName": "S3 Enforce SSL",
       "description": "Enforces SSL for object accedss",
       "resourceTypes": [
-        "S3",
         "S3 Bucket"
       ],
       "params": [

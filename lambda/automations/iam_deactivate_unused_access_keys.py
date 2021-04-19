@@ -105,8 +105,7 @@ def info() -> dict:
     "displayName": "Deactivate Keys",
     "description": "Deactivates Unused Access Keys",
     "resourceTypes": [
-      "IAM User",
-      "IAM"
+      "IAM User"
     ],
     "params": [
       {

@@ -86,7 +86,6 @@
       "displayName": "Attach IAM Role",
       "description": "Attaches and IAM role to an Instance",
       "resourceTypes": [
-        "EC2",
         "EC2 Instance"
       ],
       "params": [
@@ -196,8 +195,7 @@
       "displayName": "Release Elastic IP",
       "description": "Releases and Elastic IP from associated EC2 Instance",
       "resourceTypes": [
-        "EC2 Instance",
-        "Elastic IP Address"
+        "EC2 Instance"
       ],
       "params": [
   
@@ -208,7 +206,6 @@
       "displayName": "Snapshot Instance",
       "description": "Snapshots attached EBS Volumes",
       "resourceTypes": [
-        "EBS Volume",
         "EC2 Instance"
       ],
       "params": [
@@ -266,11 +263,11 @@
       ]
     },
     {
-      "name": "ecs_rebot",
+      "name": "ecs_reboot",
       "displayName": "Restart Privileged ECS Tasks",
       "description": "Restarts ECS Tasks that have Privileged Access Permissions",
       "resourceTypes": [
-        "Cloudtrail"
+        "ECS Cluster"
       ],
       "params": [
         {
@@ -296,8 +293,7 @@
       "displayName": "Deactivate Keys",
       "description": "Deactivates Unused Access Keys",
       "resourceTypes": [
-        "IAM User",
-        "IAM"
+        "IAM User"
       ],
       "params": [
         {
@@ -319,8 +315,7 @@
       "displayName": "Delete Access Keys",
       "description": "Deletes IAM Access Keys",
       "resourceTypes": [
-        "IAM User",
-        "IAM"
+        "IAM User"
       ],
       "params": [
   
@@ -331,7 +326,7 @@
       "displayName": "Deletes Default Policy Version",
       "description": "Deletes the default policy version, and sets latest version as active",
       "resourceTypes": [
-        "IAM"
+        "IAM Policy"
       ],
       "params": [
   
@@ -342,7 +337,6 @@
       "displayName": "Disable Console Access",
       "description": "Disables a users console access, but leaves programmatic access intact",
       "resourceTypes": [
-        "IAM",
         "IAM User"
       ],
       "params": [
@@ -354,7 +348,6 @@
       "displayName": "Force Password Change",
       "description": "Forces user to change their password on next login",
       "resourceTypes": [
-        "IAM",
         "IAM User"
       ],
       "params": [
@@ -388,8 +381,7 @@
       "displayName": "Revoke Access Key",
       "description": "Revokes IAM User Access Keys",
       "resourceTypes": [
-        "IAM User",
-        "IAM"
+        "IAM User"
       ],
       "params": [
   
@@ -478,7 +470,6 @@
       "displayName": "Disable Lambda",
       "description": "Disables a Lambda from Executing",
       "resourceTypes": [
-        "Lambda",
         "Lambda Function"
       ],
       "params": [
@@ -551,7 +542,6 @@
       "displayName": "S3 Enforce SSL",
       "description": "Enforces SSL for object accedss",
       "resourceTypes": [
-        "S3",
         "S3 Bucket"
       ],
       "params": [
@@ -563,7 +553,6 @@
       "displayName": "Block S3 Public Access",
       "description": "Blocks all public access to S3 Bucket",
       "resourceTypes": [
-        "S3",
         "S3 Bucket"
       ],
       "params": [
@@ -575,7 +564,6 @@
       "displayName": "Delete S3 ACLs",
       "description": "Deletes S3 Bucket Access Control Lists",
       "resourceTypes": [
-        "S3",
         "S3 Bucket"
       ],
       "params": [
@@ -587,7 +575,6 @@
       "displayName": "Delete S3 Permissions",
       "description": "Deletes all ACLs and Bucket Policies from an S3 bucket",
       "resourceTypes": [
-        "S3",
         "S3 Bucket"
       ],
       "params": [
@@ -599,7 +586,6 @@
       "displayName": "Enable S3 Encryption",
       "description": "Enables AES265 Encryption on S3 Bucket Objects",
       "resourceTypes": [
-        "S3",
         "S3 Bucket"
       ],
       "params": [
@@ -611,7 +597,6 @@
       "displayName": "Enable Access Logging",
       "description": "Enables Access Logging for S3 Buckets",
       "resourceTypes": [
-        "S3",
         "S3 Bucket"
       ],
       "params": [
@@ -623,7 +608,6 @@
       "displayName": "Enable S3 Versioning",
       "description": "Enables Object Versioning",
       "resourceTypes": [
-        "S3",
         "S3 Bucket"
       ],
       "params": [
@@ -643,8 +627,8 @@
     },
     {
       "name": "update_tag",
-      "displayName": "Update / Fix Tag",
-      "description": "Updates and EC2 Resource Tag Key",
+      "displayName": "Replace Tag",
+      "description": "Replaces a tag's key but keeps its value (EC2 only)",
       "resourceTypes": [
         "Security Group",
         "EC2 Instance",

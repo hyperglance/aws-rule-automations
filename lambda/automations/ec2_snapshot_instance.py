@@ -67,7 +67,6 @@ def info() -> dict:
     "displayName": "Snapshot Instance",
     "description": "Snapshots attached EBS Volumes",
     "resourceTypes": [
-      "EBS Volume",
       "EC2 Instance"
     ],
     "params": [

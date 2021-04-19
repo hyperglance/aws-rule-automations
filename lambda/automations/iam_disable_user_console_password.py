@@ -51,7 +51,6 @@ def info() -> dict:
     "displayName": "Disable Console Access",
     "description": "Disables a users console access, but leaves programmatic access intact",
     "resourceTypes": [
-      "IAM",
       "IAM User"
     ],
     "params": [

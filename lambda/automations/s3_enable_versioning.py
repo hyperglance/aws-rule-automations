@@ -61,7 +61,6 @@ def info() -> dict:
     "displayName": "Enable S3 Versioning",
     "description": "Enables Object Versioning",
     "resourceTypes": [
-      "S3",
       "S3 Bucket"
     ],
     "params": [

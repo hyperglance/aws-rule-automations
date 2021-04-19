@@ -63,7 +63,6 @@ def info() -> dict:
     "displayName": "Attach IAM Role",
     "description": "Attaches and IAM role to an Instance",
     "resourceTypes": [
-      "EC2",
       "EC2 Instance"
     ],
     "params": [

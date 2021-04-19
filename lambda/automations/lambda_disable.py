@@ -51,7 +51,6 @@ def info() -> dict:
     "displayName": "Disable Lambda",
     "description": "Disables a Lambda from Executing",
     "resourceTypes": [
-      "Lambda",
       "Lambda Function"
     ],
     "params": [

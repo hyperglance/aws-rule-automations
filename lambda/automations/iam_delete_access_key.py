@@ -55,8 +55,7 @@ def info() -> dict:
     "displayName": "Delete Access Keys",
     "description": "Deletes IAM Access Keys",
     "resourceTypes": [
-      "IAM User",
-      "IAM"
+      "IAM User"
     ],
     "params": [
 

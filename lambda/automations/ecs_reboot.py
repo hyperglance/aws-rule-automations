@@ -114,7 +114,7 @@ def info() -> dict:
   "displayName": "Restart Privileged ECS Tasks",
   "description": "Restarts ECS Tasks that have Privileged Access Permissions",
   "resourceTypes": [
-    "Cloudtrail"
+    "ECS Cluster"
   ],
   "params": [
     {

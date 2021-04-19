@@ -66,7 +66,6 @@ def info() -> dict:
     "displayName": "Enable S3 Encryption",
     "description": "Enables AES265 Encryption on S3 Bucket Objects",
     "resourceTypes": [
-      "S3",
       "S3 Bucket"
     ],
     "params": [

@@ -71,7 +71,6 @@ def info() -> dict:
     "displayName": "Delete S3 Permissions",
     "description": "Deletes all ACLs and Bucket Policies from an S3 bucket",
     "resourceTypes": [
-      "S3",
       "S3 Bucket"
     ],
     "params": [

@@ -55,7 +55,6 @@ def info() -> dict:
     "displayName": "Force Password Change",
     "description": "Forces user to change their password on next login",
     "resourceTypes": [
-      "IAM",
       "IAM User"
     ],
     "params": [
