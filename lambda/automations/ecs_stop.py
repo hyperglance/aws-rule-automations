@@ -119,3 +119,21 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
     automation_output = "No Running Tasks, Exiting..."
 
   return automation_output
+
+  def info() -> dict:
+    INFO = {
+      "displayName": "Stop ECS Cluster",
+      "description": "Stops ECS Cluster",
+      "resourceTypes": [
+        "ECS Cluster"
+      ],
+      "params": [
+        {
+          "name": "Role",
+          "type": "string",
+          "default": " "
+        }
+      ]
+    }
+
+    return INFO

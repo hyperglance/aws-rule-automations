@@ -176,7 +176,11 @@
         "IAM"
       ],
       "params": [
-  
+        {
+          "name": "Role",
+          "type": "string",
+          "default": " "
+        }
       ]
     },
     {
@@ -266,6 +270,21 @@
       "name": "ecs_reboot",
       "displayName": "Restart Privileged ECS Tasks",
       "description": "Restarts ECS Tasks that have Privileged Access Permissions",
+      "resourceTypes": [
+        "ECS Cluster"
+      ],
+      "params": [
+        {
+          "name": "Role",
+          "type": "string",
+          "default": " "
+        }
+      ]
+    },
+    {
+      "name": "ecs_stop",
+      "displayName": "Stop ECS Cluster",
+      "description": "Stops ECS Cluster",
       "resourceTypes": [
         "ECS Cluster"
       ],

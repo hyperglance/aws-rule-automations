@@ -33,7 +33,7 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
   """
 
   client = boto_session.client('iam')
-  role_name = resource_id
+  role_name = automation_params.get('Role')
 
   try:
     response = client.list_instance_profiles_for_role(RoleName=role_name)['InstanceProfiles']
@@ -62,7 +62,11 @@ def info() -> dict:
       "IAM"
     ],
     "params": [
-
+      {
+        "name": "Role",
+        "type": "string",
+        "default": " "
+      }
     ]
   }
 
