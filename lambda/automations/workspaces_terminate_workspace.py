@@ -36,7 +36,11 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
 
   try:
     response = client.terminate_workspaces(
-      WorkspaceId=workspace_id
+      TerminateWorkspaceRequests=[
+        {
+          'WorkspaceId': workspace_id
+        },
+      ]
     )
     automation_output = "Terminated Workspace ID: {}".format(workspace_id)
 

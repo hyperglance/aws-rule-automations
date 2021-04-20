@@ -1,14 +1,16 @@
-"""EC2 Stop Instance
+"""Workspaces - Start Workspace
 
-This automation Stops an EC2 Instance, identified as above or below the configured threshold
+This automation Starts a Workspace, identified as above or below the configured threshold
 by Hyperglance Rule(s)
 
 This automation will operate across accounts, where the appropriate IAM Role exists.
 
 """
 
+from botocore.exceptions import ClientError
+
 def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='', table: list = [ ], automation_params = '') -> str:
-  """ Attempts to Stop an EC2 Instance
+  """ Attempts to Start a Workspace
 
   Parameters
   ----------
@@ -30,37 +32,34 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
 
   """
 
-  client = boto_session.client('ec2')
-  ec2_instance = resource_id
+  client = boto_session.client('workspaces')
+  workspace_id = resource_id
 
-  response = client.stop_instances(
-    InstanceIds=[ec2_instance], 
-    DryRun=automation_params.get('DryRun').lower() in ['true', 'y', 'yes']
+  try:
+    response = client.start_workspaces(
+      StartWorkspaceRequests=[
+        {
+        'WorkspaceId': workspace_id
+        },
+      ]
     )
+    automation_output = "Started Workspace ID: {}".format(workspace_id)
 
-  result = response['ResponseMetadata']['HTTPStatusCode']
-  
-  if result >= 400:
-    automation_output = "An unexpected error occured, error message: {}".format(response)
-  else:
-    automation_output = "Instance {} stopped".format(ec2_instance)
-  
+  except ClientError as err:
+    automation_output = "An unexpected error occured, error message: {}".format(err)
+
   return automation_output
 
 
 def info() -> dict:
   INFO = {
-    "displayName": "Stop Instance",
-    "description": "Immediately Stops an EC2 Instance",
+    "displayName": "Start Workspace",
+    "description": "Starts a Workspacee",
     "resourceTypes": [
-      "EC2 Instance"
+      "Workspace"
     ],
     "params": [
-      {
-        "name": "DryRun",
-        "type": "bool",
-        "default": "True"
-      }
+
     ]
   }
 

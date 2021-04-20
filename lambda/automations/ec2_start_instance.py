@@ -1,6 +1,6 @@
-"""EC2 Stop Instance
+"""EC2 Start Instance
 
-This automation Stops an EC2 Instance, identified as above or below the configured threshold
+This automation Starts an EC2 Instance, identified as above or below the configured threshold
 by Hyperglance Rule(s)
 
 This automation will operate across accounts, where the appropriate IAM Role exists.
@@ -8,7 +8,7 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 """
 
 def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='', table: list = [ ], automation_params = '') -> str:
-  """ Attempts to Stop an EC2 Instance
+  """ Attempts to Start an EC2 Instance
 
   Parameters
   ----------
@@ -33,25 +33,25 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
   client = boto_session.client('ec2')
   ec2_instance = resource_id
 
-  response = client.stop_instances(
-    InstanceIds=[ec2_instance], 
+  response = client.start_instances(
+    InstanceIds=[ec2_instance],
     DryRun=automation_params.get('DryRun').lower() in ['true', 'y', 'yes']
-    )
+  )
 
   result = response['ResponseMetadata']['HTTPStatusCode']
-  
+
   if result >= 400:
     automation_output = "An unexpected error occured, error message: {}".format(response)
   else:
-    automation_output = "Instance {} stopped".format(ec2_instance)
-  
+    automation_output = "Instance {} started".format(ec2_instance)
+
   return automation_output
 
 
 def info() -> dict:
   INFO = {
-    "displayName": "Stop Instance",
-    "description": "Immediately Stops an EC2 Instance",
+    "displayName": "Start Instance",
+    "description": "Immediately Starts an EC2 Instance",
     "resourceTypes": [
       "EC2 Instance"
     ],

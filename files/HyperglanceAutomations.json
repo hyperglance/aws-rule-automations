@@ -221,9 +221,24 @@
       ]
     },
     {
+      "name": "ec2_start_instance",
+      "displayName": "Start Instance",
+      "description": "Immediately Start an EC2 Instance",
+      "resourceTypes": [
+        "EC2 Instance"
+      ],
+      "params": [
+        {
+          "name": "DryRun",
+          "type": "boolean",
+          "default": "true"
+        }
+      ]
+    },
+    {
       "name": "ec2_stop_instance",
       "displayName": "Stop Instance",
-      "description": "Immediately Stops and EC2 Instance",
+      "description": "Immediately Stops an EC2 Instance",
       "resourceTypes": [
         "EC2 Instance"
       ],
@@ -681,6 +696,17 @@
       "description": "Isolates an Entire VPC by applying Deny ALL security group rules",
       "resourceTypes": [
         "VPC"
+      ],
+      "params": [
+  
+      ]
+    },
+    {
+      "name": "workspaces_start_workspace",
+      "displayName": "Start Workspace",
+      "description": "Starts a Workspace",
+      "resourceTypes": [
+        "Workspace"
       ],
       "params": [
   
