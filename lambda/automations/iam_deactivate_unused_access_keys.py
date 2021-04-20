@@ -76,7 +76,7 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
     ## Get all the access keys for the user
     iam_user_access_keys = client.list_access_keys(
       UserName=iam_username,
-      MaxItems=automation_params.get('MaxKeyItems')
+      MaxItems=int(automation_params.get('MaxKeyItems'))
     )
 
     for key in iam_user_access_keys:
