@@ -35,7 +35,7 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
   ec2_resource = boto_session.resource('ec2')
 
   ec2_instance = resource_id
-  vpc_id = table[0]['VPC ID']
+  vpc_id = matched_attributes.get('VPC ID')
 
   ## Check if there already is a qurantine SG, if not, create one
 
