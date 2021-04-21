@@ -10,21 +10,36 @@ This Repository contains terrafom configurations, that deploys an SNS Topic and 
 
 Please follow the below steps to install the pre-requisites required to deploy the infrastructure.
 
+### Update Hyperglance Instance IAM Role
+
+The policy attached to the IAM role for the Hyperglance EC2 Instance, requires the following permissions to be added:
+
+```json
+s3:PutObject,
+sns:Publish
+```
+
+[AWS Policy Management - User Guide](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_manage-edit.html)
+
 ### Install Terraform
+
+> Note: Version 0.15 and newer is currently unsupported, use a version between 0.13.6 and 0.14.10
 
 Method 1, Select your operating system from the link below, install terraform, and add it to your `PATH`
 
 [Terraform Installed and Available from Command line](https://www.terraform.io/downloads.html)
 
+[Version 0.14.10 Download](https://releases.hashicorp.com/terraform/0.14.10/)
+
 Method 2, Use homebrew (MAC OS / Linux), chocolately (Windows):
 
 [Homebrew](https://brew.sh/):
 
-`brew install terraform`
+`brew install terraform@0.13`
 
 [Chocolately](https://chocolatey.org/):
 
-`choco install terraform`
+`choco install terraform --version 0.14.10`
 
 > Note: Method 2 takes care of updating your PATH variables and installing any required dependencies
 
@@ -35,7 +50,7 @@ $ terraform -version
 
 Output:
 + terraform -version
-Terraform v0.13.2
+Terraform v0.13.6
 ```
 
 ### Install AWS CLI
@@ -48,8 +63,8 @@ Once the CLI is installed, [configure](https://docs.aws.amazon.com/cli/latest/us
 $ aws configure
 AWS Access Key ID [None]: AKIAIOSFODNN7EXAMPLE
 AWS Secret Access Key [None]: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
-Default region name [None]: us-west-2
-Default output format [None]: yaml
+Default region name [None]: us-east-1
+Default output format [None]: json
 ```
 
 > Note: The above Access and Secrets are examples, only. Please substitute the values that are appropriate for your environement.
@@ -68,6 +83,23 @@ $ git clone https://github.com/hyperglance/aws-rule-automations.git
 Download the [Zip](https://github.com/hyperglance/aws-rule-automations/archive/refs/tags/v2.1-beta.zip) release, and extract it.
 
 ## Usage
+
+>OPTIONAL: To use the same region as configured using aws configure, run the following command:
+
+```bash
+export AWS_DEFAULT_REGION=$(aws configure get region --profile default)
+```
+
+Otherwise the deployment will ask you for the region:
+
+```bash
++ terraform plan
+provider.aws.region
+  The region where AWS operations will take place. Examples
+  are us-east-1, us-west-2, etc.
+
+  Enter a value: 
+```
 
 To deploy the automation stack, from the `deployment/terraform/automations` directory execute the following command sequence:
 
