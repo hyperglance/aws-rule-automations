@@ -80,8 +80,7 @@ $ mkdir code && cd code
 $ git clone https://github.com/hyperglance/aws-rule-automations.git
 ```
 
-Download the [Zip](https://github.com/hyperglance/aws-rule-automations/archive/refs/tags/v2.1-beta.zip) release, and extract it.
-
+Alternatively, download the [Zip](https://github.com/hyperglance/aws-rule-automations/archive/refs/tags/v2.1-beta.zip) release, and extract it.
 ## Usage
 
 >OPTIONAL: To use the same region as configured using aws configure, run the following command:
@@ -144,9 +143,9 @@ $ terraform apply
 
 | Name | Version |
 |------|---------|
-| terraform | >= 0.12.6, < 0.14 |
-| aws | >= 3.80, < 4.0 |
-| random | ~> 2.30 |
+| terraform | >= 0.13.6, < 0.15 |
+| aws | >= 3.29, < 4.0 |
+| random | = 3.10 |
 
 ## Outputs
 
