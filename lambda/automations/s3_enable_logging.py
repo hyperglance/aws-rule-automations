@@ -86,21 +86,21 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
     except ClientError as err:
       automation_output = "An unexpectd Client Error has occured, error: {}".format(err)
 
-  try:
-    response = logging_bucket.put(
-      BucketLoggingStatus={
-        'LoggingEnabled': {
-          'TargetBucket': target_log_bucket,
-          'TargetPrefix': ''
-        }
-      }
-    )
 
-    result = response['ResponseMetadata']['HTTPStatusCode']
-    if result >= 400:
-      automation_output += "An unexpected error occured when enabling bucket logging, error: {}".format(result)
-    else:
-      automation_output += "Bucket logging enabled from bucket: {} to bucket: {}".format(bucket_name, target_log_bucket)
+  response = logging_bucket.put(
+    BucketLoggingStatus={
+      'LoggingEnabled': {
+        'TargetBucket': target_log_bucket,
+        'TargetPrefix': ''
+      }
+    }
+  )
+
+  result = response['ResponseMetadata']['HTTPStatusCode']
+  if result >= 400:
+    automation_output += "An unexpected error occured when enabling bucket logging, error: {}".format(result)
+  else:
+    automation_output += "Bucket logging enabled from bucket: {} to bucket: {}".format(bucket_name, target_log_bucket)
 
   return automation_output
 

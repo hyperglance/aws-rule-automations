@@ -34,18 +34,17 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
   client = boto_session.client("iam")
   user_name = resource_id
 
-  try:
-    response = client.update_login_profile(
-      UserName=user_name,
-      PasswordResetRequired=True
-    )
+  response = client.update_login_profile(
+    UserName=user_name,
+    PasswordResetRequired=True
+  )
 
-    result = response['ResponseMetadata']['HTTPStatusCode']
+  result = response['ResponseMetadata']['HTTPStatusCode']
 
-    if result >= 400:
-      automation_output = "An unexpected error occured, error message: {}".format(result)
-    else:
-      automation_output = "Password reset enabled for user: {}".format(user_name)
+  if result >= 400:
+    automation_output = "An unexpected error occured, error message: {}".format(result)
+  else:
+    automation_output = "Password reset enabled for user: {}".format(user_name)
   
   return automation_output
 

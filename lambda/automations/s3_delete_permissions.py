@@ -57,11 +57,10 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
   ## Use existing automation s3_delete_acls to delelte bucket ACLs and keep code DRY
   s3_delete_acls = s3_delete_acls()
 
-  try:
-    automation_ouptut += s3_delete_acls(
-      boto_session=boto_session,
-      resource_id=resource_id
-    )
+  automation_ouptut += s3_delete_acls(
+    boto_session=boto_session,
+    resource_id=resource_id
+  )
 
   return automation_ouptut
 

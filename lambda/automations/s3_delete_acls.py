@@ -42,7 +42,6 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
       automation_ouput = "Only found the default Canonical User ACL: {}, nothing to do".format(bucket_acl[0])
       return automation_ouput
 
-  try:
     response = client.put_bucket_acl(
       Bucket=bucket_name,
       ACL='private'
