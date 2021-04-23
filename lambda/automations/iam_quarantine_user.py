@@ -151,7 +151,7 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
   client = boto_session.client('iam')
   
   account_id = table[0]['Account ID']
-  user_name = resource_id
+  user_name = matched_attributes.get('Name')
   deny_policy_arn = "arn:aws:iam:{}:policy/hyperglance_quarantine_deny_policy".format(account_id)
 
   try:

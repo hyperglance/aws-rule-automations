@@ -34,30 +34,20 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
 
   client = boto_session.client('ec2')
   ec2_instance = resource_id
+  vol_id = matched_attributes.get('Volume ID')
     
   response = client.create_snapshot(
     Description="Snapshot created by Hyperglance",
-    VolumeId=matched_attributes.get('Volume ID'),
+    VolumeId=vol_id,
     DryRun=automation_params.get('DryRun').lower() in ['true', 'y', 'yes']
   )
   
-  ## Wait for Snapshot
-  waiter = client.get_waiter('snapshot_completed')
-
-  waiter.wait(
-    Filters=[
-      {
-        'volume-id': automation_params.get('Volume ID')
-      }
-    ]
-  )
-
   result = response['ResponseMetadata']['HTTPStatusCode']
 
   if result >= 400:
     automation_output = "An unexpected error occured, error message: {}".format(result)
   else:
-    automation_output = "Snapshot Creation for Volume: {} started...".format(matched_attributes.get('Volume ID'))
+    automation_output = "Snapshot Creation for Volume: {} started...".format(vol_id)
 
   return automation_output
 

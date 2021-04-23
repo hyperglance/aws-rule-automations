@@ -31,7 +31,7 @@ def days_last_used(client, access_key) -> int:
   ## Get current date and time
   current_date_time = datetime.now()
   ## Access Key ID
-  access_key_id = access_key['AccessKeyId']
+  access_key_id = access_key.get('Access Key Id')
   ## Get the last used details
   key_last_used = client.get_access_key_last_used(
     AccessKeyId=access_key_id

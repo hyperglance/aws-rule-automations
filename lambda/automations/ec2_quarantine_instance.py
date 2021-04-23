@@ -38,7 +38,7 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
   vpc_id = matched_attributes.get('VPC ID')
 
   ## Check if there already is a qurantine SG, if not, create one
-
+  automation_output = ""
   try:
     response = client.describe_security_groups(
       Filters=[
@@ -82,7 +82,7 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
   except ClientError as err:
     automation_output = "An unexpected client error has occured: {}".format(err)
 
-  automation_output += "Quarantining Instance: {} - Updating SG attachments".format(ec2_instance)
+  automation_output = "Quarantining Instance: {} - Updating SG attachments".format(ec2_instance)
 
   ## Finally attach the instance to Qurantine SG
 

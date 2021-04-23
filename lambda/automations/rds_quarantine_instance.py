@@ -89,18 +89,17 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
 
   ## Finally attach the RDS Instance to the Quarantine SG
 
-  try:
-    response = rds_client.modify_db_instance(
-      DBInstanceIdentifier=rds_db,
-      VpcSecurityroupIds=[hyperglance_quarantine_sg],
-      ApplyImmediately=True
-    )
+  response = rds_client.modify_db_instance(
+    DBInstanceIdentifier=rds_db,
+    VpcSecurityroupIds=[hyperglance_quarantine_sg],
+    ApplyImmediately=True
+  )
 
-    result = response['ResponseMetadata']['HTTPStatusCode']
-    if result >= 400:
-      automation_output += "An unexpected error occured attaching the quarantine security group: {}".format(result)
-    else:
-      automation_output += "Attached Quarantine Security Group to RDS Instance: {}".format(rds_db)
+  result = response['ResponseMetadata']['HTTPStatusCode']
+  if result >= 400:
+    automation_output += "An unexpected error occured attaching the quarantine security group: {}".format(result)
+  else:
+    automation_output += "Attached Quarantine Security Group to RDS Instance: {}".format(rds_db)
 
   return automation_output
 
