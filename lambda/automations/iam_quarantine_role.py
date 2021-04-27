@@ -121,19 +121,15 @@ def create_deny_policy(boto_session) -> str:
 
   return automation_output
 
-def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='', table: list = [ ], automation_params = '') -> str:
+def hyperglance_automation(boto_session, resource: dict, automation_params = '') -> str:
   """ Attempts to attach an IAM policy to an EC2 Instance
 
   Parameters
   ----------
   boto_session : object
     The boto session to use to invoke the automation
-  resource_id : str
-    ID of the Resource to trigger the automation on
-  matched_attributes : 
-    Matching attributes that caused the rule to trigger
-  table : list
-    A list of additional resource values that may be required
+  resource: dict
+    Dict of  Resource attributes touse in the automation
   automation_params : str
     Automation parameters passed from the Hyperglance UI
 
@@ -144,8 +140,8 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
 
   """
 
-  role_arn = resource_id
-  account_id = table[0]['Account']
+  role_arn = resource['id']
+  account_id = resource['account']
 
   policy_arn = "arn:aws:iam::{}:policy/hypergalnce_quarantine_deny_all_policy".format(account_id)
 

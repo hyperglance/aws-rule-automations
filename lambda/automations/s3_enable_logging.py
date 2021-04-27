@@ -9,19 +9,15 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 from botocore.exceptions import ClientError
 
-def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='', table: list = [ ], automation_params = '') -> str:
+def hyperglance_automation(boto_session, resource: dict, automation_params = '') -> str:
   """ Attempts to Create an S3 Bucket for Logging
 
   Parameters
   ----------
   boto_session : object
     The boto session to use to invoke the automation
-  resource_id : str
-    ID of the Resource to trigger the automation on
-  matched_attributes : 
-    Matching attributes that caused the rule to trigger
-  table : list
-    A list of additional resource values that may be required
+  resource: dict
+    Dict of  Resource attributes touse in the automation
   automation_params : str
     Automation parameters passed from the Hyperglance UI
 
@@ -32,15 +28,14 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
 
   """
 
-  sts_client = boto_session.client('sts')
   boto_session = boto_session.Session()
 
   s3_client = boto_session.client('s3')
   s3_resource = boto_session.resource('s3')
 
-  bucket_name =  resource_id
-  account_id = sts_client.get_caller_identity()["Account"]
-  region_id = boto_session.region_name
+  bucket_name =  resource['id']
+  account_id = resource['account']
+  region_id = resource['attributes']['Region']
 
   logging_bucket = s3_resource.BucketLogging(bucket_name)
   target_log_bucket = account_id + "s3accesslogs" + region_id

@@ -8,19 +8,15 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 """
 
 
-def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='', table: list = [ ], automation_params = '') -> str:
+def hyperglance_automation(boto_session, resource: dict, automation_params = '') -> str:
   """ Attempts to force a user password change
 
   Parameters
   ----------
   boto_session : object
     The boto session to use to invoke the automation
-  resource_id : str
-    ID of the Resource to trigger the automation on
-  matched_attributes : 
-    Matching attributes that caused the rule to trigger
-  table : list
-    A list of additional resource values that may be required
+  resource: dict
+    Dict of  Resource attributes touse in the automation
   automation_params : str
     Automation parameters passed from the Hyperglance UI
 
@@ -32,7 +28,7 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
   """
 
   client = boto_session.client("iam")
-  user_name = resource_id
+  user_name = resource['attributes']['User Name']
 
   response = client.update_login_profile(
     UserName=user_name,

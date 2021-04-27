@@ -88,12 +88,10 @@ def process_event(bucket, automation_payload):
       ## Run the automation!
       try:
         automation_to_execute_output = automation_to_execute.hyperglance_automation(
-          boto_session=boto_session, 
-          resource_id=resource['id'],
-          matched_attributes=resource['matchedAttributes'], 
-          table=resource['tables'],
+          boto_session=boto_session,
+          resource=resource,
           automation_params=action_params
-          )
+        )
         logger.info('Executed %s successfully %s', automation, automation_to_execute_output)
       except Exception as err:
         logger.fatal('Could not execute: %s, output from automation: %s', automation, err)

@@ -7,22 +7,17 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 
-import os
 from botocore.exceptions import ClientError
 
-def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='', table: list = [ ], automation_params = '') -> str:
+def hyperglance_automation(boto_session, resource: dict, automation_params = '') -> str:
   """ Attempts to Delte a Security Group
 
   Parameters
   ----------
   boto_session : object
     The boto session to use to invoke the automation
-  resource_id : str
-    ID of the Resource to trigger the automation on
-  matched_attributes : 
-    Matching attributes that caused the rule to trigger
-  table : list
-    A list of additional resource values that may be required
+  resource: dict
+    Dict of  Resource attributes touse in the automation
   automation_params : str
     Automation parameters passed from the Hyperglance UI
 
@@ -34,7 +29,7 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
   """
 
   client = boto_session.client('ec2')
-  sg_id = resource_id
+  sg_id = resource['attributes']['Group ID']
 
   try:
     response = client.delete_security_group(

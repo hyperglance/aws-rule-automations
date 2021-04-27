@@ -96,19 +96,15 @@ def policy_default_version_id(client, policy_arn: str) -> str:
   version_id = client.get_policy(PolicyArn=policy_arn) ['Policy']['DefaultVersionId']
   return version_id
 
-def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='', table: list = [ ], automation_params = '') -> str:
+def hyperglance_automation(boto_session, resource: dict, automation_params = '') -> str:
   """ Attempts to delete default policy and set to the LATEST
 
   Parameters
   ----------
   boto_session : object
     The boto session to use to invoke the automation
-  resource_id : str
-    ID of the Resource to trigger the automation on
-  matched_attributes : 
-    Matching attributes that caused the rule to trigger
-  table : list
-    A list of additional resource values that may be required
+  resource: dict
+    Dict of  Resource attributes touse in the automation
   automation_params : str
     Automation parameters passed from the Hyperglance UI
 
@@ -120,7 +116,7 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
   """
 
   client = boto_session.client('iam')
-  policy_arn = resource_id
+  policy_arn = resource['attributes']['Policy ARN']
 
   ## Get current default version
   policy_default_version_id = policy_default_version_id(client=client, policy_arn=policy_arn)

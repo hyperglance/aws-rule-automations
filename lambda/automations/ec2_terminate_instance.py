@@ -11,19 +11,15 @@ import automations.ec2_snapshot_instance
 
 
 ## Stop EC2 Instance
-def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='', table: list = [ ], automation_params = '') -> str:
+def hyperglance_automation(boto_session, resource: dict, automation_params = '') -> str:
   """ Attempts to Terminate an EC2 Instance
 
   Parameters
   ----------
   boto_session : object
     The boto session to use to invoke the automation
-  resource_id : str
-    ID of the Resource to trigger the automation on
-  matched_attributes : 
-    Matching attributes that caused the rule to trigger
-  table : list
-    A list of additional resource values that may be required
+  resource: dict
+    Dict of  Resource attributes touse in the automation
   automation_params : str
     Automation parameters passed from the Hyperglance UI
 
@@ -35,7 +31,7 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
   """
 
   client = boto_session.client('ec2')
-  ec2_instance = resource_id
+  ec2_instance = resource['attributes']['Instance ID']
 
   if automation_params.get('SnapShotBeforeTerminate').lower() in ['true', 'y', 'yes']:
     ec2_snapshot_instance = ec2_snapshot_instance()

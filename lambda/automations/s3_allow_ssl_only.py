@@ -162,7 +162,7 @@ def missing_statements(bucket_name: str, target_account: str, action_options: li
   return GETPUT_CHECK, SSL_CHECK
 
 
-def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='', table: list = [ ], automation_params = '') -> str:
+def hyperglance_automation(boto_session, resource: dict, automation_params = '') -> str:
   """ Attempts to set an SSL Policy on an S3 Bucket
 
   Parameters
@@ -187,9 +187,9 @@ def hyperglance_automation(boto_session, resource_id: str, matched_attributes ='
 
   client = boto_session.client('s3')
 
-  bucket_name = resource_id
-  account_number = table[0]['Account']
-  bucket_policy = table[0]['Bucket Policy']
+  bucket_name = resource['id']
+  account_number = resource['account']
+  bucket_policy = resource['attributes']['policy']
 
   try:
     if bucket_policy == "null" or bucket_policy is None:
