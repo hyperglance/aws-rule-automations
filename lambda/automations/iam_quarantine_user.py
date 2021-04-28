@@ -152,7 +152,8 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
 
   try:
     automation_output = deny_policy_exists(
-      boto_session=boto_session
+      boto_session=boto_session,
+      policy_arn=deny_policy_arn
     )
 
     automation_output += attach_user_policy(
