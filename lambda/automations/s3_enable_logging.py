@@ -35,7 +35,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
 
   bucket_name =  resource['id']
   account_id = resource['account']
-  region_id = resource['attributes']['Region']
+  region_id = resource['region']
 
   logging_bucket = s3_resource.BucketLogging(bucket_name)
   target_log_bucket = account_id + "s3accesslogs" + region_id

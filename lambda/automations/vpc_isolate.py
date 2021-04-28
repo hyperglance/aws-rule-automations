@@ -214,7 +214,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
   client = boto_session.client('ec2')
 
   vpc_id = resource['attributes']['VPC ID']
-  region = resource['attributes']['region']
+  region = resource['region']
 
   try:
     target_vpc = client.describe_vpcs(
