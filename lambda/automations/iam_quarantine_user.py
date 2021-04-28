@@ -158,7 +158,8 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
 
     automation_output += attach_user_policy(
       boto_session=boto_session,
-      policy_arn=deny_policy_arn
+      policy_arn=deny_policy_arn,
+      user=user_name
     )
 
   except ClientError as err:
