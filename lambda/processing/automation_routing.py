@@ -5,6 +5,7 @@ import importlib
 import json
 import logging
 from processing.automation_session import *
+from processing.post_to_sns import *
 from botocore.exceptions import ClientError
 
 
@@ -85,6 +86,8 @@ def process_event(bucket, automation_payload):
       else:
         action_params = result['automation']['params']
 
+      ## Construct the SNS Log Topic
+      LOG_ARN = "arn:aws:sns:us-east-1:{}:{}-log".format(this_account_id, os.environ.get('AWS_LAMBDA_FUNCTION_NAME'))
       ## Run the automation!
       try:
         automation_to_execute_output = automation_to_execute.hyperglance_automation(
@@ -95,8 +98,22 @@ def process_event(bucket, automation_payload):
           automation_params=action_params
           )
         logger.info('Executed %s successfully %s', automation, automation_to_execute_output)
+        ## TODO: Add to a PASS [] List
+        send_to_sns(
+          boto_session,
+          automation_to_execute_output,
+          LOG_ARN
+        )
       except Exception as err:
         logger.fatal('Could not execute: %s, output from automation: %s', automation, err)
-        continue  
+        ## TODO: Add to a FAIL [] List
+        send_to_sns(
+          boto_session,
+          automation_to_execute_output,
+          LOG_ARN
+        )
+        continue
+
+      ## Make one SNS call at the end of the run, passing the automation, PASS and FAIL LIST
 
   return automation_to_execute_output
