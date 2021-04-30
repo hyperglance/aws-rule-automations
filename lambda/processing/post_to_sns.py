@@ -22,7 +22,7 @@ def send_to_sns(boto_session, automation_ouput, sns_arn):
     if result > 400:
       logger.error('Unable to Send SNS, error: %s', response)
     else:
-      logger.info('Sent Log SNS')
+      logger.debug('Sent Log SNS')
     
   except ClientError as err:
     logger.error('An unexpected client error occured, error: %s', err)
