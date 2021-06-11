@@ -1,3 +1,4 @@
+import boto3
 import json
 import logging
 from processing.automation_routing import *
@@ -6,37 +7,37 @@ from processing.automation_routing import *
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-DEV_MODE = False  
+TEST_MODE = False
+
+def get_payload_from_s3(bucket, key):
+  s3 = boto3.resource('s3')
+  payload_object = s3.Object(bucket, key)
+  payload_content = payload_object.get()['Body'].read().decode('utf-8')
+  return json.loads(payload_content)
+
+def put_payload_to_s3(bucket, key, payload):
+  payload_json = json.dumps(payload)
+  s3 = boto3.resource('s3')
+  s3.Object(bucket, key).put(Body=payload_json)
 
 # Get SNS from Hyperglance, read file from SNS and Trigger the automations
 def lambda_handler(event, context):
-  
-  payload = ''
-  return_message = {}
+  output_payload = {'critical_error': None, "automations_report": []}
 
-  logger.info('Started Processing Payload')
+  try:  
+    payload = event if TEST_MODE else json.loads(event['Records'][0]['Sns']['Message'])
+    logger.debug('%s', payload)
+    
+    ## Read the event payload in from S3
+    bucket = payload['data']['s3bucket']
+    bucket_key = payload['data']['key']
+    automation_data = event if TEST_MODE else get_payload_from_s3(bucket, bucket_key)
 
-  message = event['Records'][0]['Sns']['Message']
-
-  try:
-    if DEV_MODE:
-      payload = event
-    else:
-      payload = json.loads(message)
-      logger.debug('%s', payload)
-  except:
-    logger.error('Parsing message, failed to load: %s', event)
-    return
-
-  ## Some DEBUG Code, to check parsing
-  logger.debug('Bucket: %s', payload['data']['s3bucket'])
-  logger.debug('File: %s', payload['data']['key'])
-
-  # Try to process the message, and perform automations
-  try:
-    return_message = process_event(bucket=payload['data']['s3bucket'], automation_payload=payload['data']['key'])
+    process_event(automation_data, output_payload)
   except Exception as err:
-    logger.error('Failed to process Event %s', err )
-    return_message['Failed to Process Event'] = str(err)
+    msg = 'Failed to process Rule automations. %s' % err
+    logger.error(msg)
+    output_payload['critical_error'] = msg
 
-  return return_message  
+  # Report back to Hyperglance
+  put_payload_to_s3(bucket, bucket_key + '_completed', output_payload)
