@@ -18,7 +18,7 @@ data "aws_caller_identity" "current" {}
 # ---------------------------------------------------------------------------------------------------------------------
 
 resource "aws_iam_policy" "hyperglance_automation_policy" {
-  name        = "Hyperglance_Automation_Policy"
+  name_prefix = "Hyperglance_Automation_Policy"
   path        = "/"
   description = "Hyperglance Automations, Execution Policy"
 
@@ -104,7 +104,7 @@ resource "aws_iam_policy" "hyperglance_automation_policy" {
 # ---------------------------------------------------------------------------------------------------------------------
 
 resource "aws_iam_policy" "lambda_cloudwatch_logs" {
-  name        = "lambda_logging"
+  name_prefix = "lambda_logging"
   path        = "/"
   description = "IAM Policy for logging from lambda"
 
@@ -156,7 +156,7 @@ data "aws_iam_policy_document" "hyperglance_automation_assume_policy" {
 # ---------------------------------------------------------------------------------------------------------------------
 
 resource "aws_iam_role" "hyperglance_automation_role" {
-  name               = "Hyperglance_Automations"
+  name_prefix = "Hyperglance_Automations"
   assume_role_policy = data.aws_iam_policy_document.hyperglance_automation_assume_policy.json
   managed_policy_arns = [
     aws_iam_policy.hyperglance_automation_policy.arn,
