@@ -10,22 +10,15 @@ from botocore.exceptions import ClientError
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
+## Get Account ID where this functions lambda is running
+this_account_id = boto3.client('sts').get_caller_identity()['Account']
+logger.debug('Got the account: %s', this_account_id)
+
 def get_boto_session(target_account_id: str, target_region: str='us-east-1') -> object:
-  """ Attempts to Delete and EBS Volume
-
-  Parameters
-  ----------
-  target_account_id : string
-    The account id to use in the session request
-  target_region : string, required: no
-    Region for credential session, default to 'us-east-1' if no va;ie is passed
-
-  Returns
-  -------
-  session
-    Service Client Instance
-
-  """
+  if target_account_id == this_account_id:
+    ## It's the same account, grab the session
+    logger.info('Resource is local to this account')
+    return boto3.Session(region_name=target_region)
 
   hyperglance_role = "arn:aws:iam::" + target_account_id + ":role/Hyperglance_Automations"
   logger.info('Role ARN to use: %s', hyperglance_role)
@@ -57,11 +50,9 @@ def get_boto_session(target_account_id: str, target_region: str='us-east-1') -> 
       else:
         raise RuntimeError('An unexpected error occured attempting to assume role for account: %s', target_account_id)
 
-  boto_session = boto3.Session(
+  return boto3.Session(
     aws_access_key_id=automation_credentials['AccessKeyId'],
     aws_secret_access_key=automation_credentials['SecretAccessKey'],
     aws_session_token=automation_credentials['SessionToken'],
     region_name=target_region
   )
-
-  return boto_session
