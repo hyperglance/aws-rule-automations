@@ -46,16 +46,16 @@ def get_boto_session(target_account_id: str, target_region: str='us-east-1') -> 
       )
 
       ## Get cresential to use in automation
-      automation_account_session_creds[target_account_id] = automation_role['Credentials']
-      automation_credentials = automation_account_session_creds[target_account_id]
+      automation_credentials = automation_role['Credentials']
+      automation_account_session_creds[target_account_id] = automation_credentials
 
       logger.info('Assumed role: %s', hyperglance_role)
 
     except ClientError as err:
       if err.response['Error']['Code'] == 'AccessDenied':
-        logger.error('Unable to Assume role on account: %s, please check that the role exists on the target account', target_account_id)
+        raise RuntimeError('Unable to Assume role on account: %s, please check that the role exists on the target account', target_account_id)
       else:
-        logger.error('An unexpected error occured attempting to assume role for account: %s', target_account_id)
+        raise RuntimeError('An unexpected error occured attempting to assume role for account: %s', target_account_id)
 
   boto_session = boto3.Session(
     aws_access_key_id=automation_credentials['AccessKeyId'],
