@@ -6,8 +6,6 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 
-import os
-from botocore.exceptions import ClientError
 from datetime import datetime
 
 
@@ -44,7 +42,7 @@ def days_last_used(client, access_key) -> int:
     return (current_date_time - access_key['CreateDate'].replace(tzinfo=None)).days
 
 
-def hyperglance_automation(boto_session, resource: dict, automation_params = '') -> str:
+def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
   """ Attempts to delete default policy and set to the LATEST
 
   Parameters
@@ -55,12 +53,6 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     Dict of  Resource attributes touse in the automation
   automation_params : str
     Automation parameters passed from the Hyperglance UI
-
-  Returns
-  -------
-  string
-    A string containing the status of the request
-
   """
 
   client = boto_session.client('iam')
@@ -68,32 +60,25 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
 
   max_days_unused = automation_params.get('MaxDaysUsed')
 
-  try:
-    ## Get all the access keys for the user
-    iam_user_access_keys = client.list_access_keys(
-      UserName=iam_username,
-      MaxItems=int(automation_params.get('MaxKeyItems'))
-    )
+  ## Get all the access keys for the user
+  iam_user_access_keys = client.list_access_keys(
+    UserName=iam_username,
+    MaxItems=int(automation_params.get('MaxKeyItems'))
+  )
 
-    for key in iam_user_access_keys:
-      ## Get access key ID
-      access_key_id = key['AccessKeyId']
-      ## Get number of days since last use
-      days_since_last_use = days_last_used(client=client, access_key_id=access_key_id)
+  for key in iam_user_access_keys:
+    ## Get access key ID
+    access_key_id = key['AccessKeyId']
+    ## Get number of days since last use
+    days_since_last_use = days_last_used(client=client, access_key_id=access_key_id)
 
-      if days_since_last_use > max_days_unused:
-        ## Deactivate the Key
-        client.update_access_key(
-          UserName=iam_username,
-          AccessKeyId=access_key_id,
-          Status='Inactive'
-        )
-        automation_output = "IAM User: {} access key id: {} has been deactivated"
-
-  except ClientError as err:
-    automation_output = "An unexpected client error has occured, error: {}".format(err)
-
-  return automation_output
+    if days_since_last_use > max_days_unused:
+      ## Deactivate the Key
+      client.update_access_key(
+        UserName=iam_username,
+        AccessKeyId=access_key_id,
+        Status='Inactive'
+      )
 
 
 def info() -> dict:

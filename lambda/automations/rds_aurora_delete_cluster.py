@@ -10,7 +10,7 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 import uuid
 
 ## Delete RDS Aurora DB Cluster
-def hyperglance_automation(boto_session, resource: dict, automation_params = '') -> str:
+def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
   """ Attempts to Delete and Aurora Backed RDS Instance
 
   Parameters
@@ -21,30 +21,16 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     Dict of  Resource attributes touse in the automation
   automation_params : str
     Automation parameters passed from the Hyperglance UI
-
-  Returns
-  -------
-  string
-    A string containing the status of the request
-
   """
 
   client = boto_session.client('rds')
   rds_instance = resource['id']
 
-  response = client.delete_db_cluster(
+  client.delete_db_cluster(
     DBClusterIdentifier=rds_instance,
     SkipFinalSnapshot=automation_params.get('SkipAuroraSnapshot').lower() in ['true', 'y', 'yes'],
     FinalDBSnapshotIdentifier='Snapshot_{}'.format(str(uuid.uuid5(uuid.NAMESPACE_DNS, 'hyperglance')))
   )
-
-  result = response['ResponseMetadata']['HTTPStatusCode']
-  if result >= 400:
-    automation_output = "An unexpected error occured, error message: {}".format(result)
-  else:
-    automation_output = "Deleted Autora Cluster: {}".format(rds_instance)
-
-  return automation_output
 
 
 def info() -> dict:
@@ -52,7 +38,7 @@ def info() -> dict:
     "displayName": "Delete Aurora Cluster",
     "description": "Deletes and Aurora DB Cluster",
     "resourceTypes": [
-      "RDS"
+      "Aurora DB Cluster"
     ],
     "params": [
       {

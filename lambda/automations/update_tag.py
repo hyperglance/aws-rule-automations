@@ -7,9 +7,7 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 
-from botocore.exceptions import ClientError
-
-def hyperglance_automation(boto_session, resource: dict, automation_params = '') -> str:
+def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
   """ Attempts to Tag an EC2 Resource
 
   Parameters
@@ -20,76 +18,82 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     Dict of  Resource attributes touse in the automation
   automation_params : str
     Automation parameters passed from the Hyperglance UI
-
-  Returns
-  -------
-  string
-    A string containing the status of the request
-
   """
+
+  new_key = automation_params.get('New Key')
+  dry_run = automation_params.get('DryRun').lower() in ['true', 'y', 'yes']
 
   client = boto_session.client('ec2')
 
-  target_key = list(matched_attributes.keys())[0]
-  target_value = matched_attributes.get(target_key)
-  new_key = automation_params.get('New Key')
+  for old_key, value in resource['matchedAttributes']:
+    # only interested in tags
+    if old_key not in resource['tags']:
+      continue
 
-  if target_key == new_key:
-    ## Skip automation
-    return "Target Key: {} is an exact match of New Key: {}, skipping the automation".format(target_key, new_key)
+    # tag might already be 'good'
+    if old_key == new_key:
+      continue
+
   
-  ## Creat the new tag and retain existing value
-  try:
-    response = client.create_tags(
+    ## Create the new tag and retain existing value
+    client.create_tags(
       Resources=[
         resource['id'],
       ],
-      DryRun=automation_params.get('DryRun').lower() in ['true', 'y', 'yes'],
+      DryRun=dry_run,
       Tags=[
         {
           'Key': new_key,
-          'Value': target_value
+          'Value': value
         },
       ]
     )
-
-    result = response['ResponseMetadata']['HTTPStatusCode']
-
-    if result >=400:
-      automation_output = "An unexpected error occured, error message: {}".format(result)
-      return automation_output
-    else:
-      automation_output = "Added Tag: {} with Value: {} to Resource: {}".format(new_key, target_value, resource_id)
   
-  except ClientError as err:
-    automation_output = "An unexpected client error occured, error: {}".format(err)
-  
-  ## Attempt to Delete the offending tag
-  try:
-    response = client.delete_tags(
+    ## Remove the old offending tag (we make sure to do the destructive action 2nd!)
+    client.delete_tags(
       Resources=[
-        resource_id,
+        resource['id'],
       ],
-      DryRun=automation_params.get('DryRun').lower() in ['true', 'y', 'yes'],
+      DryRun=dry_run,
       Tags=[
         {
-          'Key': target_key,
-          'Value': target_value
+          'Key': old_key,
+          'Value': value
         },
       ]
     )
 
-    result = response['ResponseMetadata']['HTTPStatusCode']
 
-    if result >= 400:
-      automation_output += " An Unexpected error occured, error message: {}".format(result)
-      return automation_output
-    else:
-      automation_output += " Removed Tag: {} from Resource: {}".format(target_key, resource_id)
+def info() -> dict:
+  INFO = {
+    "displayName": "Replace Tag",
+    "description": "Replaces a tag's key but keeps its value (EC2 only)",
+    "resourceTypes": [
+      "Security Group",
+      "EC2 Instance",
+      "EC2 Image",
+      "Internet Gateway",
+      "Network Acl",
+      "Network Interface",
+      "Placement Group",
+      "Route Table",
+      "EC2 Snapshot",
+      "Subnet",
+      "EBS Volume",
+      "VPC"
+    ],
+    "params": [
+      {
+        "name": "New Key",
+        "type": "string",
+        "default": ""
+      },
+      {
+        "name": "DryRun",
+        "type": "boolean",
+        "default": "true"
+      }
+    ]
+  }
 
-  except ClientError as err:
-    automation_output = "An unexpected client error occured, error: {}".format(err)
-    return automation_output
-
-
-  return automation_output
+  return INFO

@@ -7,9 +7,7 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 
-from botocore.exceptions import ClientError
-
-def hyperglance_automation(boto_session, resource: dict, automation_params = '') -> str:
+def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
   """ Attempts to Delte a Security Group
 
   Parameters
@@ -20,33 +18,15 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     Dict of  Resource attributes touse in the automation
   automation_params : str
     Automation parameters passed from the Hyperglance UI
-
-  Returns
-  -------
-  string
-    A string containing the status of the request
-
   """
 
   client = boto_session.client('ec2')
   sg_id = resource['attributes']['Group ID']
 
-  try:
-    response = client.delete_security_group(
-      GroupId=sg_id,
-      DryRun=automation_params.get('DryRun').lower() in ['true', 'y', 'yes']
-    )
-    result = response['ResponseMetadata']['HTTPStatusCode']
-
-    if result >= 400:
-      automation_output = "An unexpected error occurred, error message {}".format(result)
-    else:
-      automation_output = "Security Group {} deleted.".format(sg_id)
-
-  except ClientError as err:
-    automation_output = "An unexpected CLient Error Occured {}".format(err)
-
-  return automation_output
+  client.delete_security_group(
+    GroupId=sg_id,
+    DryRun=automation_params.get('DryRun').lower() in ['true', 'y', 'yes']
+  )
 
 
 def info() -> dict:

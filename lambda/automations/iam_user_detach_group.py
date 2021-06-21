@@ -7,9 +7,7 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 
-from botocore.exceptions import ClientError
-
-def hyperglance_automation(boto_session, resource: dict, automation_params = '') -> str:
+def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
   """ Attempts to detach a user from a group
 
   Parameters
@@ -20,12 +18,6 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     Dict of  Resource attributes touse in the automation
   automation_params : str
     Automation parameters passed from the Hyperglance UI
-
-  Returns
-  -------
-  string
-    A string containing the status of the request
-
   """
 
   client = boto_session.client('iam')
@@ -33,17 +25,10 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
   user_name = resource['attributes']['user name']
   group_id = automation_params.get('Group')
 
-  try:
-    client.remove_user_from_group(
-      GroupName=group_id,
-      UserName=user_name
-    )
-    automation_output = "Removed user: {} from group: {} successfully".format(user_name, group_id)
-
-  except ClientError as err:
-    automation_output = "An unexpected client error has occured, error: {}".format(err)
-
-  return automation_output
+  client.remove_user_from_group(
+    GroupName=group_id,
+    UserName=user_name
+  )
 
 
 def info() -> dict:

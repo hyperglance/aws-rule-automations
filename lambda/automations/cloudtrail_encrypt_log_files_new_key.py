@@ -5,7 +5,6 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 
-from botocore.exceptions import ClientError
 import json
 
 POLICY = {
@@ -77,32 +76,20 @@ def create_policy(client, target_account: str) -> str:
     The boto IAM client used to get user
   target_account : str
     Target Account for the Policy
-
-  Returns
-  -------
-  string
-    A string containing the status of the request
-
   """
 
-  try:
-    response = client.get_user()
-    user_name = response['User']['UserName']
+  response = client.get_user()
+  user_name = response['User']['UserName']
 
-    kms_policy = json.dumps(POLICY)
+  kms_policy = json.dumps(POLICY)
 
-    kms_policy = kms_policy.replace("_TARGET_ACCOUNT_", target_account)
-    kms_policy = kms_policy.replace("_TARGET_USER_", user_name)
+  kms_policy = kms_policy.replace("_TARGET_ACCOUNT_", target_account)
+  kms_policy = kms_policy.replace("_TARGET_USER_", user_name)
 
-    automation_output = "Policy: {}".format(POLICY)
-
-  except ClientError as err:
-    automation_output = "An unexpected client error has occured, error: {}".format(err)
-
-  return automation_output
+  return kms_policy
 
 
-def create_key(kms_client, iam_client, target_account: str, cloudTrail_name: str) -> str:
+def create_key(kms_client, target_account: str, cloudTrail_name: str) -> str:
   """ Attempts to create a User Key
 
   Parameters
@@ -115,41 +102,27 @@ def create_key(kms_client, iam_client, target_account: str, cloudTrail_name: str
     Target account for the KMS Key
   cloudtrail_name : str
     Name of target Cloudtrail logs
-
-  Returns
-  -------
-  string
-    A string containing the status of the request
-
   """
 
-  try:
-    kms_policy = create_policy(
-      client=kms_client,
-      target_account=target_account
-    )
+  kms_policy = create_policy(
+    client=kms_client,
+    target_account=target_account
+  )
 
-    response = kms_client.create_key(
-      Policy=kms_policy,
-      Description="Key for Cloudtrail: {}".format(cloudTrail_name)
-    )
+  response = kms_client.create_key(
+    Policy=kms_policy,
+    Description="Key for Cloudtrail: {}".format(cloudTrail_name)
+  )
 
-    created_key = response['KeyMetadata']['KeyId']
+  created_key = response['KeyMetadata']['KeyId']
 
-    ## Rotate the Key
-    kms_client.enable_key_rotation(
-      KeyId=created_key
-    )
-
-    automation_output = "{}".format(created_key)
-
-  except ClientError as err:
-    automation_output = "An unexpected client error has occured, error: {}".format(err)
-
-  return automation_output
+  ## Rotate the Key
+  kms_client.enable_key_rotation(
+    KeyId=created_key
+  )
 
 
-def hyperglance_automation(boto_session, resource: dict, automation_params = '') -> str:
+def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
   """ Attempts to Enable Encryption on Cloudtrail
 
   Parameters
@@ -160,43 +133,27 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     Dict of  Resource attributes touse in the automation
   automation_params : str
     Automation parameters passed from the Hyperglance UI
-
-  Returns
-  -------
-  string
-    A string containing the status of the request
-
   """
 
   ## Setup required sessions
   cloudtrail_client = boto_session.client('cloudtrail')
-  iam_client = boto_session.client('iam')
   kms_client = boto_session.client('kms')
 
   cloudtrail_name = resource['atributes']['Cloudtrail Name']
   target_account = resource['account']
 
-  try:
-    key = create_key(
-      kms_client=kms_client,
-      iam_client=iam_client,
-      target_account=target_account,
-      cloudTrail_name=cloudtrail_name
-    )
+  key = create_key(
+    kms_client=kms_client,
+    target_account=target_account,
+    cloudTrail_name=cloudtrail_name
+  )
 
-    ## Finally enable the encryption
-    cloudtrail_client.update_trail(
-      Name=cloudtrail_name,
-      KmsKeyId=key,
-      EnableLogFileValidation=True,
-    )
-
-    automation_output = "CloudTrail: {} encrypt log files using key: {}".format(cloudtrail_name.split('/')[-1], key)
-
-  except ClientError as err:
-    automation_output = "An unexpected client error occured, error: {}".format(err)
-
-  return automation_output
+  ## Finally enable the encryption
+  cloudtrail_client.update_trail(
+    Name=cloudtrail_name,
+    KmsKeyId=key,
+    EnableLogFileValidation=True,
+  )
 
 
 def info() -> dict:

@@ -6,9 +6,7 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 
-from botocore.exceptions import ClientError
-
-def hyperglance_automation(boto_session, resource: dict, automation_params = '') -> str:
+def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
   """ Attempts to delete a User Access Key
 
   Parameters
@@ -19,31 +17,23 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     Dict of  Resource attributes touse in the automation
   automation_params : str
     Automation parameters passed from the Hyperglance UI
-
-  Returns
-  -------
-  string
-    A string containing the status of the request
-
   """
 
   client = boto_session.client('iam')
   user_name = resource['attributes']['User Name']
-  
-  automation_output = ''
 
-  for rows, row in enumerate(table):
-    try:
-      client.delete_access_key(
-        UserName=user_name,
-        AccessKeyId=row['Access Key Id']
-      )
-      automation_output += "Access Key: {} for user: {} deleted".format(row['Access Key Id'], user_name)
+  iam_user_access_keys = client.list_access_keys(
+    UserName=user_name,
+    MaxItems=10
+  )
 
-    except ClientError as err:
-      automation_output += "An unexpected client error occured, error: {}".format(err)
-
-  return automation_output
+  for key in iam_user_access_keys:
+    ## Get access key ID
+    access_key_id = key['AccessKeyId']
+    client.delete_access_key(
+      UserName=user_name,
+      AccessKeyId=access_key_id
+    )
 
 
 def info() -> dict:

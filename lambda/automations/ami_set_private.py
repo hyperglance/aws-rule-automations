@@ -7,9 +7,7 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 
-from botocore.exceptions import ClientError
-
-def hyperglance_automation(boto_session, resource: dict, automation_params = '') -> str:
+def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
   """ Attempts to set an AMI to Private
 
   Parameters
@@ -20,12 +18,6 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     Dict of  Resource attributes touse in the automation
   automation_params : str
     Automation parameters passed from the Hyperglance UI
-
-  Returns
-  -------
-  string
-    A string containing the status of the request
-
   """
 
   client = boto_session.client('ec2')
@@ -33,32 +25,17 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
   ami_id = resource['attributes']['AMI ID']
   owner_id = resource['attributes']['Owner ID']
 
-  ## Attempt to update AMI Properties
-
-  try:
-    response = client.modify_image_attribute(
-      ImageId=ami_id,
-      LaunchPermission={
-        'Remove': [
-          {
-            "Group": 'all',
-            "UserId": owner_id
-          },
-        ]
-      }
-    )
-
-    result = response['ResponseMetadata']['HTTPStatusCode']
-
-    if result >= 400:
-      automation_output = "An unexpected error occured, error message: {}".format(result)
-    else:
-      automation_output = "AMI {} set to private".format(ami_id)
-
-  except ClientError as err:
-    automation_output = "An Unexpected Client Error occured, error message: {}".format(err)
-
-  return automation_output
+  client.modify_image_attribute(
+    ImageId=ami_id,
+    LaunchPermission={
+      'Remove': [
+        {
+          "Group": 'all',
+          "UserId": owner_id
+        },
+      ]
+    }
+  )
 
 def info() -> dict:
   INFO = {

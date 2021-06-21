@@ -7,9 +7,8 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 
-from botocore.exceptions import ClientError
 
-def hyperglance_automation(boto_session, resource: dict, automation_params = '') -> str:
+def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
   """ Attempts to all Ingress and Egress Security Group Rules
 
   Parameters
@@ -20,12 +19,6 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     Dict of  Resource attributes touse in the automation
   automation_params : str
     Automation parameters passed from the Hyperglance UI
-
-  Returns
-  -------
-  string
-    A string containing the status of the request
-
   """
 
   client = boto_session.client('ec2')
@@ -51,16 +44,9 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
         del security_group_egress[index]['UserIdGroupsPairs'][0]['GroupName']
       except Exception as err:
         continue
-    response = security_group_client.revoke_egress(
+    security_group_client.revoke_egress(
       IpPermissions=security_group_egress
     )
-
-    result = response['ResponseMetadata']['HTTPStatusCode']
-
-    if result >= 400:
-      automation_output = "An unexpected error occured, error message: {}".format(result)
-    else:
-      automation_output = "Security Group: {} Egress Rules removed".format(security_group_id)
 
   ## Attempt to delete
   if security_group_ingress:
@@ -70,18 +56,9 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
         del security_group_ingress[index]['UserIdGroupPairs'][0]['GroupName']
       except Exception as err:
         continue
-    response = security_group_client.revoke_ingress(
+    security_group_client.revoke_ingress(
       IpPermissions=security_group_ingress
     )
-
-    result = response['ResponseMetadata']['HTTPStatusCode']
-
-    if result >= 400:
-      automation_output = "An unexpected error occured, error message: {}".format(result)
-    else:
-      automation_output += "Security Group: {} ingress rules removed".format(security_group_id)
-
-  return automation_output
 
 
 def info() -> dict:

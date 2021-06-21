@@ -7,9 +7,8 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 
-import os
 
-def hyperglance_automation(boto_session, resource: dict, automation_params = '') -> str:
+def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
   """ Attempts to Snapshot and EC2 Instance
 
   Parameters
@@ -20,32 +19,17 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     Dict of  Resource attributes touse in the automation
   automation_params : str
     Automation parameters passed from the Hyperglance UI
-
-  Returns
-  -------
-  string
-    A string containing the status of the request
-
   """
 
   client = boto_session.client('ec2')
   ec2_instance = resource['attributes']['Instance ID']
   vol_id = resource['attributes']['Volume ID']
     
-  response = client.create_snapshot(
+  client.create_snapshot(
     Description="Snapshot created by Hyperglance",
     VolumeId=vol_id,
     DryRun=automation_params.get('DryRun').lower() in ['true', 'y', 'yes']
   )
-  
-  result = response['ResponseMetadata']['HTTPStatusCode']
-
-  if result >= 400:
-    automation_output = "An unexpected error occured, error message: {}".format(result)
-  else:
-    automation_output = "Snapshot Creation for Volume: {} started...".format(vol_id)
-
-  return automation_output
 
 
 def info() -> dict:

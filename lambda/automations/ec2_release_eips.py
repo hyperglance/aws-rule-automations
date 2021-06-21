@@ -7,7 +7,11 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 
-def hyperglance_automation(boto_session, resource: dict, automation_params = '') -> str:
+import logging
+
+logger = logging.getLogger()
+
+def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
   """ Attempts to release EIPs
 
   Parameters
@@ -18,13 +22,8 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     Dict of  Resource attributes touse in the automation
   automation_params : str
     Automation parameters passed from the Hyperglance UI
-
-  Returns
-  -------
-  string
-    A string containing the status of the request
-
   """
+  
 
   client = boto_session.client('ec2')
   ec2_instance = resource['attributes']['Instance ID']
@@ -42,32 +41,18 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
 
   if ec2_eip_addresses:
     for ec2_eip in ec2_eip_addresses:
-      eip_association_id = ec2_eip['AssociationId']
-      response = client.disassociate_address(
-        AssociationId=eip_association_id
+     
+      client.disassociate_address(
+        AssociationId=ec2_eip['AssociationId']
       )
+      logger.debug( "Disassociated EIP: {}".format(ec2_eip['PublicIp']))
 
-      result = response['ResponseMetadata']['HTTPStatusCode']
-      if result >= 400:
-        automation_output = "An unexpected error occured, error message: {}".format(result)
-        return automation_output
-      else:
-        automation_output += "Disassociated EIP: {}".format(ec2_eip['PublicIp'])
-
-      eip_allocation_id = ec2_eip['AllocationId']
-      response = client.release_address(
-        AllocationId=eip_allocation_id
+      client.release_address(
+        AllocationId=ec2_eip['AllocationId']
       )
-
-      result = response['ResponseMetadata']['HTTPStatusCode']
-      if result >= 400:
-        automation_output = "An unexpected error occured, error message: {}".format(result)
-      else:
-        automation_output += "Released EIP: {}".format(ec2_eip['PublicIp'])
+      logger.debug("Released EIP: {}".format(ec2_eip['PublicIp']))
   else:
-    automation_output = "No EIPs found, please check rule configuration"
-
-  return automation_output
+    logger.debug("No EIPs found")
 
 
 def info() -> dict:

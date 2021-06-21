@@ -6,10 +6,9 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 
-from botocore.exceptions import ClientError
-import automations.s3_delete_acls
+import s3_delete_acls
 
-def hyperglance_automation(boto_session, resource: dict, automation_params = '') -> str:
+def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
   """ Attempts to ACLS and Policies from an S3 bucket
 
   Parameters
@@ -20,45 +19,22 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     Dict of  Resource attributes touse in the automation
   automation_params : str
     Automation parameters passed from the Hyperglance UI
-
-  Returns
-  -------
-  string
-    A string containing the status of the request
-
   """
 
   client = boto_session.client('s3')
   bucket_name = resource['id']
 
-  try:
-    ## Remove bucket policy
-    response = client.delete_bucket_policy(
-      Bucket=bucket_name
-    )
-
-    result = response['ResponseMetadata']['HTTPStatusCode']
-
-    if result >= 400:
-      automation_ouptut = "An unexpected error occured deleting the bucket policy for bucket: {}, error:".format(bucket_name, result)
-    else:
-      automation_ouptut = "Bucket policy successully removed from bucket: {}".format(bucket_name)
-
-  except ClientError as err:
-    if err.response['Error']['Code'] == 'NoSuchBucketPolicy':
-      automation_ouptut = "Bucket: {} does not have a bucket policy.".format(bucket_name)
-    else:
-      automation_ouptut = "An unexpected client error occured, error: {}".format(err)
-
-  ## Use existing automation s3_delete_acls to delelte bucket ACLs and keep code DRY
-  s3_delete_acls = s3_delete_acls()
-
-  automation_ouptut += s3_delete_acls(
-    boto_session=boto_session,
-    resource_id=resource_id
+  ## Remove bucket policy
+  client.delete_bucket_policy(
+    Bucket=bucket_name
   )
 
-  return automation_ouptut
+  ## Use existing automation s3_delete_acls to delelte bucket ACLs and keep code DRY
+  s3_delete_acls.hyperglance_automation(
+    boto_session=boto_session,
+    resource=resource,
+    automation_params=automation_params
+  )
 
 
 def info() -> dict:

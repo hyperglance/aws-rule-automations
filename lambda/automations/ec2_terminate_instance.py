@@ -7,11 +7,11 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 
-import automations.ec2_snapshot_instance
+import ec2_snapshot_instance
 
 
 ## Stop EC2 Instance
-def hyperglance_automation(boto_session, resource: dict, automation_params = '') -> str:
+def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
   """ Attempts to Terminate an EC2 Instance
 
   Parameters
@@ -22,40 +22,22 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     Dict of  Resource attributes touse in the automation
   automation_params : str
     Automation parameters passed from the Hyperglance UI
-
-  Returns
-  -------
-  string
-    A string containing the status of the request
-
   """
 
   client = boto_session.client('ec2')
   ec2_instance = resource['attributes']['Instance ID']
 
   if automation_params.get('SnapShotBeforeTerminate').lower() in ['true', 'y', 'yes']:
-    ec2_snapshot_instance = ec2_snapshot_instance()
-    response = ec2_snapshot_instance(
+    ec2_snapshot_instance.hyperglance_automation(
       boto_session, 
-      resource_id
-      )
+      resource,
+      automation_params
+    )
 
-    if response['ResponseMetadata']['HTTPStatusCOde'] >= 400:
-      automation_output = "Something went wrong with the snapshot for instance {}, abandoning termination".format(ec2_instance)
-      return automation_output
-  else:
-    response = client.terminate_instances(
-      InstanceIds=[ec2_instance], 
-      DryRun=automation_params.get('DryRun').lower() in ['true', 'y', 'yes']
-      )
-
-    result = response['ResponseMetadata']['HTTPStatusCode']
-    if result >= 400:
-      automation_output = "An unexpected error occured, error message: {}".format(result)
-    else:
-      automation_output = "Instance {} terminated".format(ec2_instance)
-
-    return automation_output
+  client.terminate_instances(
+    InstanceIds=[ec2_instance], 
+    DryRun=automation_params.get('DryRun').lower() in ['true', 'y', 'yes']
+  )
 
   
 def info() -> dict:

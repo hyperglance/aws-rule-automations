@@ -7,7 +7,6 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 
-from botocore.exceptions import ClientError
 import json
 
 
@@ -162,7 +161,7 @@ def missing_statements(bucket_name: str, target_account: str, action_options: li
   return GETPUT_CHECK, SSL_CHECK
 
 
-def hyperglance_automation(boto_session, resource: dict, automation_params = '') -> str:
+def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
   """ Attempts to set an SSL Policy on an S3 Bucket
 
   Parameters
@@ -177,12 +176,6 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     A list of additional resource values that may be required
   automation_params : str
     Automation parameters passed from the Hyperglance UI
-
-  Returns
-  -------
-  string
-    A string containing the status of the request
-
   """
 
   client = boto_session.client('s3')
@@ -191,52 +184,45 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
   account_number = resource['account']
   bucket_policy = resource['attributes']['policy']
 
-  try:
-    if bucket_policy == "null" or bucket_policy is None:
-      ## No Policy - Create One
-      GETPUT_CHECK["Resource"] = GETPUT_CHECK.get("Resource").replace("BUCKET_NAME", bucket_name)
-      GETPUT_CHECK["Principal"]["AWS"] = account_number
-      GETPUT_CHECK["Action"] = "s3*"
-      SSL_CHECK["Resource"] = SSL_CHECK.get("Resource").replace("BUCKET_NAME", bucket_name)
+  if bucket_policy == "null" or bucket_policy is None:
+    ## No Policy - Create One
+    GETPUT_CHECK["Resource"] = GETPUT_CHECK.get("Resource").replace("BUCKET_NAME", bucket_name)
+    GETPUT_CHECK["Principal"]["AWS"] = account_number
+    GETPUT_CHECK["Action"] = "s3*"
+    SSL_CHECK["Resource"] = SSL_CHECK.get("Resource").replace("BUCKET_NAME", bucket_name)
 
-      BUCKET_POLICY.get('Statement').append(GETPUT_CHECK)
-      BUCKET_POLICY.get('Statement').append(SSL_CHECK)
+    BUCKET_POLICY.get('Statement').append(GETPUT_CHECK)
+    BUCKET_POLICY.get('Statement').append(SSL_CHECK)
 
-      bucket_policy = BUCKET_POLICY
+    bucket_policy = BUCKET_POLICY
 
-    else:
-      ## Update the Policy with any Missing Actions
-      policy_actions = has_get_put_action(
-        bucket_policy=bucket_policy
-      )
-
-      add_getput, add_ssl = missing_statements(
-        bucket_name=bucket_name,
-        target_account=account_number,
-        action_options=policy_actions
-      )
-
-      if add_ssl is None:
-        ## Only add SSL
-        bucket_policy['Statement'].append(add_ssl)
-      else:
-        ## Add SSL and GET / PUT
-        bucket_policy['Statement'].append(add_getput)
-        bucket_policy['Statement'].append(add_ssl)
-
-    policy = json.dumps(bucket_policy)
-
-    client.put_bucket_policy(
-      Bucket=bucket_name,
-      Policy=policy
+  else:
+    ## Update the Policy with any Missing Actions
+    policy_actions = has_get_put_action(
+      bucket_policy=bucket_policy
     )
 
-    automation_output = "Added SSL Policy to bucket: {}".format(bucket_name)
+    add_getput, add_ssl = missing_statements(
+      bucket_name=bucket_name,
+      target_account=account_number,
+      action_options=policy_actions
+    )
 
-  except ClientError as err:
-    automation_output = "An unexpected client error occured, error: {}".format(err)
+    if add_ssl is None:
+      ## Only add SSL
+      bucket_policy['Statement'].append(add_ssl)
+    else:
+      ## Add SSL and GET / PUT
+      bucket_policy['Statement'].append(add_getput)
+      bucket_policy['Statement'].append(add_ssl)
 
-  return automation_output
+  policy = json.dumps(bucket_policy)
+
+  client.put_bucket_policy(
+    Bucket=bucket_name,
+    Policy=policy
+  )
+
 
   def info() -> dict:
     INFO = {

@@ -10,9 +10,7 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 
-from botocore.exceptions import ClientError
-
-def hyperglance_automation(boto_session, resource: dict, automation_params = '') -> str:
+def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
   """ Attempts to Block all Puiblic access to an S3 Bucket
 
   Parameters
@@ -23,33 +21,20 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     Dict of  Resource attributes touse in the automation
   automation_params : str
     Automation parameters passed from the Hyperglance UI
-
-  Returns
-  -------
-  string
-    A string containing the status of the request
-
   """
 
   client = boto_session.client('s3')
   bucket_name = resource['id']
 
-  try:
-    response = client.put_public_access_block(
-      Bucket=bucket_name,
-      PublicAccessBlockConfiguration={
-        'BlockPublicAcls': True,
-        'IgnorePublicAcls': True,
-        'BlockPublicPolicy': True,
-        'RestrictPublicBuckets': True
-      }
-    )
-    automation_output = "Bucket {} public access blocked".format(bucket_name)
-
-  except ClientError as err:
-    automation_output = "An unexpected error occured, error message: {}".format(err)
-  
-  return automation_output
+  client.put_public_access_block(
+    Bucket=bucket_name,
+    PublicAccessBlockConfiguration={
+      'BlockPublicAcls': True,
+      'IgnorePublicAcls': True,
+      'BlockPublicPolicy': True,
+      'RestrictPublicBuckets': True
+    }
+  )
 
 
 def info() -> dict:
@@ -57,7 +42,6 @@ def info() -> dict:
     "displayName": "Block S3 Public Access",
     "description": "Blocks all public access to S3 Bucket",
     "resourceTypes": [
-      "S3",
       "S3 Bucket"
     ],
     "params": [

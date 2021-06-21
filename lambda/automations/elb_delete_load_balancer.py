@@ -7,7 +7,7 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 
-def hyperglance_automation(boto_session, resource: dict, automation_params = '') -> str:
+def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
   """ Attempts to Delete and ELB Load Balancer
 
   Parameters
@@ -18,28 +18,14 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     Dict of  Resource attributes touse in the automation
   automation_params : str
     Automation parameters passed from the Hyperglance UI
-
-  Returns
-  -------
-  string
-    A string containing the status of the request
-
   """
   ## TODO: Add conditional logic for Classic ELB 
   client = boto_session.client('elbv2')
   load_balancer = resource['id']
 
-  response = client.delete_load_balancer(
+  client.delete_load_balancer(
     LoadBalancerArn=load_balancer
   )
-
-  result = response['ResponseMetadata']['HttpStatusCode']
-  if response >= 400:
-    automation_output = "An unexpected error occured, error messaage: {}".format(result)
-  else:
-    automation_output = "Load Balancer {} stopped".format(load_balancer)
-
-  return automation_output
 
 
 def info() -> dict:

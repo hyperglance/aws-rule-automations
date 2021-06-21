@@ -7,7 +7,7 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 
-def hyperglance_automation(boto_session, resource: dict, automation_params = '') -> str:
+def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
   """ Attempts to Start an EC2 Instance
 
   Parameters
@@ -18,30 +18,15 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     Dict of  Resource attributes touse in the automation
   automation_params : str
     Automation parameters passed from the Hyperglance UI
-
-  Returns
-  -------
-  string
-    A string containing the status of the request
-
   """
 
   client = boto_session.client('ec2')
   ec2_instance = resource['attributes']['Instance ID']
 
-  response = client.start_instances(
+  client.start_instances(
     InstanceIds=[ec2_instance],
     DryRun=automation_params.get('DryRun').lower() in ['true', 'y', 'yes']
   )
-
-  result = response['ResponseMetadata']['HTTPStatusCode']
-
-  if result >= 400:
-    automation_output = "An unexpected error occured, error message: {}".format(response)
-  else:
-    automation_output = "Instance {} started".format(ec2_instance)
-
-  return automation_output
 
 
 def info() -> dict:

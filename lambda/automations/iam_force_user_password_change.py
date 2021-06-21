@@ -8,7 +8,7 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 """
 
 
-def hyperglance_automation(boto_session, resource: dict, automation_params = '') -> str:
+def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
   """ Attempts to force a user password change
 
   Parameters
@@ -19,30 +19,15 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     Dict of  Resource attributes touse in the automation
   automation_params : str
     Automation parameters passed from the Hyperglance UI
-
-  Returns
-  -------
-  string
-    A string containing the status of the request
-
   """
 
   client = boto_session.client("iam")
   user_name = resource['attributes']['User Name']
 
-  response = client.update_login_profile(
+  client.update_login_profile(
     UserName=user_name,
     PasswordResetRequired=True
   )
-
-  result = response['ResponseMetadata']['HTTPStatusCode']
-
-  if result >= 400:
-    automation_output = "An unexpected error occured, error message: {}".format(result)
-  else:
-    automation_output = "Password reset enabled for user: {}".format(user_name)
-  
-  return automation_output
 
 
 def info() -> dict:

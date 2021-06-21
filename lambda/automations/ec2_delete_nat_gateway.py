@@ -7,9 +7,8 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 
-import os
 
-def hyperglance_automation(boto_session, resource: dict, automation_params = '') -> str:
+def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
   """ Attempts to Delete a NAT Gateway
 
   Parameters
@@ -20,29 +19,15 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     Dict of  Resource attributes touse in the automation
   automation_params : str
     Automation parameters passed from the Hyperglance UI
-
-  Returns
-  -------
-  string
-    A string containing the status of the request
-
   """
 
   client = boto_session.client('ec2')
   gateway_id = resource['attributes']['NAT Gateway ID']
 
-  response = client.delete_nat_gateway(
+  client.delete_nat_gateway(
     NatGatewayId=gateway_id,
     DryRun=automation_params.get('DryRun').lower() in ['true', 'y', 'yes']
   )
-
-  result = response['ResponseMetadata']['HTTPStatusCode']
-  if result >= 400:
-    automation_output = "An unexpected error occured, error message: {}".format(result)
-  else:
-    automation_output = "NAT Geteway: {} deleted".format(gateway_id)
-
-  return automation_output
 
 
 def info() -> dict:

@@ -6,9 +6,7 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 
-from botocore.exceptions import ClientError
-
-def hyperglance_automation(boto_session, resource: dict, automation_params = '') -> str:
+def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
   """ Attempts to enable cloudtrail log file validation
 
   Parameters
@@ -19,29 +17,15 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     Dict of  Resource attributes touse in the automation
   automation_params : str
     Automation parameters passed from the Hyperglance UI
-
-  Returns
-  -------
-  string
-    A string containing the status of the request
-
   """
 
   client = boto_session.client('cloudtrail')
   cloudtrail_name = resource['attributes']['Cloudtrail ID']
 
-  try:
-    client.update_trail(
-      Name=cloudtrail_name,
-      EnableLogFileValidation=True
-    )
-    automation_output = "Cloud trail log file validation enabled on: {}".format(cloudtrail_name)
-
-  except ClientError as err:
-    automation_output = "An unexpected client error occured, error: {}".format(err)
-
-  return automation_output
-
+  client.update_trail(
+    Name=cloudtrail_name,
+    EnableLogFileValidation=True
+  )
 
 def info() -> dict:
   INFO = {

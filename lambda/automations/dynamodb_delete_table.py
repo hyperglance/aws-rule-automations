@@ -7,10 +7,8 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 
-from botocore.exceptions import ClientError
-
 ## Delets Dynamo DB Table
-def hyperglance_automation(boto_session, resource: dict, automation_params = '') -> str:
+def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
   """ Attempts to Delete and Dynamo DB Table
 
   Parameters
@@ -21,27 +19,14 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     Dict of  Resource attributes touse in the automation
   automation_params : str
     Automation parameters passed from the Hyperglance UI
-
-  Returns
-  -------
-  string
-    A string containing the status of the request
-
   """
 
   client = boto_session.client('dynamodb')
   table_name = resource['id']
 
-  try:
-    response = client.delete_table(
-      TableName=table_name
-    )
-    automation_output = "Deleted Dynamo DB Table: {}".format(table_name)
-
-  except ClientError as err:
-    automation_output = "An unexpected error occured, error message {}".format(err)
-
-  return automation_output
+  client.delete_table(
+    TableName=table_name
+  )
 
 
 def info() -> dict:

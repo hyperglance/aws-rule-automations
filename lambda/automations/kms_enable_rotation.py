@@ -7,7 +7,7 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 """
 
 
-def hyperglance_automation(boto_session, resource: dict, automation_params = '') -> str:
+def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
   """ Attempts to enable KMS Key Rotation
 
   Parameters
@@ -18,30 +18,14 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     Dict of  Resource attributes touse in the automation
   automation_params : str
     Automation parameters passed from the Hyperglance UI
-
-  Returns
-  -------
-  string
-    A string containing the status of the request
-
   """
 
   client = boto_session.client('kms')
-  kms_key = resource['attrinutes']['KMS Key']
+  kms_key = resource['attributes']['KMS Key']
 
-  try:
-    response = client.enable_key_rotation(
-      KeyId=kms_key
-    )
-
-    result = response['ResponseMetadata']['HTTPStatusCode']
-
-    if result >= 400:
-      automation_output = "An unexpected error occured, error message: {}".format(result)
-    else:
-      automation_output = "Key: {} rotation enabled".format(kms_key)
-
-    return automation_output
+  client.enable_key_rotation(
+    KeyId=kms_key
+  )
 
   
 def info() -> dict:

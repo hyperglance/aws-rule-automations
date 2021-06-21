@@ -5,9 +5,7 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 
-from botocore.exceptions import ClientError
-
-def hyperglance_automation(boto_session, resource: dict, automation_params = '') -> str:
+def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
   """ Attempts to Enable Encryption on Cloudtrail
 
   Parameters
@@ -18,12 +16,6 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     Dict of  Resource attributes touse in the automation
   automation_params : str
     Automation parameters passed from the Hyperglance UI
-
-  Returns
-  -------
-  string
-    A string containing the status of the request
-
   """
 
   client = boto_session.client('cloudtrail')
@@ -31,18 +23,10 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
   cloudtrail_name = resource['attributes']['Cloudtrail ID']
   key_id = automation_params.get("Key ID")
 
-  try:
-    client.update_trail(
-      Name=cloudtrail_name,
-      KmsKeyId=key_id
-    )
-
-    automation_output = "Enabled encryption on Cloudtrail: {} using KMS Key: {}".format(cloudtrail_name, key_id)
-
-  except ClientError as err:
-    automation_output = "An unexpected client error occured, error: {}".format(err)
-
-  return automation_output
+  client.update_trail(
+    Name=cloudtrail_name,
+    KmsKeyId=key_id
+  )
 
 def info() -> dict:
 

@@ -6,67 +6,31 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 
-from botocore.exceptions import ClientError
 import json
 
 
-def attach_policy(boto_session, policy_arn: str) -> str:
-  """ Attempts to Attach the policy to users
-
-  Parameters
-  ----------
-  boto_session : object
-    The boto session to use to invoke the automation
-  policy_arn : str
-    Policy to attach to the user
-
-  Returns
-  -------
-  string
-    A string containing the status of the request
-
-  """
-
-  client = boto_session.client('iam')
-
+def attach_policy_to_all_users(client, policy_arn: str):
+  ## Attach policy to each user
   account_users = client.list_users()['Users']
-
-  try:
-    ## Attache policy to each user
-    for user in account_users:
-      client.attach_user_policy(
-        UserName=user.get('UserName'),
-        PolicyArn=policy_arn
-      )
-
-    automation_output = "VPC Isolated"
-
-  except ClientError as err:
-    automation_output = "An unexpected client error has occured, error: {}".format(err)
-
-  return automation_output
+  for user in account_users:
+    client.attach_user_policy(
+      UserName=user.get('UserName'),
+      PolicyArn=policy_arn
+    )
 
 
-def create_deny_policy(boto_session, region: str, vpc_id: str) -> str:
+def create_deny_policy(client, region: str, vpc_id: str):
   """ Attempts to Create a deny policy for User attachment
 
   Parameters
   ----------
-  boto_session : object
-    The boto session to use to invoke the automation
+  client : object
+    The boto client to use to invoke the automation
   region : str
     Target VPC Region
   vpc_id: str
     ID of the target VPC
-
-  Returns
-  -------
-  string
-    A string containing the status of the request
-
   """
-
-  client = boto_session.client('iam')
 
   ## Policy Definition
   policy = {
@@ -75,8 +39,8 @@ def create_deny_policy(boto_session, region: str, vpc_id: str) -> str:
       "automation": "ec2:*",
       "Effect": "Deny",
       "Resource": [
-        "arn:aws:ec2:{region}:*vpc/{vpc_id}",
-        "arn:aws:ec2:{}:*:security-group/*"
+        "arn:aws:ec2:{}:*vpc/{}".format(region, vpc_id),
+        "arn:aws:ec2:{}:*:security-group/*".format(region)
       ],
       "Condition": {
         "ArnEquals": {
@@ -86,113 +50,46 @@ def create_deny_policy(boto_session, region: str, vpc_id: str) -> str:
     ]
   }
 
-  try:
-    ## Create the policy
-    client.create_policy(
-      PolicyName="isolate_{}_access_policy".format(vpc_id),
-      PolicyDocument=json.dumps(policy)
+  ## Create the policy
+  client.create_policy(
+    PolicyName="isolate_{}_access_policy".format(vpc_id),
+    PolicyDocument=json.dumps(policy)
+  )
+
+
+def create_isolation_acl(client, vpc_id: str):
+  acls = client.describe_network_acls(
+    Filters=[
+      {
+        'Name': 'vpc-id',
+        'Values': [
+          vpc_id
+        ]
+      },
+    ],
+  )
+
+  ## Iterate through each ACL
+  vpc_subnet_associations = []
+  for acl in acls.get('NetworkAcls'):
+    associations = acl.get('Associations', [])
+    vpc_subnet_associations += [association.get('NetworkAclAssociationId') for association in associations]
+
+  if vpc_subnet_associations:
+    ## Create ACL with Deny ALL
+    network_acl = client.create_network_acl(
+      VpcId=vpc_id
     )
 
-  except ClientError as err:
-    automation_output = "An unexpected client error: {} has occured, unable to create policy".format(err)
-
-  automation_output = " "
-
-  return automation_output
-
-
-def isolation_policy_exists(boto_session, policy_arn: str) -> bool:
-  """ Checks if the isolation policy already exists
-
-  Parameters
-  ----------
-  boto_session : object
-    The boto session to use to invoke the automation
-  policy_arn : str
-    Policy ARN to check
-
-  Returns
-  -------
-  bool
-    Returns True if policy exists, otherwise False
-
-  """
-
-  client = boto_session.client('iam')
-
-  try:
-    client.get_policy(
-      PolicyARN=policy_arn
-    )
-  
-  except ClientError as err:
-    if err.response['Error']['Code'] == 'NoSuchIdentity':
-      return False
-    else:
-      return "An unexpected client error occured: {} cannot check for policy: {}".format(err, policy_arn)
-
-  return True
-
-def create_isolation_acl(client, vpc_id: str) -> str:
-  """ Attempts to Create an Isolation ACL
-
-  Parameters
-  ----------
-  client : object
-    The boto client object
-  vpc_id : str
-    Id of target VPC
-
-  Returns
-  -------
-  string
-    A string containing the status of the request
-
-  """
-
-  ## VPC Subnets
-  vpc_subnet_associations = [ ]
-
-  try:
-    acls = client.describe_network_acls(
-      Filters=[
-        {
-          'Name': 'vpc-id',
-          'Values': [
-            vpc_id
-          ]
-        },
-      ],
-    )
-
-    ## Iterate through each ACL
-    for acl in acls.get('NetworkAcls'):
-      associations = acl.get('Associations')
-      if associations:
-        vpc_subnet_associations += [associations.get('NetworkAclAssociationId') for association in associations]
-
-    if vpc_subnet_associations:
-      ## Create ACL with Deny ALL
-      network_acl = client.create_network_acl(
-        VpcId=vpc_id
-      )
-
-      for subnet_id in vpc_subnet_associations:
+    for subnet_id in vpc_subnet_associations:
+      if subnet_id:
         client.replace_network_acl_association(
           AssociationId=subnet_id,
-          DryRun=True,
-          NetworkAclId=network_acl.get('NetowrkAclId')
+          NetworkAclId=network_acl.get('NetworkAclId')
         )
 
-  except ClientError as err:
-    automation_output = "An unexepcted client error occured: {}, failed to create isolation acls".format(err)
 
-  automation_output = " "
-
-  return automation_output
-
-
-def hyperglance_automation(boto_session, resource: dict, automation_params = '') -> str:
+def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
   """ Attempts to Qurantine and EC2 Instance
 
   Parameters
@@ -203,63 +100,41 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     Dict of  Resource attributes touse in the automation
   automation_params : str
     Automation parameters passed from the Hyperglance UI
-
-  Returns
-  -------
-  string
-    A string containing the status of the request
-
   """
 
-  client = boto_session.client('ec2')
+  ec2_client = boto_session.client('ec2')
+  iam_client = boto_session.client('iam')
 
   vpc_id = resource['attributes']['VPC ID']
+  vpc_arn = resource['attributes']['arn']
   region = resource['region']
 
+  policy_arn = vpc_arn.replace(':vpc/', ':policy/').replace(region, '') + '_vpc_quarantined_by_hyperglance'
+
+  ## Disable DNS
+  ec2_client.modify_vpc_attribute(
+    EnableDnsSupport={
+      'Value': False
+    },
+    VpcId=vpc_id
+  )
+
+  ## Create a Deny ACL
+  create_isolation_acl(ec2_client, vpc_id)
+
   try:
-    target_vpc = client.describe_vpcs(
-      VpcIds=[vpc_id],
-    ).get('Vpcs')[0]
-
-    vpc_account_id = target_vpc.get('OwnerId')
-    isolate_policy_arn = "arn:aws:iam::{}:policy/isolate_{}_access_policy".format(vpc_account_id, vpc_id)
-
-    ## Disable DNS
-    client.modify_vpc_atribute(
-      EnableDnsSupport={
-        'Value': False
-      },
-      VpcId=vpc_id
+    create_deny_policy(
+      client=iam_client,
+      region=region,
+      vpc_id=vpc_id
     )
+  except:
+    pass # Policy might already exist
 
-    ## Create a Deny ACL
-    automation_output = create_isolation_acl(client, vpc_id)
-
-    ## Check for Errors
-    if automation_output == ' ' and not isolation_policy_exists(
-      boto_session=boto_session,
-      policy_arn=isolate_policy_arn
-      ):
-      
-      automation_output = create_deny_policy(
-        boto_session=boto_session,
-        region=region,
-        vpc_id=vpc_id
-      )
-
-      if 'error' in automation_output:
-        return automation_output
-
-    ## Attach policy to all users in the account
-    automation_output = attach_policy(
-      boto_session=boto_session,
-      policy_arn=isolate_policy_arn
-    )
-
-  except ClientError as err:
-    automation_output = "An unexpected client error occured, error: {}".format(err)
-
-  return automation_output
+  attach_policy_to_all_users(
+    client=iam_client,
+    policy_arn=policy_arn
+  )
 
 
 def info() -> dict:

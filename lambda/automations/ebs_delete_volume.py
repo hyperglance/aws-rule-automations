@@ -8,7 +8,7 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 """
 
 ## Delete EBS Snapshot
-def hyperglance_automation(boto_session, resource: dict, automation_params = '') -> str:
+def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
   """ Attempts to Delete and EBS Volume
 
   Parameters
@@ -19,35 +19,18 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     Dict of  Resource attributes touse in the automation
   automation_params : str
     Automation parameters passed from the Hyperglance UI
-
-  Returns
-  -------
-  string
-    A string containing the status of the request
-
   """
   client = boto_session.client('ec2')
   ebs_volume = resource['attributes']['Volume ID']
 
-  response = client.delete_volume(
+  client.delete_volume(
     VolumeId=ebs_volume
   )
 
   ## Wait for the deletion to finish
-  waiter = client.get_waiter('volume_deleted')
-
-  waiter.wait(
+  client.get_waiter('volume_deleted').wait(
     VolumeIds=[ebs_volume]
   )
-
-  result = response['ResponseMetadata']['HTTPStatusCode']
-
-  if result >= 400:
-    automation_output = "An unexpected error occured, error message: {}".format(result)
-  else:
-    automation_output = "EBS Volume: {} deleted".format(ebs_volume)
-
-  return automation_output
 
 
 def info() -> dict:

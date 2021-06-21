@@ -7,9 +7,7 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 
-from botocore.exceptions import ClientError
-
-def hyperglance_automation(boto_session, resource: dict, automation_params = '') -> str:
+def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
   """ Attempts to Start a Workspace
 
   Parameters
@@ -20,31 +18,18 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     Dict of  Resource attributes touse in the automation
   automation_params : str
     Automation parameters passed from the Hyperglance UI
-
-  Returns
-  -------
-  string
-    A string containing the status of the request
-
   """
 
   client = boto_session.client('workspaces')
   workspace_id = resource['id']
 
-  try:
-    response = client.start_workspaces(
-      StartWorkspaceRequests=[
-        {
-        'WorkspaceId': workspace_id
-        },
-      ]
-    )
-    automation_output = "Started Workspace ID: {}".format(workspace_id)
-
-  except ClientError as err:
-    automation_output = "An unexpected error occured, error message: {}".format(err)
-
-  return automation_output
+  client.start_workspaces(
+    StartWorkspaceRequests=[
+      {
+      'WorkspaceId': workspace_id
+      }
+    ]
+  )
 
 
 def info() -> dict:

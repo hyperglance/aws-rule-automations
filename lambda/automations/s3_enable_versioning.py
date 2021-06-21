@@ -9,7 +9,7 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 from botocore.exceptions import ClientError
 
-def hyperglance_automation(boto_session, resource: dict, automation_params = '') -> str:
+def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
   """ Attempts to Enable versioning on an S3 Bucket
 
   Parameters
@@ -20,36 +20,18 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     Dict of  Resource attributes touse in the automation
   automation_params : str
     Automation parameters passed from the Hyperglance UI
-
-  Returns
-  -------
-  string
-    A string containing the status of the request
-
   """
 
   client = boto_session.client('s3')
   bucket_name = resource['id']
 
-  try:
-    response = client.put_bucket_versioning(
-      Bucket=bucket_name,
-      VersioningConfiguration={
-        'MFADelete': 'Disabled',
-        'Status': 'Enabled'
-      },
-    )
-    result = response['ResponseMetadata']['HTTPStatusCode']
-
-    if result >= 400:
-      automation_output = "An unexpected error occured, error message: {}".format(result)
-    else:
-      automation_output = "Bucket {} enabled for versioning".format(bucket_name)
-    
-  except ClientError as err:
-    automation_output = "An unexpected Client error Occured, error message: {}".format(err)
-
-  return automation_output
+  client.put_bucket_versioning(
+    Bucket=bucket_name,
+    VersioningConfiguration={
+      'MFADelete': 'Disabled',
+      'Status': 'Enabled'
+    },
+  )
 
 
 def info() -> dict:
