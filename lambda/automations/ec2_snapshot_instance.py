@@ -23,11 +23,14 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
 
   client = boto_session.client('ec2')
   ec2_instance = resource['attributes']['Instance ID']
-  vol_id = resource['attributes']['Volume ID']
     
-  client.create_snapshot(
-    Description="Snapshot created by Hyperglance",
-    VolumeId=vol_id,
+  client.create_snapshots(
+    Description=f'Snapshot of {ec2_instance} created by Hyperglance',
+    InstanceSpecification={
+      'InstanceId': ec2_instance,
+      'ExcludeBootVolume': False
+    },
+    CopyTagsFromSource='volume',
     DryRun=automation_params.get('DryRun').lower() in ['true', 'y', 'yes']
   )
 
