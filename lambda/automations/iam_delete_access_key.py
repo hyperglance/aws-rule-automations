@@ -23,11 +23,10 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
   user_name = resource['attributes']['User Name']
 
   iam_user_access_keys = client.list_access_keys(
-    UserName=user_name,
-    MaxItems=10
+    UserName=user_name
   )
 
-  for key in iam_user_access_keys:
+  for key in iam_user_access_keys['AccessKeyMetadata']:
     ## Get access key ID
     access_key_id = key['AccessKeyId']
     client.delete_access_key(

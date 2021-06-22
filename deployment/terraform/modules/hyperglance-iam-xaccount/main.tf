@@ -47,7 +47,7 @@ resource "aws_iam_policy" "hyperglance_automation_policy" {
           "ec2:DescribeInstances",
           "ec2:DescribeVolumes",
           "ec2:DescribeVolumeStatus",
-          "ec2:DescribeSnapshots"
+          "ec2:DescribeSnapshots",
           "ec2:DisassociateAddress",
           "ec2:ModifyInstanceAttribute",
           "ec2:ModifyImageAttribute",
@@ -66,6 +66,7 @@ resource "aws_iam_policy" "hyperglance_automation_policy" {
           "iam:CreateRole",
           "iam:GetPolicy",
           "iam:GetUser",
+          "iam:ListAccessKeys",
           "iam:PassRole",
           "iam:RemoveRoleFromInstanceProfile",
           "iam:ListInstanceProfilesForRole",

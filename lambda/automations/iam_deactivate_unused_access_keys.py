@@ -62,11 +62,10 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
 
   ## Get all the access keys for the user
   iam_user_access_keys = client.list_access_keys(
-    UserName=iam_username,
-    MaxItems=int(automation_params.get('MaxKeyItems'))
+    UserName=iam_username
   )
 
-  for key in iam_user_access_keys:
+  for key in iam_user_access_keys['AccessKeyMetadata']:
     ## Get access key ID
     access_key_id = key['AccessKeyId']
     ## Get number of days since last use
@@ -89,13 +88,6 @@ def info() -> dict:
       "IAM User"
     ],
     "params": [
-      {
-        "name": "MaxKeyItems",
-        "type": "number",
-        "default": "10",
-        "min": "5",
-        "max": "200"
-      },
       {
         "name": "MaxDaysUsed",
         "type": "Number",

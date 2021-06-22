@@ -20,17 +20,16 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
   """
 
   client = boto_session.client('iam')
-  user_name = resource['attributes']['user name']
+  user_name = resource['attributes']['User Name']
 
   iam_user_access_keys = client.list_access_keys(
-    UserName=user_name,
-    MaxItems=10
+    UserName=user_name
   )
 
-  for key in iam_user_access_keys:
+  for key in iam_user_access_keys['AccessKeyMetadata']:
     client.update_access_key(
       UserName=user_name,
-      AccessKeyId=key['Access Key Id'],
+      AccessKeyId=key['AccessKeyId'],
       Status='Inactive'
     )
   

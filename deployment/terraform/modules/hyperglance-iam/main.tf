@@ -66,6 +66,7 @@ resource "aws_iam_policy" "hyperglance_automation_policy" {
           "iam:CreateRole",
           "iam:GetPolicy",
           "iam:GetUser",
+          "iam:ListAccessKeys",
           "iam:PassRole",
           "iam:RemoveRoleFromInstanceProfile",
           "iam:ListInstanceProfilesForRole",
