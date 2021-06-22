@@ -7,8 +7,6 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 
-from botocore.exceptions import ClientError
-
 def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
   """ Attempts to Enable versioning on an S3 Bucket
 
