@@ -7,7 +7,7 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 
-import ec2_snapshot_instance
+import automations.ec2_snapshot_instance
 
 
 ## Stop EC2 Instance
@@ -28,7 +28,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
   ec2_instance = resource['attributes']['Instance ID']
 
   if automation_params.get('SnapShotBeforeTerminate').lower() in ['true', 'y', 'yes']:
-    ec2_snapshot_instance.hyperglance_automation(
+    automations.ec2_snapshot_instance.hyperglance_automation(
       boto_session, 
       resource,
       automation_params
@@ -50,6 +50,11 @@ def info() -> dict:
     "params": [
       {
         "name": "DryRun",
+        "type": "bool",
+        "default": "True"
+      },
+      {
+        "name": "SnapShotBeforeTerminate",
         "type": "bool",
         "default": "True"
       }
