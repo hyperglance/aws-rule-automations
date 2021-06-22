@@ -52,7 +52,7 @@ def process_event(automation_data, output_payload):
       automation_to_execute = importlib.import_module(''.join(['automations.', automation_name]), package=None)
     except:
       msg = 'Unable to find or load an automation called: %s' % automation_name
-      logger.error(msg)
+      logger.exception(msg)
       automation['critical_error'] = msg
       return
 
@@ -67,6 +67,6 @@ def process_event(automation_data, output_payload):
         logger.info('Executed %s successfully %s', automation_name, automation_to_execute_output)
         
       except Exception as err:
-        logger.error('Could not execute: %s, output from automation: %s', automation_name, err)
+        logger.exception('Automation %s failed on resource %s', automation_name, resource['id'])
         resource['error'] = str(err) # augment resource with an error field
         automation['errored'].append(resource)
