@@ -70,9 +70,12 @@ resource "aws_iam_policy" "hyperglance_automation_policy" {
           "iam:ListAccessKeys",
           "iam:PassRole",
           "iam:RemoveRoleFromInstanceProfile",
+          "iam:RemoveUserFromGroup",
           "iam:ListInstanceProfilesForRole",
           "iam:UpdateAccountPasswordPolicy",
           "iam:UpdateLoginProfile",
+          "lambda:GetFunction",
+          "lambda:UpdateFunctionConfiguration",
           "elasticloadbalancing:DeleteLoadBalancer",
           "rds:DeleteDBInstance",
           "rds:ModifyDBInstance",
@@ -92,6 +95,7 @@ resource "aws_iam_policy" "hyperglance_automation_policy" {
           "s3:PutBucketPublicAccessBlock",
           "s3:PutObject",
           "sts:AssumeRole",
+          "workspaces:StartWorkspaces",
           "workspaces:StopWorkspaces",
           "workspaces:TerminateWorkspaces"
         ]
