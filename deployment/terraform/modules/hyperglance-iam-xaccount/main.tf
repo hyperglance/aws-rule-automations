@@ -7,6 +7,11 @@ terraform {
   required_version = ">= 0.14.0, < 0.15"
 }
 
+# ---------------------------------------------------------------------------------------------------------------------
+# WE MUST BE MINDFUL OF GOVCLOUD
+# ---------------------------------------------------------------------------------------------------------------------
+
+data "aws_partition" "current" {}
 
 # ---------------------------------------------------------------------------------------------------------------------
 # CREATE AN AWS IAM POLICY FOR automations EXECUTION
@@ -112,7 +117,7 @@ data "aws_iam_policy_document" "hyperglance_automation_assume_policy" {
 
     principals {
       type        = "AWS"
-      identifiers = ["arn:aws:iam::${var.lambda_account_id}:root"]
+      identifiers = ["arn:${data.aws_partition.current.partition}:iam::${var.lambda_account_id}:root"]
     }
   }
 }
