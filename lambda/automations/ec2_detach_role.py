@@ -41,8 +41,7 @@ def info() -> dict:
     "displayName": "Detach IAM Role",
     "description": "Detaches a specified role from an EC2 Instance",
     "resourceTypes": [
-      "EC2 Instance",
-      "IAM"
+      "EC2 Instance"
     ],
     "params": [
       {

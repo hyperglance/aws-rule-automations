@@ -28,6 +28,7 @@ resource "aws_iam_policy" "hyperglance_automation_policy" {
       {
         Action = [
           "dynamodb:DeleteTable",
+          "ec2:AssociateIamInstanceProfile",
           "ec2:AuthorizeSecurityGroupEgress",
           "ec2:AuthorizeSecurityGroupIngress",
           "ec2:CreateSecurityGroup",
@@ -66,6 +67,7 @@ resource "aws_iam_policy" "hyperglance_automation_policy" {
           "iam:GetPolicy",
           "iam:GetUser",
           "iam:PassRole",
+          "iam:RemoveRoleFromInstanceProfile",
           "iam:ListInstanceProfilesForRole",
           "iam:UpdateAccountPasswordPolicy",
           "iam:UpdateLoginProfile",
