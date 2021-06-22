@@ -23,43 +23,6 @@
       ]
     },
     {
-      "name": "cloudtrail_enable_log_validation",
-      "displayName": "Enable Cloudtrail Validation",
-      "description": "Enables Cloudtrail Log Validation",
-      "resourceTypes": [
-        "Cloudtrail"
-      ],
-      "params": [
-  
-      ]
-    },
-    {
-      "name": "cloudtrail_encrypt_log_files_new_key",
-      "displayName": "Encrypt Cloudtrail Logs",
-      "description": "Encrypts Cloudtrail Logs, using a new generated KMS Key",
-      "resourceTypes": [
-        "Cloudtrail"
-      ],
-      "params": [
-  
-      ]
-    },
-    {
-      "name": "cloudtrail_encrypt_log_files_existing_key",
-      "displayName": "Encrypt Cloudtrail Logs - Existing Key",
-      "description": "Encrypts Cloudtrail Logs, using an existing KMS Key",
-      "resourceTypes": [
-        "Cloudtrail"
-      ],
-      "params": [
-        {
-          "name": "Key ID",
-          "type": "string",
-          "default": " "
-        }
-      ]
-    },
-    {
       "name": "dynamodb_delete_table",
       "displayName": "Delete Dynamo DB Table",
       "description": "Deletes a specified Dynamo DB Table",
@@ -313,10 +276,11 @@
     },
     {
       "name": "elb_delete_load_balancer",
-      "displayName": "Deletes v2 Load Balancer",
-      "description": "Destroys and Elastic Load Balancer (v2)",
+      "displayName": "Delete v2 Load Balancer",
+      "description": "Destroys ALB/NLB Elastic Load Balancer (v2)",
       "resourceTypes": [
-        "Elastic Load Balancer"
+        "Application Load Balancer",
+        "Network Load Balancer"
       ],
       "params": [
   
@@ -400,17 +364,6 @@
       ]
     },
     {
-      "name": "iam_quarantine_role",
-      "displayName": "Quarantine IAM Role",
-      "description": "Attaches a DENY ALL policy to the role",
-      "resourceTypes": [
-        "IAM"
-      ],
-      "params": [
-  
-      ]
-    },
-    {
       "name": "iam_revoke_access_key",
       "displayName": "Revoke Access Key",
       "description": "Revokes IAM User Access Keys",
@@ -419,21 +372,6 @@
       ],
       "params": [
   
-      ]
-    },
-    {
-      "name": "iam_role_attach_policy",
-      "displayName": "Attach Policy to Role",
-      "description": "Attaches an existing policy to an IAM role",
-      "resourceTypes": [
-        "IAM"
-      ],
-      "params": [
-        {
-          "name": "Policy",
-          "type": "string",
-          "default": ""
-        }
       ]
     },
     {
@@ -454,9 +392,9 @@
     {
       "name": "iam_user_detach_group",
       "displayName": "Detach User from Group",
-      "description": "Detaches a user from a specifid User Group",
+      "description": "Detaches a user from a specified User Group",
       "resourceTypes": [
-        "IAM"
+        "IAM User"
       ],
       "params": [
         {
@@ -474,18 +412,11 @@
         "IAM"
       ],
       "params": [
-  
-      ]
-    },
-    {
-      "name": "lambda_detach_blanket_permissions",
-      "displayName": "Detach Lambda Permissions",
-      "description": "Detaches Permissions from a Lambda execution role, that allows ALL (*) resources",
-      "resourceTypes": [
-        "IAM"
-      ],
-      "params": [
-  
+        {
+          "name": "KMS Key",
+          "type": "string",
+          "default": ""
+        }
       ]
     },
     {
@@ -515,7 +446,7 @@
       "displayName": "Delete Aurora Cluster",
       "description": "Deletes an Aurora DB Cluster",
       "resourceTypes": [
-        "RDS"
+        "Aurora DB Cluster"
       ],
       "params": [
         {
@@ -526,22 +457,22 @@
       ]
     },
     {
-      "name": "rds_aurora_delete_cluster",
+      "name": "rds_terminate_instance",
       "displayName": "Delete RDS DB Instance",
       "description": "Deletes an RDS DB Instance",
       "resourceTypes": [
-        "RDS"
+        "RDS DB Instance"
       ],
       "params": [
         {
           "name": "SkipSnapshot",
           "type": "bool",
-          "default": "False"
+          "default": "false"
         },
         {
           "name": "DeleteBackups",
           "type": "bool",
-          "default": "False"
+          "default": "false"
         }
       ]
     },
@@ -550,7 +481,7 @@
       "displayName": "Quarantine RDS Instance",
       "description": "Quarantines and RDS Instance by applying a DENY ALL Security Group",
       "resourceTypes": [
-        "EC2 Instance"
+        "RDS DB Instance"
       ],
       "params": [
   
@@ -565,7 +496,7 @@
       ],
       "params": [
         {
-          "name": "SkipRedshiftSnapshot",
+          "name": "SkipSnapshot",
           "type": "boolean",
           "default": "false"
         }

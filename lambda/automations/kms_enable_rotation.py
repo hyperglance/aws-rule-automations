@@ -21,7 +21,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
   """
 
   client = boto_session.client('kms')
-  kms_key = resource['attributes']['KMS Key']
+  kms_key = automation_params.get('KMS Key')
 
   client.enable_key_rotation(
     KeyId=kms_key
@@ -36,7 +36,11 @@ def info() -> dict:
       "IAM"
     ],
     "params": [
-
+      {
+        "name": "KMS Key",
+        "type": "string",
+        "default": ""
+      }
     ]
   }
 

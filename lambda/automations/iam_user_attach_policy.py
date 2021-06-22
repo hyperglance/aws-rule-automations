@@ -23,7 +23,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
 
   client = boto_session.client('iam')
 
-  user_name = resource['attributes']['user name']
+  user_name = resource['attributes']['User Name']
   policy_arn = automation_params.get('Policy')
 
   client.attach_user_policy(

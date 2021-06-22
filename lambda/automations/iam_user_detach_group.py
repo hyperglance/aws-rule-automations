@@ -22,7 +22,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
 
   client = boto_session.client('iam')
 
-  user_name = resource['attributes']['user name']
+  user_name = resource['attributes']['User Name']
   group_id = automation_params.get('Group')
 
   client.remove_user_from_group(
@@ -34,9 +34,9 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
 def info() -> dict:
   INFO = {
     "displayName": "Detach User from Group",
-    "description": "Detaches a user from a specifid User Group",
+    "description": "Detaches a user from a specified User Group",
     "resourceTypes": [
-      "IAM"
+      "IAM User"
     ],
     "params": [
       {

@@ -30,10 +30,11 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
 
 def info() -> dict:
   INFO = {
-    "displayName": "Deletes v2 Load Balancer",
-    "description": "Destroys and Elastic Load Balancer (v2)",
+    "displayName": "Delete Load Balancer",
+    "description": "Destroys ALB/NLB Elastic Load Balancer (v2)",
     "resourceTypes": [
-      "Elastic Load Balancer"
+      "Application Load Balancer",
+      "Network Load Balancer"
     ],
     "params": [
 
