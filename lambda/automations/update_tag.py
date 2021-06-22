@@ -25,7 +25,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
 
   client = boto_session.client('ec2')
 
-  for old_key, value in resource['matchedAttributes']:
+  for old_key, value in resource['matchedAttributes'].items():
     # only interested in tags
     if old_key not in resource['tags']:
       continue
