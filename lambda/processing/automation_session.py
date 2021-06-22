@@ -10,8 +10,10 @@ from botocore.exceptions import ClientError
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-## Get Account ID where this functions lambda is running
-this_account_id = boto3.client('sts').get_caller_identity()['Account']
+## Get some details about where this lambda is running
+identity = boto3.client('sts').get_caller_identity()
+this_account_id = identity['Account']
+partition = identity['Arn'].split(':')[1]
 logger.debug('Got the account: %s', this_account_id)
 
 def get_boto_session(target_account_id: str, target_region: str='us-east-1') -> object:
@@ -20,7 +22,7 @@ def get_boto_session(target_account_id: str, target_region: str='us-east-1') -> 
     logger.info('Resource is local to this account')
     return boto3.Session(region_name=target_region)
 
-  hyperglance_role = "arn:aws:iam::" + target_account_id + ":role/Hyperglance_Automations"
+  hyperglance_role = f'arn:{partition}:iam::{target_account_id}:role/Hyperglance_Automations'
   logger.info('Role ARN to use: %s', hyperglance_role)
 
   ## Try and get the credentials for ENV

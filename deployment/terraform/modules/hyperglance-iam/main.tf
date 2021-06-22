@@ -8,10 +8,10 @@ terraform {
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
-# GET CALLET IDENTITY FOR POLICY
+# WE MUST BE MINDFUL OF GOVCLOUD
 # ---------------------------------------------------------------------------------------------------------------------
 
-data "aws_caller_identity" "current" {}
+data "aws_partition" "current" {}
 
 # ---------------------------------------------------------------------------------------------------------------------
 # CREATE AN AWS IAM POLICY FOR automations EXECUTION
@@ -99,33 +99,6 @@ resource "aws_iam_policy" "hyperglance_automation_policy" {
   })
 }
 
-# ---------------------------------------------------------------------------------------------------------------------
-# CREATE A CLOUDWATCH POLICY FOR LAMBDA LOGS
-# ---------------------------------------------------------------------------------------------------------------------
-
-resource "aws_iam_policy" "lambda_cloudwatch_logs" {
-  name_prefix = "lambda_logging"
-  path        = "/"
-  description = "IAM Policy for logging from lambda"
-
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": [
-        "logs:CreateLogGroup",
-        "logs:CreateLogStream",
-        "logs:PutLogEvents"
-      ],
-      "Resource": "arn:aws:logs:*:*:*",
-      "Effect": "Allow"
-    }
-  ]
-}
-EOF
-}
-
 
 # ---------------------------------------------------------------------------------------------------------------------
 # CREATE AN ASSUME ROLE POLICY, FOR LAMBDA AND X-ACCOUNT EXECUTION
@@ -143,11 +116,6 @@ data "aws_iam_policy_document" "hyperglance_automation_assume_policy" {
         "lambda.amazonaws.com"
       ]
     }
-
-    principals {
-      type        = "AWS"
-      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"]
-    }
   }
 }
 
@@ -160,7 +128,7 @@ resource "aws_iam_role" "hyperglance_automation_role" {
   assume_role_policy = data.aws_iam_policy_document.hyperglance_automation_assume_policy.json
   managed_policy_arns = [
     aws_iam_policy.hyperglance_automation_policy.arn,
-    aws_iam_policy.lambda_cloudwatch_logs.arn
+    "arn:${data.aws_partition.current.partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
   ]
   tags = var.tags
 }
