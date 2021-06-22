@@ -31,7 +31,7 @@ resource "aws_iam_policy" "hyperglance_automation_policy" {
           "ec2:AuthorizeSecurityGroupEgress",
           "ec2:AuthorizeSecurityGroupIngress",
           "ec2:CreateSecurityGroup",
-          "ec2:CreateSnapshot",
+          "ec2:CreateSnapshots",
           "ec2:CreateTags",
           "ec2:DeleteSecurityGroup",
           "ec2:DeleteInternetGateway",
