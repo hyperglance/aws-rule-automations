@@ -64,6 +64,7 @@ resource "aws_iam_policy" "hyperglance_automation_policy" {
           "iam:DetachRolePolicy",
           "iam:CreatePolicy",
           "iam:CreateRole",
+          "iam:DeleteAccessKey",
           "iam:GetPolicy",
           "iam:GetUser",
           "iam:ListAccessKeys",
