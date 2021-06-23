@@ -37,7 +37,11 @@ def info() -> dict:
       "Internet Gateway"
     ],
     "params": [
-
+      {
+        "name": "DryRun",
+        "type": "boolean",
+        "default": "true"
+      }
     ]
   }
 
