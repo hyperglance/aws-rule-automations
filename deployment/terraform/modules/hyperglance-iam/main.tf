@@ -76,6 +76,7 @@ resource "aws_iam_policy" "hyperglance_automation_policy" {
           "iam:UpdateLoginProfile",
           "lambda:GetFunction",
           "lambda:UpdateFunctionConfiguration",
+          "lambda:PutFunctionConcurrency",
           "elasticloadbalancing:DeleteLoadBalancer",
           "rds:DeleteDBInstance",
           "rds:ModifyDBInstance",
