@@ -76,7 +76,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
 
   rds_client.modify_db_instance(
     DBInstanceIdentifier=rds_db,
-    VpcSecurityroupIds=[hyperglance_quarantine_sg],
+    VpcSecurityGroupIds=[hyperglance_quarantine_sg],
     ApplyImmediately=True
   )
 
