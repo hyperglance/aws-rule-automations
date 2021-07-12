@@ -69,7 +69,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     ## Get access key ID
     access_key_id = key['AccessKeyId']
     ## Get number of days since last use
-    days_since_last_use = days_last_used(client=client, access_key_id=access_key_id)
+    days_since_last_use = days_last_used(client=client, access_key=access_key_id)
 
     if days_since_last_use > max_days_unused:
       ## Deactivate the Key
