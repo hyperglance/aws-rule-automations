@@ -20,8 +20,6 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     Automation parameters passed from the Hyperglance UI
   """
 
-  boto_session = boto_session.Session()
-
   s3_client = boto_session.client('s3')
   s3_resource = boto_session.resource('s3')
 
