@@ -182,7 +182,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
 
   bucket_name = resource['id']
   account_number = resource['account']
-  bucket_policy = resource['attributes']['policy']
+  bucket_policy = resource['attributes']['Policy']
 
   if bucket_policy == "null" or bucket_policy is None:
     ## No Policy - Create One
