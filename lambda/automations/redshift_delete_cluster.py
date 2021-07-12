@@ -26,8 +26,8 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
 
   client.delete_cluster(
     ClusterIdentifier=cluster,
-    SkipFinalSnapshot=automation_params.get('SkipSnapshot').lower() in ['true', 'y', 'yes'],
-    FinalClusterIdentifier='Snapshot_{}'.format(str(uuid.uuid5(uuid.NAMESPACE_DNS, 'hyperglance'))),
+    SkipFinalClusterSnapshot=automation_params.get('SkipSnapshot').lower() in ['true', 'y', 'yes'],
+    FinalClusterSnapshotIdentifier='Snapshot-{}'.format(str(uuid.uuid5(uuid.NAMESPACE_DNS, 'hyperglance'))),
     FinalClusterSnapshotRetentionPeriod=-1
   )
 
