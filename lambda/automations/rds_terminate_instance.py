@@ -29,7 +29,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
   client.delete_db_instance(
     DBInstanceIdentifier=rds_instance,
     SkipFinalSnapshot=automation_params.get('SkipSnapshot').lower() in ['true', 'y', 'yes'],
-    FinalDBSnapsotIdentifier='Snapshot_{}'.format(str(uuid.uuid5(uuid.NAMESPACE_DNS, 'hyperglance'))),
+    FinalDBSnapshotIdentifier='Snapshot_{}'.format(str(uuid.uuid5(uuid.NAMESPACE_DNS, 'hyperglance'))),
     DeleteAutomatedBackups=automation_params.get('DeleteBackups').lower() in ['true', 'y', 'yes']
   )
 
