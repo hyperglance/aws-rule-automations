@@ -36,15 +36,17 @@ def create_deny_policy(client, region: str, vpc_id: str):
   policy = {
     "Version": "2012-10-17",
     "Statement": [
-      "automation": "ec2:*",
-      "Effect": "Deny",
-      "Resource": [
-        "arn:aws:ec2:{}:*vpc/{}".format(region, vpc_id),
-        "arn:aws:ec2:{}:*:security-group/*".format(region)
-      ],
-      "Condition": {
-        "ArnEquals": {
-          "ec2:Vpc": "arn:aws:ec2:{}:*:vpc/{}".format(region, vpc_id)
+      {
+        "Action": "ec2:*",
+        "Effect": "Deny",
+        "Resource": [
+          "arn:aws:ec2:{}:*vpc/{}".format(region, vpc_id),
+          "arn:aws:ec2:{}:*:security-group/*".format(region)
+        ],
+        "Condition": {
+          "ArnEquals": {
+            "ec2:Vpc": "arn:aws:ec2:{}:*:vpc/{}".format(region, vpc_id)
+          }
         }
       }
     ]
