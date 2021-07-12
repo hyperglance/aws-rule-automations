@@ -36,7 +36,7 @@ def lambda_handler(event, context):
     process_event(automation_data, output_payload)
   except Exception as err:
     msg = 'Failed to process Rule automations. %s' % err
-    logger.error(msg)
+    logger.exception(msg)
     output_payload['critical_error'] = msg
 
   # Report back to Hyperglance
