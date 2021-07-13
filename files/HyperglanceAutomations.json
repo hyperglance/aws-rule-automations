@@ -500,7 +500,7 @@
     {
       "name": "s3_allow_ssl_only",
       "displayName": "S3 Enforce SSL",
-      "description": "Enforces SSL for object accedss",
+      "description": "Enforces SSL for object access",
       "resourceTypes": [
         "S3 Bucket"
       ],
