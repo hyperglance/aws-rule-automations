@@ -236,17 +236,6 @@
       ]
     },
     {
-      "name": "ecs_delete_image",
-      "displayName": "Delete Container Image",
-      "description": "Deletes and ECS Container Image",
-      "resourceTypes": [
-        "ECS Service"
-      ],
-      "params": [
-  
-      ]
-    },
-    {
       "name": "ecs_reboot",
       "displayName": "Restart Privileged ECS Tasks",
       "description": "Restarts ECS Tasks that have Privileged Access Permissions",
