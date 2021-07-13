@@ -108,7 +108,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
   iam_client = boto_session.client('iam')
 
   vpc_id = resource['attributes']['VPC ID']
-  vpc_arn = resource['attributes']['arn']
+  vpc_arn = resource['arn']
   region = resource['region']
 
   policy_arn = vpc_arn.replace(':vpc/', ':policy/').replace(region, '') + '_vpc_quarantined_by_hyperglance'
