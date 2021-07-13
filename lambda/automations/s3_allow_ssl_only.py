@@ -182,9 +182,9 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
 
   bucket_name = resource['id']
   account_number = resource['account']
-  bucket_policy = resource['attributes']['Policy']
+  bucket_policy_attr = resource['attributes'].get('Policy')
 
-  if bucket_policy == "null" or bucket_policy is None:
+  if bucket_policy_attr == "None" or bucket_policy_attr is None:
     ## No Policy - Create One
     GETPUT_CHECK["Resource"] = GETPUT_CHECK.get("Resource").replace("BUCKET_NAME", bucket_name)
     GETPUT_CHECK["Principal"]["AWS"] = account_number
@@ -195,8 +195,9 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     BUCKET_POLICY.get('Statement').append(SSL_CHECK)
 
     bucket_policy = BUCKET_POLICY
-
   else:
+    bucket_policy = json.loads(bucket_policy_attr)
+
     ## Update the Policy with any Missing Actions
     policy_actions = has_get_put_action(
       bucket_policy=bucket_policy
