@@ -78,6 +78,7 @@ resource "aws_iam_policy" "hyperglance_automation_policy" {
           "lambda:UpdateFunctionConfiguration",
           "lambda:PutFunctionConcurrency",
           "elasticloadbalancing:DeleteLoadBalancer",
+          "rds:DeleteDBCluster",
           "rds:DeleteDBInstance",
           "rds:ModifyDBInstance",
           "redshift:DeleteCluster",
