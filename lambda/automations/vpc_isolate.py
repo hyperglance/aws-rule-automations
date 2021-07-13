@@ -87,7 +87,7 @@ def create_isolation_acl(client, vpc_id: str):
       if subnet_id:
         client.replace_network_acl_association(
           AssociationId=subnet_id,
-          NetworkAclId=network_acl.get('NetworkAclId')
+          NetworkAclId=network_acl['NetworkAcl']['NetworkAclId']
         )
 
 
