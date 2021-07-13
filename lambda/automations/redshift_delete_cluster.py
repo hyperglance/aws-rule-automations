@@ -24,10 +24,12 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
   client = boto_session.client('redshift')
   cluster = resource['id']
 
+  skip_snapshot = automation_params.get('SkipSnapshot').lower() in ['true', 'y', 'yes']
+
   client.delete_cluster(
     ClusterIdentifier=cluster,
-    SkipFinalClusterSnapshot=automation_params.get('SkipSnapshot').lower() in ['true', 'y', 'yes'],
-    FinalClusterSnapshotIdentifier='Snapshot-{}'.format(str(uuid.uuid5(uuid.NAMESPACE_DNS, 'hyperglance'))),
+    SkipFinalClusterSnapshot=skip_snapshot,
+    FinalClusterSnapshotIdentifier=None if skip_snapshot else 'Snapshot-{}'.format(str(uuid.uuid5(uuid.NAMESPACE_DNS, 'hyperglance'))),
     FinalClusterSnapshotRetentionPeriod=-1
   )
 

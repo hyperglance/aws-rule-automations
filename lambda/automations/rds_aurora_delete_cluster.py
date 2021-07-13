@@ -26,10 +26,12 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
   client = boto_session.client('rds')
   rds_instance = resource['id']
 
+  skip_snapshot = automation_params.get('SkipAuroraSnapshot').lower() in ['true', 'y', 'yes']
+
   client.delete_db_cluster(
     DBClusterIdentifier=rds_instance,
-    SkipFinalSnapshot=automation_params.get('SkipAuroraSnapshot').lower() in ['true', 'y', 'yes'],
-    FinalDBSnapshotIdentifier='Snapshot-{}'.format(str(uuid.uuid5(uuid.NAMESPACE_DNS, 'hyperglance')))
+    SkipFinalSnapshot=skip_snapshot,
+    FinalDBSnapshotIdentifier=None if skip_snapshot else 'Snapshot-{}'.format(str(uuid.uuid5(uuid.NAMESPACE_DNS, 'hyperglance')))
   )
 
 
