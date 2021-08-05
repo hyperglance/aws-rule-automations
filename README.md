@@ -1,155 +1,107 @@
 <img src="https://github.com/hyperglance/aws-rule-automations/blob/master/files/b5dfbb6c-75c8-493b-8c5d-d68b3272cf0f.png" alt="Hyperglance Logo" />
 
-![Pylint](https://github.com/hyperglance/aws-rule-automations/workflows/Pylint/badge.svg)
+# Hyperglance Rule Automations for AWS
 
-# Hyperglance Rule Automations - Lambda Configuration
+> Enable Hyperglance to automate, fix and optimize your cloud.
 
-This Repository contains terrafom configurations, that deploys an SNS Topic and lambda function that can be used to remediate infrastructure, based on rules configured in [Hyperglance](https://support.hyperglance.com/knowledge/rules-dashboard-view).
+This repository contains terraform configurations, that deploy an SNS Topic and Lambda function that you connect with your Hyperglance EC2 Instance. Giving you the power to automate your cloud and fix configuration issues quickly & easily.
 
 ## Pre-Requisites
 
-Please follow the below steps to install the pre-requisites required to deploy the infrastructure.
+Before you can deploy automations you will need:
+1. Terraform CLI - [Install instructions](https://learn.hashicorp.com/tutorials/terraform/install-cli)
+2. AWS CLI - [Install instructions](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
+3. IAM permissions configured on the Hyperglance Instance - See below.
 
-### Update Hyperglance Instance IAM Role
+### IAM Permissions
 
-The policy attached to the IAM role for the Hyperglance EC2 Instance, requires the following permissions to be added:
+The IAM Policy on the Role associated with the Hyperglance EC2 Instance will need the following permissions added:
 
 ```json
-s3:PutObject,
-sns:Publish
+"sns:Publish",
+"s3:PutObject",
+"s3:GetObject",
+"s3:ListBucket",
 ```
 
-[AWS Policy Management - User Guide](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_manage-edit.html)
+## Quick Start
 
-### Install Terraform
+1. Follow the pre-requisite steps above.
+2. Connect the AWS CLI to the AWS account that hosts Hyperglance by running: `aws configure`
+		__Note:__ You will need an [AWS IAM access and secret key](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-creds).
+		Example:
+	```bash
+	$ aws configure
+	AWS Access Key ID [None]: ENTER_YOUR_ACCESS_KEY_HERE
+	AWS Secret Access Key [None]: ENTER_YOUR_SECRET_KEY_HERE
+	Default region name [None]: us-east-1
+	Default output format [None]: json
+	```
+3. Clone our repo or  [download the zip](https://github.com/hyperglance/aws-rule-automations/archive/refs/heads/master.zip)
+	`$ git clone https://github.com/hyperglance/aws-rule-automations.git`
 
-> Note: Version 0.15 and newer is currently unsupported, use a version between 0.13.6 and 0.14.10
+4. Deploy the stack:
+	```bash
+	$ cd aws-rule-automations/deployment/terraform/automations
+	$ terraform init
+	$ terraform apply
+	```
+	> Terraform will prompt for the region you wish to deploy to and for final confirmation.
 
-Method 1, Select your operating system from the link below, install terraform, and add it to your `PATH`
+5. Once complete, the bucket name and Topic ARN required by Hyperglance will be returned:
+	```bash
+	Apply complete! Resources: 8 added, 0 changed, 0 destroyed.
 
-[Terraform Installed and Available from Command line](https://www.terraform.io/downloads.html)
+	Outputs:
 
-[Version 0.14.10 Download](https://releases.hashicorp.com/terraform/0.14.10/)
+	bucket_name = "hyperglance-automations-lucky-marmoset"
+	topic_arn = "arn:aws:sns:us-east-1:001234567891011:hyperglance-automations-lucky-marmoset"
+	```
+	
+	Copy these into the Hyperglance UI:  __Settings ➔ Notification Configuration ➔ AWS SNS__
+	or visit this URL: https://YOUR_HYPERGLANECE_IP/#/admin/notification-configuration?edit=AWS-SNS
+	
+	> __Note:__ Leave the 'Role ARN' field blank.
+	This is only needed if you deploy the stack to a different AWS account from the Hyperglance Instance.
 
-Method 2, Use homebrew (MAC OS / Linux), chocolately (Windows):
+6. __That's it - Automations are now enabled!__
+	* Within Hyperglance click on any rule or visit the Advanced Search page to start exploring automations features.
+	* If you need automations to run on resources from _other_ AWS Accounts then continue on to follow our multi-account guide below.
 
-[Homebrew](https://brew.sh/):
+## Multiple Accounts - Usage
 
-`brew install terraform@0.13`
+To grant the automations Lambda access to resources in __other__ AWS accounts you will need to create a special cross-account role in each of those accounts:
 
-[Chocolately](https://chocolatey.org/):
+1. Edit `aws-rule-automations/deployment/terraform/xaccount_role/main.tf`
+	* Set the `lambda_account_id` to AWS Account ID where automations Lambda __is hosted__.
+2. Connect to an AWS Account where you wish to deploy the Role:
+	* Run: `aws configure`
+	* You will need [AWS IAM access and secret keys](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-creds) for this account.
 
-`choco install terraform --version 0.14.10`
+4. Deploy the Role:
+	```bash
+	$ cd aws-rule-automations/deployment/terraform/xaccount_role
+	$ terraform init
+	$ terraform apply
+	```
 
-> Note: Method 2 takes care of updating your PATH variables and installing any required dependencies
+## Customizing Automations
+__Easily add your own automations or modify existing ones!__
 
-Check Terraform is installed correctly:
+Automations are written in Python3, each one is a self-contained Python (`.py`) file.
+Find them here: https://github.com/hyperglance/aws-rule-automations/tree/master/lambda/automations
 
-```bash
-$ terraform -version
+To add a new automation:
+* Add a new .py file
+* Implement the `hyperglance_automation()` function with logic for your automation.
+* Implement the `info()` function to inform the Hyperglance UI about your automation:
+	* Name,
+	* Description,
+	* Any UI inputs it needs from the user,
+	* A list of compatible resource types.
+* Re-deploy the terraform stack with `terraform apply`
+* __Done__: Your new automation will be immediately available and ready to use in the Hyperglance UI.
 
-Output:
-+ terraform -version
-Terraform v0.13.6
-```
 
-### Install AWS CLI
-
-Use the follow User Guide to install the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html), s elect your operating system from the appropriate topic.
-
-Once the CLI is installed, [configure](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html) it using `aws configure` :
-
-```bash
-$ aws configure
-AWS Access Key ID [None]: AKIAIOSFODNN7EXAMPLE
-AWS Secret Access Key [None]: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
-Default region name [None]: us-east-1
-Default output format [None]: json
-```
-
-> Note: The above Access and Secrets are examples, only. Please substitute the values that are appropriate for your environement.
-
-Alternatively, credentials can be provided in the terraform file, or managed by [Leapp](https://github.com/Noovolari/leapp) or similar.
-
-### Clone / Download the repository:
-
-Clone the repository:
-
-```bash
-$ mkdir code && cd code
-$ git clone https://github.com/hyperglance/aws-rule-automations.git
-```
-
-Alternatively, download the [Zip](https://github.com/hyperglance/aws-rule-automations/archive/refs/tags/v2.1-beta.zip) release, and extract it.
-## Usage
-
->OPTIONAL: To use the same region as configured using aws configure, run the following command:
-
-```bash
-export AWS_DEFAULT_REGION=$(aws configure get region --profile default)
-```
-
-Otherwise the deployment will ask you for the region:
-
-```bash
-+ terraform plan
-provider.aws.region
-  The region where AWS operations will take place. Examples
-  are us-east-1, us-west-2, etc.
-
-  Enter a value: 
-```
-
-To deploy the automation stack, from the `deployment/terraform/automations` directory execute the following command sequence:
-
-```bash
-$ terraform init
-$ terraform apply
-```
-
-This will ask you to confirm deployment, type `yes` to confirm. You can skip confirmation using `terraform apply -auto-approve`
-
-Once complete, the bucket name and Topic ARN required by Hyperglance will be returned:
-
-```bash
-Apply complete! Resources: 8 added, 0 changed, 0 destroyed.
-
-Outputs:
-
-bucket_name = "hyperglance-automations-lucky-marmoset"
-topic_arn = "arn:aws:sns:us-east-1:001234567891011:hyperglance-automations-lucky-marmoset"
-```
-
-Copy these to the Notification configuration page
-
-### Cross Account
-
-If you plan to execute Automations on any other account, that is not the one you have deployed the stack to, you will need to deploy the role to each account
-
-An example of the x-account role deployment, can be found in `deployment/terraform/xaccount_role` if you have more than one target account, it is best to copy this folder and rename it with the account name, to keep the state seperate.
-
->Note: Please ensure to update the `lambda_account_id` parameter with a valid AWS Account ID, where the the Automation lambda is located, otherwise x-account automations may fail.
-
-When ready, execute:
-
-```bash
-$ terraform init
-$ terraform apply
-```
-
->Note: terraform will create resources which cost money. Run `terraform destroy` when you don't need these resources.
-
-## Requirements
-
-| Name | Version |
-|------|---------|
-| terraform | >= 0.13.6, < 0.15 |
-| aws | >= 3.29, < 4.0 |
-| random | = 3.10 |
-
-## Outputs
-
-| Name | Description |
-|------|-------------|
-| topic_arn | The ARN of the Hyperglance SNS Topic |
-| bucket_name | The bucket name where Automation Payloads will be delievered |
+## Contributions
+Are welcome!
