@@ -28,8 +28,10 @@ The IAM Policy on the Role associated with the Hyperglance EC2 Instance will nee
 
 1. Follow the pre-requisite steps above.
 2. Connect the AWS CLI to the AWS account that hosts Hyperglance by running: `aws configure`
-		__Note:__ You will need an [AWS IAM access and secret key](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-creds).
-		Example:
+
+	__Note:__ You will need an [AWS IAM access and secret key](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-creds).
+	
+	Example:
 	```bash
 	$ aws configure
 	AWS Access Key ID [None]: ENTER_YOUR_ACCESS_KEY_HERE
@@ -38,15 +40,17 @@ The IAM Policy on the Role associated with the Hyperglance EC2 Instance will nee
 	Default output format [None]: json
 	```
 3. Clone our repo or  [download the zip](https://github.com/hyperglance/aws-rule-automations/archive/refs/heads/master.zip)
-	`$ git clone https://github.com/hyperglance/aws-rule-automations.git`
+	```bash
+	$ git clone https://github.com/hyperglance/aws-rule-automations.git
+	```
 
 4. Deploy the stack:
+	> Terraform will prompt for the region you wish to deploy to and for final confirmation.
 	```bash
 	$ cd aws-rule-automations/deployment/terraform/automations
 	$ terraform init
 	$ terraform apply
 	```
-	> Terraform will prompt for the region you wish to deploy to and for final confirmation.
 
 5. Once complete, the bucket name and Topic ARN required by Hyperglance will be returned:
 	```bash
