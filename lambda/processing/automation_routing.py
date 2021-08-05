@@ -27,7 +27,7 @@ def execute_on_resource(automation_to_execute, resource, action_params):
     automation_params=action_params
   )
 
-def process_event(automation_data, output_payload):
+def process_event(automation_data, outputs):
   logger.debug('Payload From S3 %s', automation_data)
   logger.info('Triggered For Hyperglance Rule: %s', automation_data['name'])
 
@@ -45,7 +45,7 @@ def process_event(automation_data, output_payload):
     automation['processed'] = []
     automation['errored'] = []
     automation['critical_error'] = None
-    output_payload['automations_report'].append(automation)
+    outputs.append(automation)
     
     ## Dynamically load the module that will handle this automation
     try:
