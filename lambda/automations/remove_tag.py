@@ -1,6 +1,6 @@
-"""Tags an EC2 Resource
+"""
 
-This automation attempts to update a tag key for a resource, identified as above or below the configured threshold
+This automation attempts to remove a tag for a resource, identified as above or below the configured threshold
 by Hyperglance Rule(s)
 
 This automation will operate across accounts, where the appropriate IAM Role exists.
@@ -25,39 +25,24 @@ def hyperglance_automation(boto_session, resource: dict, automation_params=''):
       Automation parameters passed from the Hyperglance UI
     """
 
-    new_key = automation_params.get('New Key')
-    old_key = automation_params.get('Old Key')
+    key = automation_params.get('Key')
     client = boto_session.client('ec2')  # remove this hardcoding when parsing of arn is implemented
     tags = resource['tags']
 
-    if new_key in tags.keys():
-        logger.error("tag " + new_key + "is already present - aborting automation")
-        return
-    elif not old_key in tags.keys():
-        logger.error("tag " + old_key + "is not present - aborting automation")
+    if not key in tags.keys():
+        logger.error(tags)
+        logger.error("tag " + key + " is not present - aborting automation")
         return
 
-    client.create_tags(
-        Resources=[
-            resource['id'],
-        ],
-        Tags=[
-            {
-                'Key': new_key,
-                'Value': tags[old_key]
-            },
-        ]
-    )
 
-    ## Remove the old offending tag (we make sure to do the destructive action 2nd!)
     client.delete_tags(
         Resources=[
             resource['id'],
         ],
         Tags=[
             {
-                'Key': old_key,
-                'Value': tags[old_key]
+                'Key': key,
+                'Value': tags[key]
             },
         ]
     )
@@ -66,7 +51,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params=''):
 def info() -> dict:
     INFO = {
         "displayName": "Replace Tag",
-        "description": "Replaces a tag's key but keeps its value",
+        "description": "Replaces a tag's key but keeps its value (EC2 only)",
         "resourceTypes": [
             "Security Group",
             "EC2 Instance",
@@ -85,12 +70,7 @@ def info() -> dict:
         ],
         "params": [
             {
-                "name": "New Key",
-                "type": "string",
-                "default": ""
-            },
-            {
-                "name": "Old Key",
+                "name": "Key",
                 "type": "string",
                 "default": ""
             }

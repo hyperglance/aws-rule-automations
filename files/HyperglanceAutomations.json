@@ -575,6 +575,67 @@
       ]
     },
     {
+      "name": "remove_tag",
+      "displayName": "Remove Tag",
+      "description": "Remove a tag from a resource",
+      "resourceTypes": [
+        "Security Group",
+        "EC2 Instance",
+        "EC2 Image",
+        "Internet Gateway",
+        "Network Acl",
+        "Network Interface",
+        "Placement Group",
+        "Route Table",
+        "EC2 Snapshot",
+        "Subnet",
+        "EBS Volume",
+        "VPC",
+        "SNS",
+        "SQS"
+      ],
+      "params": [
+        {
+          "name": "Key",
+          "type": "string",
+          "default": ""
+        }
+      ]
+    },
+    {
+      "name": "add_tag",
+      "displayName": "Add Tag",
+      "description": "Adds a tag to a resource",
+      "resourceTypes": [
+        "Security Group",
+        "EC2 Instance",
+        "EC2 Image",
+        "Internet Gateway",
+        "Network Acl",
+        "Network Interface",
+        "Placement Group",
+        "Route Table",
+        "EC2 Snapshot",
+        "Subnet",
+        "EBS Volume",
+        "VPC",
+        "SNS",
+        "SQS"
+      ],
+      "params": [
+        {
+          "name": "Key",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "name": "Value",
+          "type": "string",
+          "default": ""
+        }
+      ]
+    },
+    {
       "name": "update_tag",
       "displayName": "Replace Tag",
       "description": "Replaces a tag's key but keeps its value (EC2 only)",
@@ -590,18 +651,20 @@
         "EC2 Snapshot",
         "Subnet",
         "EBS Volume",
-        "VPC"
+        "VPC",
+        "SNS",
+        "SQS"
       ],
       "params": [
         {
-          "name": "New Key",
+          "name": "Old Key",
           "type": "string",
           "default": ""
         },
         {
-          "name": "DryRun",
-          "type": "boolean",
-          "default": "true"
+          "name": "New Key",
+          "type": "string",
+          "default": ""
         }
       ]
     },
