@@ -2,6 +2,7 @@ import boto3
 import json
 import logging
 from processing.automation_routing import *
+import processing.automation_list
 
 ## Setuo Logger
 logger = logging.getLogger()
@@ -32,7 +33,7 @@ def lambda_handler(event, context):
     bucket = payload['data']['s3bucket']
     bucket_key = payload['data']['key']
     automation_data = event if TEST_MODE else get_payload_from_s3(bucket, bucket_key)
-
+    processing.automation_list.update_automation_json(bucket);
     process_event(automation_data, output_payload)
   except Exception as err:
     msg = 'Failed to process Rule automations. %s' % err

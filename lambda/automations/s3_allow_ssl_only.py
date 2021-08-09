@@ -225,7 +225,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
   )
 
 
-  def info() -> dict:
+def info() -> dict:
     INFO = {
       "displayName": "S3 Enforce SSL",
       "description": "Enforces SSL for object access",

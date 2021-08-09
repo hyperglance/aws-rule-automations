@@ -6,34 +6,38 @@ Returns the list of avaiblae actions for use in Hyperglance.
 import os
 import json
 import importlib
+import logging
+import boto3
+
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
 
 
-def get_action_list() -> list:
+
+def update_automation_json(bucket) -> list:
   """ Generates a list of actions for sunsumption by Hyperglance.
 
   Returns
   -------
   list
-    A json formatted list containing the available actions
+    A json formatted list containing the available automations
 
   """
+  automation_files = os.listdir(os.path.abspath("./automations"))
+  automations = [os.path.splitext(x)[0] for x in automation_files]
+  root = {"automations":[]}
 
-  action_path = '../actions'
-  action_lists = os.listdir(action_path)
-  action_list = [os.path.splitext(x)[0] for x in action_lists]
+  for index, automation in enumerate(automations):
+    automation_module = importlib.import_module(''.join(['automations.', automation]), package=None)
+    automation_info = automation_module.info()
+    automation_info["name"] = automation
+    root["automations"].append(automation_info)
 
-  action_json = '{"actions": ['
+  put_payload_to_s3(bucket, "HyperglanceAutomations.json", root)
 
-  for index, action in enumerate(action_list):
-    print(action)
-    action_info = importlib.import_module(''.join(['lambda.actions.', action]), package=None)
-    action_info_details = action_info.info()
+def put_payload_to_s3(bucket, key, payload):
+    payload_json = json.dumps(payload)
+    s3 = boto3.resource('s3')
+    s3.Object(bucket, key).put(Body=payload_json)
 
-    print(action_info_details)
-  
-    ##action_json += json.dumps(action_list)
-    ##action_json += '}'
 
-  ## TODO: Save to S3 Bucket 
-  
-  return action_json
