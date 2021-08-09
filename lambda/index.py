@@ -1,30 +1,13 @@
-import boto3
 import json
 import logging
 from processing.automation_routing import *
+from s3.s3utils import get_payload_from_s3, put_report_to_s3, put_pending_status_to_s3, remove_pending_status_from_s3
 
 ## Setup Logger
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 TEST_MODE = False
-
-def get_payload_from_s3(bucket, key):
-  s3 = boto3.resource('s3')
-  payload_object = s3.Object(bucket, key)
-  payload_content = payload_object.get()['Body'].read().decode('utf-8')
-  return json.loads(payload_content)
-
-def put_report_to_s3(bucket, key_prefix, report):
-  automation_name = report['name']
-  num_successful = len(report['processed'])
-  num_errored = len(report['errored'])
-  total = num_successful + num_errored
-  report_name = f'report_{automation_name}_total({total})_success({num_successful})_error({num_errored}).json'
-
-  payload_json = json.dumps(report)
-  s3 = boto3.resource('s3')
-  s3.Object(bucket, key_prefix + report_name).put(Body=payload_json)
 
 # MAIN ENTRY POINT
 def lambda_handler(event, context):
@@ -38,12 +21,16 @@ def lambda_handler(event, context):
 
   # Vars used for reporting back to S3
   outputs_per_automation = [];
-  report_key_prefix = '/'.join(bucket_key.split('/')[0:-1]) + '/'
+  report_key_prefix = '/'.join(bucket_key.split('/')[0:-1]).replace('/events/', '/reports/') + '/'
 
   try:      
     ## Read the event payload in from S3
     automation_data = event if TEST_MODE else get_payload_from_s3(bucket, bucket_key)
 
+    # Write a pending report into S3
+    put_pending_status_to_s3(bucket, report_key_prefix)
+
+    # Process main automations logic
     process_event(automation_data, outputs_per_automation)
   except Exception as err:
     msg = 'Failed to process Rule automations. %s' % err
@@ -57,3 +44,6 @@ def lambda_handler(event, context):
     # Report back to Hyperglance, a file in S3 for each automation
     for report in outputs_per_automation:
       put_report_to_s3(bucket, report_key_prefix, report)
+
+    # Remove the pending signal file
+    remove_pending_status_from_s3(bucket, report_key_prefix)
