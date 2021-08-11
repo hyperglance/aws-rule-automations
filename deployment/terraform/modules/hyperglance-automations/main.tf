@@ -22,13 +22,6 @@ data "archive_file" "hyperglance_automations_release" {
 # GENERATE THE HYPERGLANCE AUTOMATIONS JSON
 #----------------------------------------------------------------------------------------------------------------------
 
-resource "null_resource" "hyperglance_automations_json" {
-  provisioner "local-exec" {
-    command = var.generate_automations_script
-    interpreter = ["python3"]
-  }
-}
-
 
 # ---------------------------------------------------------------------------------------------------------------------
 # CREATE AN S3 BUCKET
@@ -41,15 +34,23 @@ resource "aws_s3_bucket" "hyperglance_automations_bucket" {
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
+# GENERATE THE HYPERGLANCE AUTOMATIONS JSON
+#----------------------------------------------------------------------------------------------------------------------
+data "external" "hyperglance_automations_json" {
+  program = ["python3", var.generate_automations_script]
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
 # UPLOAD ACTION LIST TO THE S3 BUCKET
 # ---------------------------------------------------------------------------------------------------------------------
 
+
+
 resource "aws_s3_bucket_object" "hyperglance_automation_list" {
-  depends_on = [null_resource.hyperglance_automations_json]
   bucket = aws_s3_bucket.hyperglance_automations_bucket.id
   key    = "HyperglanceAutomations.json"
-  source = var.hyperglance_automation_list
-  etag   = filemd5(var.hyperglance_automation_list)
+  source = data.external.hyperglance_automations_json.result["automation_file"]
+  etag   = filemd5(data.external.hyperglance_automations_json.result["automation_file"])
 
 }
 

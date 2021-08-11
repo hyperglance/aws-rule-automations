@@ -10,11 +10,6 @@ variable "tags" {
   }
 }
 
-variable "hyperglance_automation_list" {
-  type        = string
-  description = "Path to Automation list used by Hyperglance"
-}
-
 variable "lambda_package" {
   type        = string
   description = "Path to lambda code"
