@@ -1,21 +1,15 @@
 """Get Action List
 
-Returns the list of avaiblae actions for use in Hyperglance.
+Returns the list of available automations for use in Hyperglance.
 """
 
 import os
-import json
 import importlib
-import logging
-import boto3
+import sys
+import pathlib
 
-logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
-
-
-
-def update_automation_json(bucket) -> list:
-  """ Generates a list of actions for sunsumption by Hyperglance.
+def generate_json(lambda_root) -> list:
+  """ Generates the HyperglanceAutomations.json file
 
   Returns
   -------
@@ -23,21 +17,23 @@ def update_automation_json(bucket) -> list:
     A json formatted list containing the available automations
 
   """
-  automation_files = os.listdir(os.path.abspath("./automations"))
+  automation_files = os.listdir(os.path.join(lambda_root, "automations"))
   automations = [os.path.splitext(x)[0] for x in automation_files]
   root = {"automations":[]}
 
   for index, automation in enumerate(automations):
     automation_module = importlib.import_module(''.join(['automations.', automation]), package=None)
-    automation_info = automation_module.info()
-    automation_info["name"] = automation
+    automation_info = {"name": automation}
+    automation_info.update(automation_module.info())
     root["automations"].append(automation_info)
+  return str(root)
 
-  put_payload_to_s3(bucket, "HyperglanceAutomations.json", root)
 
-def put_payload_to_s3(bucket, key, payload):
-    payload_json = json.dumps(payload)
-    s3 = boto3.resource('s3')
-    s3.Object(bucket, key).put(Body=payload_json)
+automations_file = pathlib.Path(os.path.abspath(__file__)).parents[2].joinpath("files/HyperglanceAutomations.json")
+lambda_root = pathlib.Path(os.path.abspath(__file__)).parents[1]
+file = open(automations_file, "w")
+sys.path.append(str(lambda_root))
+file.write(generate_json(lambda_root))
+file.close()
 
 

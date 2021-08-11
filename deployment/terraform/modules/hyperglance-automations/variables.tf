@@ -19,3 +19,8 @@ variable "lambda_package" {
   type        = string
   description = "Path to lambda code"
 }
+
+variable "generate_automations_script" {
+  type        = string
+  description = "Path to automation_list.py"
+}
