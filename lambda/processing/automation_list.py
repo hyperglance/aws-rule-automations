@@ -7,6 +7,7 @@ import os
 import importlib
 import sys
 import pathlib
+import json
 
 
 def generate_json(lambda_root) -> list:
@@ -19,7 +20,7 @@ def generate_json(lambda_root) -> list:
 
   """
     automation_files = os.listdir(os.path.join(lambda_root, "automations"))
-    automations = [os.path.splitext(x)[0] for x in automation_files]
+    automations = [os.path.splitext(f)[0] for f in automation_files if f.endswith('.py')]
     root = {"automations": []}
 
     for index, automation in enumerate(automations):
@@ -38,4 +39,4 @@ sys.path.append(str(lambda_root))
 file.write(generate_json(lambda_root))
 file.close()
 
-print(''.join(['{"automation_file":', '"', str(automations_file), '"}']))  # terraform quirks
+print(json.dumps({'automation_file' : str(automations_file)}))  # terraform quirks

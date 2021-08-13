@@ -88,3 +88,6 @@ settings.json
 __pycache__
 .vscode
 *Prod*
+
+# Ignore Hyperglance specific build artifacts
+HyperglanceAutomations.json
