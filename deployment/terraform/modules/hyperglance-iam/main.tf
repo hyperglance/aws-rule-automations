@@ -94,6 +94,7 @@ resource "aws_iam_policy" "hyperglance_automation_policy" {
           "s3:CreateBucket",
           "s3:DeleteBucket",
           "s3:DeleteBucketPolicy",
+          "s3:DeleteObject",
           "s3:GetBucketAcl",
           "s3:GetBucketPolicy",
           "s3:GetObject",

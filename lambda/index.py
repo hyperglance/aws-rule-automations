@@ -1,43 +1,49 @@
-import boto3
 import json
 import logging
 from processing.automation_routing import *
+from s3.s3utils import get_payload_from_s3, put_report_to_s3, put_pending_status_to_s3, remove_pending_status_from_s3
 
-## Setuo Logger
+## Setup Logger
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 TEST_MODE = False
 
-def get_payload_from_s3(bucket, key):
-  s3 = boto3.resource('s3')
-  payload_object = s3.Object(bucket, key)
-  payload_content = payload_object.get()['Body'].read().decode('utf-8')
-  return json.loads(payload_content)
-
-def put_payload_to_s3(bucket, key, payload):
-  payload_json = json.dumps(payload)
-  s3 = boto3.resource('s3')
-  s3.Object(bucket, key).put(Body=payload_json)
-
-# Get SNS from Hyperglance, read file from SNS and Trigger the automations
+# MAIN ENTRY POINT
 def lambda_handler(event, context):
-  output_payload = {'critical_error': None, "automations_report": []}
+  # Lambda is triggered by SNS
+  snsMessage = event if TEST_MODE else json.loads(event['Records'][0]['Sns']['Message'])
+  logger.debug('%s', snsMessage)
 
-  try:  
-    payload = event if TEST_MODE else json.loads(event['Records'][0]['Sns']['Message'])
-    logger.debug('%s', payload)
-    
+  # Extract details about the S3 bucket and the event payload file
+  bucket = snsMessage['data']['s3bucket']
+  bucket_key = snsMessage['data']['key']
+
+  # Vars used for reporting back to S3
+  outputs_per_automation = [];
+  report_key_prefix = '/'.join(bucket_key.split('/')[0:-1]).replace('/events/', '/reports/') + '/'
+
+  try:      
     ## Read the event payload in from S3
-    bucket = payload['data']['s3bucket']
-    bucket_key = payload['data']['key']
     automation_data = event if TEST_MODE else get_payload_from_s3(bucket, bucket_key)
 
-    process_event(automation_data, output_payload)
+    # Write a pending report into S3
+    put_pending_status_to_s3(bucket, report_key_prefix)
+
+    # Process main automations logic
+    process_event(automation_data, outputs_per_automation)
   except Exception as err:
     msg = 'Failed to process Rule automations. %s' % err
     logger.exception(msg)
-    output_payload['critical_error'] = msg
 
-  # Report back to Hyperglance
-  put_payload_to_s3(bucket, bucket_key + '_completed', output_payload)
+    # Report critical lambda failure back to Hyperglance
+    # For now, we are doing this by creating a dummy automation report to convey the error message
+    error_report = {'name':'critical_error', 'processed':[], 'errored':[], 'critical_error':msg}
+    put_report_to_s3(bucket, report_key_prefix, error_report)
+  finally:
+    # Report back to Hyperglance, a file in S3 for each automation
+    for report in outputs_per_automation:
+      put_report_to_s3(bucket, report_key_prefix, report)
+
+    # Remove the pending signal file
+    remove_pending_status_from_s3(bucket, report_key_prefix)
