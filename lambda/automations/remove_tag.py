@@ -7,7 +7,7 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 import logging
-import processing.automation_utils as utils
+#import processing.automation_utils as utils
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
@@ -34,7 +34,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params=''):
         logger.error("tag " + key + " is not present - aborting automation")
         return
 
-    utils.remove_tag(boto_session, key, resource)
+    #utils.remove_tag(boto_session, key, resource)
 
 
 
