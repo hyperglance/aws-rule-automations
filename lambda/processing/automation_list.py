@@ -27,11 +27,12 @@ def generate_json(lambda_root) -> list:
         automation_info = {"name": automation}
         automation_info.update(automation_module.info())
         root["automations"].append(automation_info)
-    return str(root)
+    return str(root).replace("'", "\"")
 
 
 automations_file = pathlib.Path(os.path.abspath(__file__)).parents[2].joinpath("files/HyperglanceAutomations.json")
 lambda_root = pathlib.Path(os.path.abspath(__file__)).parents[1]
+
 file = open(automations_file, "w")
 sys.path.append(str(lambda_root))
 file.write(generate_json(lambda_root))

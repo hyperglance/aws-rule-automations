@@ -7,6 +7,7 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 import logging
+import processing.automation_utils as utils
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
@@ -26,7 +27,6 @@ def hyperglance_automation(boto_session, resource: dict, automation_params=''):
     """
 
     key = automation_params.get('Key')
-    client = boto_session.client('ec2')  # remove this hardcoding when parsing of arn is implemented
     tags = resource['tags']
 
     if not key in tags.keys():
@@ -34,24 +34,14 @@ def hyperglance_automation(boto_session, resource: dict, automation_params=''):
         logger.error("tag " + key + " is not present - aborting automation")
         return
 
+    utils.remove_tag(boto_session, key, resource)
 
-    client.delete_tags(
-        Resources=[
-            resource['id'],
-        ],
-        Tags=[
-            {
-                'Key': key,
-                'Value': tags[key]
-            },
-        ]
-    )
 
 
 def info() -> dict:
     INFO = {
-        "displayName": "Replace Tag",
-        "description": "Replaces a tag's key but keeps its value (EC2 only)",
+        "displayName": "Remove Tag",
+        "description": "Removes a tag",
         "resourceTypes": [
             "Security Group",
             "EC2 Instance",
@@ -65,8 +55,8 @@ def info() -> dict:
             "Subnet",
             "EBS Volume",
             "VPC",
-            "SQS",
-            "SNS"
+            "SQS Topic",
+            "SNS Queue"
         ],
         "params": [
             {

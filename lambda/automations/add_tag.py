@@ -7,6 +7,7 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 import logging
+import processing.automation_utils as utils
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
@@ -27,29 +28,17 @@ def hyperglance_automation(boto_session, resource: dict, automation_params=''):
 
     key = automation_params.get('Key')
     value = automation_params.get('Value')
-    client = boto_session.client('ec2')  # remove this hardcoding when parsing of arn is implemented
     tags = resource['tags']
 
     if key in tags.keys():
         logger.error("tag " + key + "is already present - aborting automation")
         return
-
-    client.create_tags(
-        Resources=[
-            resource['id'],
-        ],
-        Tags=[
-            {
-                'Key': key,
-                'Value': value
-            },
-        ]
-    )
+    utils.add_tag(boto_session, key, value, resource)
 
 def info() -> dict:
     INFO = {
         "displayName": "Add Tag",
-        "description": "Add a tag to a resource",
+        "description": "Adds a tag to a resource",
         "resourceTypes": [
             "Security Group",
             "EC2 Instance",
@@ -63,8 +52,8 @@ def info() -> dict:
             "Subnet",
             "EBS Volume",
             "VPC",
-            "SNS",
-            "SQS"
+            "SNS Topic",
+            "SQS Queue"
         ],
         "params": [
             {
