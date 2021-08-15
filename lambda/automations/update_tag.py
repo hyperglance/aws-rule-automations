@@ -7,8 +7,11 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 
-def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
-  """ Attempts to Tag an EC2 Resource
+import processing.automation_utils as utils
+
+
+def hyperglance_automation(boto_session, resource: dict, automation_params=''):
+    """ Attempts to Tag an EC2 Resource
 
   Parameters
   ----------
@@ -20,82 +23,59 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     Automation parameters passed from the Hyperglance UI
   """
 
-  new_key = automation_params.get('New Key')
-  dry_run = automation_params.get('DryRun').lower() in ['true', 'y', 'yes']
+    new_key = automation_params.get('New Key')
+    dry_run = automation_params.get('DryRun').lower() in ['true', 'y', 'yes']
 
-  client = boto_session.client('ec2')
+    client = boto_session.client('ec2')
 
-  for old_key, value in resource['matchedAttributes'].items():
-    # only interested in tags
-    if old_key not in resource['tags']:
-      continue
+    for old_key, value in resource['matchedAttributes'].items():
+        # only interested in tags
+        if old_key not in resource['tags']:
+            continue
 
-    # tag might already be 'good'
-    if old_key == new_key:
-      continue
+        # tag might already be 'good'
+        if old_key == new_key:
+            continue
 
+        ## Create the new tag and retain existing value
+        utils.add_tag(boto_session, new_key, value, resource)
 
-    ## Create the new tag and retain existing value
-    client.create_tags(
-      Resources=[
-        resource['id'],
-      ],
-      DryRun=dry_run,
-      Tags=[
-        {
-          'Key': new_key,
-          'Value': value
-        },
-      ]
-    )
-
-    ## Remove the old offending tag (we make sure to do the destructive action 2nd!)
-    client.delete_tags(
-      Resources=[
-        resource['id'],
-      ],
-      DryRun=dry_run,
-      Tags=[
-        {
-          'Key': old_key,
-          'Value': value
-        },
-      ]
-    )
+        ## Remove the old offending tag (we make sure to do the destructive action 2nd!)
+        utils.remove_tag(boto_session, old_key, value)
 
 
 def info() -> dict:
-  INFO = {
-    "displayName": "Update Tag",
-    "description": "Replaces a tags key but keeps its value",
-    "resourceTypes": [
-      "Security Group",
-      "EC2 Instance",
-      "EC2 Image",
-      "Internet Gateway",
-      "Network Acl",
-      "Network Interface",
-      "Placement Group",
-      "Route Table",
-      "EC2 Snapshot",
-      "Subnet",
-      "EBS Volume",
-      "VPC",
-      "SNS Topic",
-      "SQS Queue"
-    ],
-    "params": [
-      {
-        "name": "New Key",
-        "type": "string",
-        "default": ""
-      },
-      {
-        "name": "DryRun",
-        "type": "boolean",
-        "default": "true"
-      }
-    ]
-  }
+    INFO = {
+        "displayName": "Update Tag",
+        "description": "Replaces a tags key but keeps its value",
+        "resourceTypes": [
+            "Security Group",
+            "EC2 Instance",
+            "EC2 Image",
+            "Internet Gateway",
+            "Network Acl",
+            "Network Interface",
+            "Placement Group",
+            "Route Table",
+            "EC2 Snapshot",
+            "Subnet",
+            "EBS Volume",
+            "VPC",
+            "SNS Topic",
+            "SQS Queue"
+        ],
+        "params": [
+            {
+                "name": "New Key",
+                "type": "string",
+                "default": ""
+            },
+            {
+                "name": "DryRun",
+                "type": "boolean",
+                "default": "true"
+            }
+        ]
+    }
 
-  return INFO
+    return INFO

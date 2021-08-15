@@ -49,11 +49,9 @@ def info() -> dict:
             "Internet Gateway",
             "Network Acl",
             "Network Interface",
-            "Placement Group",
             "Route Table",
             "EC2 Snapshot",
             "Subnet",
-            "EBS Volume",
             "VPC",
             "SQS Queue",
             "SNS Topic"
