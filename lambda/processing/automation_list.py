@@ -10,7 +10,7 @@ import pathlib
 import json
 
 
-def generate_json(lambda_root) -> list:
+def generate_json(lambda_root) -> str:
     """ Generates the HyperglanceAutomations.json file
 
   Returns
@@ -39,4 +39,4 @@ sys.path.append(str(lambda_root))
 file.write(generate_json(lambda_root))
 file.close()
 
-print(json.dumps({'automation_file' : str(automations_file)}))  # terraform quirks
+print(json.dumps({'automation_file': str(automations_file)}))  # terraform quirks
