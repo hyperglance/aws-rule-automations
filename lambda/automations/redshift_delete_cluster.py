@@ -44,7 +44,7 @@ def info() -> dict:
     "params": [
       {
         "name": "SkipSnapshot",
-        "type": "bool",
+        "type": "boolean",
         "default": "False"
       }
     ]

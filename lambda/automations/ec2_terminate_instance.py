@@ -50,12 +50,12 @@ def info() -> dict:
     "params": [
       {
         "name": "DryRun",
-        "type": "bool",
+        "type": "boolean",
         "default": "True"
       },
       {
         "name": "SnapShotBeforeTerminate",
-        "type": "bool",
+        "type": "boolean",
         "default": "True"
       }
     ]

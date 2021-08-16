@@ -38,7 +38,11 @@ def info() -> dict:
       "NAT Gateway"
     ],
     "params": [
-
+      {
+        "name": "DryRun",
+        "type": "boolean",
+        "default": "True"
+      }
     ]
   }
 

@@ -35,6 +35,9 @@ def info() -> dict:
     ],
     "params": [
 
+    ],
+    "permissions": [
+
     ]
   }
 

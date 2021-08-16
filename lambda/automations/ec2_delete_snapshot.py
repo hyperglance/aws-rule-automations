@@ -37,7 +37,11 @@ def info() -> dict:
       "EBS Snapshot"
     ],
     "params": [
-
+      {
+        "name": "DryRun",
+        "type": "boolean",
+        "default": "True"
+      }
     ]
   }
 

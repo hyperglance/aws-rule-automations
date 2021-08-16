@@ -37,7 +37,11 @@ def info() -> dict:
       "Security Group"
     ],
     "params": [
-
+      {
+        "name": "DryRun",
+        "type": "boolean",
+        "default": "True"
+      }
     ]
   }
 

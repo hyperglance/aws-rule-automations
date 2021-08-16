@@ -43,7 +43,11 @@ def info() -> dict:
       "EC2 Instance"
     ],
     "params": [
-
+      {
+        "name": "DryRun",
+        "type": "boolean",
+        "default": "True"
+      }
     ]
   }
 
