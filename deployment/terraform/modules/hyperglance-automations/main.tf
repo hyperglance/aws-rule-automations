@@ -37,7 +37,7 @@ resource "aws_s3_bucket" "hyperglance_automations_bucket" {
 # GENERATE THE HYPERGLANCE AUTOMATIONS JSON
 #----------------------------------------------------------------------------------------------------------------------
 data "external" "hyperglance_automations_json" {
-  program = ["python3", var.generate_automations_script]
+  program = ["py", "-3", var.generate_automations_script]
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -80,32 +80,30 @@ resource "aws_lambda_function" "hyperglance_automations_lambda" {
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
-# CREATE SNS TOPIC
+# SUBSCRIBE THE LAMBDA TO S3 OBJECT EVENTS
+# Hyperglance will create event.json files in the bucket that we need to subscribe to
 # ---------------------------------------------------------------------------------------------------------------------
 
-resource "aws_sns_topic" "hyperglance_sns_topic" {
-  name = random_pet.hyperglance_automations_name.id
-  tags = var.tags
+resource "aws_s3_bucket_notification" "bucket_notification" {
+  bucket = aws_s3_bucket.hyperglance_automations_bucket.id
+
+  lambda_function {
+    lambda_function_arn = aws_lambda_function.hyperglance_automations_lambda.arn
+    events              = ["s3:ObjectCreated:*"]
+    filter_suffix       = "event.json"
+  }
+
+  depends_on = [aws_lambda_permission.hyperglance_automation_permissions]
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
-# CREATE SNS SUBSCRIPTUON AND TRIGGER LAMBDA
-# ---------------------------------------------------------------------------------------------------------------------
-
-resource "aws_sns_topic_subscription" "hyperglance_sns_topic_subscription" {
-  topic_arn = aws_sns_topic.hyperglance_sns_topic.arn
-  protocol  = "lambda"
-  endpoint  = aws_lambda_function.hyperglance_automations_lambda.arn
-}
-
-# ---------------------------------------------------------------------------------------------------------------------
-# ALLOW SNS TO TRIGGER LAMBDA EXECUTION
+# ALLOW S3 TO TRIGGER LAMBDA EXECUTION
 # ---------------------------------------------------------------------------------------------------------------------
 
 resource "aws_lambda_permission" "hyperglance_automation_permissions" {
-  statement_id  = "AllowExecutionFromSNS"
+  statement_id  = "AllowExecutionFromS3Bucket"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.hyperglance_automations_lambda.arn
-  principal     = "sns.amazonaws.com"
-  source_arn    = aws_sns_topic.hyperglance_sns_topic.arn
+  principal     = "s3.amazonaws.com"
+  source_arn    = aws_s3_bucket.hyperglance_automations_bucket.arn
 }
