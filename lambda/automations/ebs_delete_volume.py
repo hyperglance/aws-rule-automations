@@ -42,6 +42,9 @@ def info() -> dict:
     ],
     "params": [
 
+    ],
+    "permissions": [
+      "ec2:DeleteVolume"
     ]
   }
 

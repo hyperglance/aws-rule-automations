@@ -49,6 +49,10 @@ def info() -> dict:
         "type": "string",
         "default": " "
       }
+    ],
+    "permissions": [
+      "iam:ListInstanceProfilesForRole",
+      "iam:RemoveRoleFromInstanceProfile"
     ]
   }
 

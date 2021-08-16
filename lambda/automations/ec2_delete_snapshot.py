@@ -40,8 +40,11 @@ def info() -> dict:
       {
         "name": "DryRun",
         "type": "boolean",
-        "default": "True"
+        "default": "true"
       }
+    ],
+    "permissions": [
+      "ec2:DeleteSnapshot"
     ]
   }
 

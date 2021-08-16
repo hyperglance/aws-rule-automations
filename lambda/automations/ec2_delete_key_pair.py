@@ -40,6 +40,9 @@ def info() -> dict:
         "name": "Key Name",
         "type": "string"
       }
+    ],
+    "permissions": [
+      "ec2:DeleteKeyPair"
     ]
   }
 

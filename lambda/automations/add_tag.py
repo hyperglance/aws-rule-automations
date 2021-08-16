@@ -64,6 +64,11 @@ def info() -> dict:
                 "type": "string",
                 "default": ""
             }
+        ],
+        "permissions": [
+            "ec2:CreateTags"
+            "sns:TagResource"
+            "sqs:TagQueue"
         ]
     }
 

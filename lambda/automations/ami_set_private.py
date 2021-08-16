@@ -46,6 +46,9 @@ def info() -> dict:
     ],
     "params": [
 
+    ],
+    "permissions": [
+      "ec2:ModifyImageAttribute"
     ]
   }
 

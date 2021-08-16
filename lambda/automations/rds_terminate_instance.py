@@ -47,12 +47,12 @@ def info() -> dict:
       {
         "name": "SkipSnapshot",
         "type": "boolean",
-        "default": "False"
+        "default": "false"
       },
       {
         "name": "DeleteBackups",
         "type": "boolean",
-        "default": "False"
+        "default": "false"
       }
     ]
   }

@@ -46,7 +46,7 @@ def info() -> dict:
       {
         "name": "DryRun",
         "type": "boolean",
-        "default": "True"
+        "default": "true"
       }
     ]
   }

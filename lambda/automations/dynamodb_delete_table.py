@@ -38,6 +38,9 @@ def info() -> dict:
     ],
     "params": [
 
+    ],
+    "permissions": [
+      "dynamodb:DeleteTable"
     ]
   }
 

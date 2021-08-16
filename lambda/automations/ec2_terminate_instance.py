@@ -51,12 +51,12 @@ def info() -> dict:
       {
         "name": "DryRun",
         "type": "boolean",
-        "default": "True"
+        "default": "true"
       },
       {
         "name": "SnapShotBeforeTerminate",
         "type": "boolean",
-        "default": "True"
+        "default": "true"
       }
     ]
   }

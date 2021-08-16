@@ -37,7 +37,7 @@ def info() -> dict:
 
     ],
     "permissions": [
-
+      "ec2:DeleteNetworkAcl"
     ]
   }
 

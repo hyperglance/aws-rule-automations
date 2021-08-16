@@ -47,6 +47,9 @@ def info() -> dict:
         "type": "string",
         "default": " "
       }
+    ],
+    "permissions": [
+      "ec2:AssociateIamInstanceProfile"
     ]
   }
 
