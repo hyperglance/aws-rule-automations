@@ -40,7 +40,7 @@ def info() -> dict:
       "S3 Bucket"
     ],
     "params": [
-
+      "s3:PutBucketVersioning"
     ]
   }
 

@@ -44,6 +44,9 @@ def info() -> dict:
         "type": "string",
         "default": ""
       }
+    ],
+    "permissions": [
+      "iam:RemoveUserFromGroup"
     ]
   }
 

@@ -65,6 +65,12 @@ def info() -> dict:
                 "type": "string",
                 "default": " "
             }
+        ],
+        "permissions": [
+            "ecs:ListTasks",
+            "ecs:DescribeTasks",
+            "ecs:DescribeTaskDefinition",
+            "ecs:StopTask"
         ]
     }
     return INFO

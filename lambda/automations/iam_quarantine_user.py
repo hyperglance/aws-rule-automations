@@ -66,6 +66,10 @@ def info() -> dict:
     ],
     "params": [
 
+    ],
+    "permissions": [
+      "iam:CreatePolicy",
+      "iam:AttachUserPolicy"
     ]
   }
 

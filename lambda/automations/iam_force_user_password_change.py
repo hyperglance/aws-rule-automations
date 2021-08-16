@@ -39,6 +39,9 @@ def info() -> dict:
     ],
     "params": [
 
+    ],
+    "permissions": [
+      "iam:UpdateLoginProfile"
     ]
   }
 

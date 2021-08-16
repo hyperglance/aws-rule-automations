@@ -90,6 +90,12 @@ def info() -> dict:
     ],
     "params": [
 
+    ],
+    "permissions": [
+      "ec2:DescribeSecurityGroups",
+      "ec2:CreateSecurityGroup",
+      "ec2RevokeSecurityGroupEgress",
+      "rds:ModifyDBInstance"
     ]
   }
 

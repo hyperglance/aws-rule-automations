@@ -62,6 +62,11 @@ def info() -> dict:
                 "type": "string",
                 "default": ""
             }
+        ],
+        "permissions": [
+            "ec2:DeleteTags",
+            "sns:UntagResource",
+            "sqs:UntagQueue"
         ]
     }
 

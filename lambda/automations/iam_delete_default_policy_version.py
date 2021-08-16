@@ -55,6 +55,12 @@ def info() -> dict:
     ],
     "params": [
 
+    ],
+    "permissions": [
+      "iam:ListPolicyVersions",
+      "iam:GetPolicy",
+      "iam:SetDefaultPolicyVersion",
+      "iam:DeletePolicyVersion"
     ]
   }
 

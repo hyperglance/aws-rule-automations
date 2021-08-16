@@ -48,6 +48,9 @@ def info() -> dict:
         "type": "boolean",
         "default": "true"
       }
+    ],
+    "permissions": [
+      "ec2:CreateSnapshots"
     ]
   }
 

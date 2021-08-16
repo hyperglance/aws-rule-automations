@@ -73,6 +73,11 @@ def info() -> dict:
     ],
     "params": [
 
+    ],
+    "permissions": [
+      "s3:ListBucket",
+      "s3:CreateBucket",
+      "s3:PutBucketLogging"
     ]
   }
 

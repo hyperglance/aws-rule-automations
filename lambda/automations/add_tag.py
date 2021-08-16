@@ -66,8 +66,8 @@ def info() -> dict:
             }
         ],
         "permissions": [
-            "ec2:CreateTags"
-            "sns:TagResource"
+            "ec2:CreateTags",
+            "sns:TagResource",
             "sqs:TagQueue"
         ]
     }

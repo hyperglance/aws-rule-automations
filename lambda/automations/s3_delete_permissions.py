@@ -46,6 +46,10 @@ def info() -> dict:
     ],
     "params": [
 
+    ],
+    "permissions": [
+      "s3:DeleteBucketPolicy",
+      "s3:PutBucketAcl"
     ]
   }
 

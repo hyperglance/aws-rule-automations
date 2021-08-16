@@ -66,7 +66,9 @@ def info() -> dict:
 
     ],
     "permissions": [
-
+      "ec2:DescribeAddresses",
+      "ec2:DisassociateAddress",
+      "ec2:ReleaseAddress"
     ]
   }
 

@@ -75,6 +75,14 @@ def info() -> dict:
                 "type": "boolean",
                 "default": "true"
             }
+        ],
+        "permissions": [
+            "ec2:CreateTags",
+            "sns:TagResource",
+            "sqs:TagQueue",
+            "ec2:DeleteTags",
+            "sns:UntagResource",
+            "sqs:UntagQueue"
         ]
     }
 

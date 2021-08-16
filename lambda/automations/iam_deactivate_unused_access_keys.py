@@ -10,7 +10,7 @@ from datetime import datetime
 
 
 def days_last_used(client, access_key) -> int:
-  """ Calculates when a key was last used
+    """ Calculates when a key was last used
 
   Parameters
   ----------
@@ -26,24 +26,24 @@ def days_last_used(client, access_key) -> int:
 
   """
 
-  ## Get current date and time
-  current_date_time = datetime.now()
-  ## Access Key ID
-  access_key_id = access_key.get('Access Key Id')
-  ## Get the last used details
-  key_last_used = client.get_access_key_last_used(
-    AccessKeyId=access_key_id
-  ) ['AccessKeyLastUsed']
+    ## Get current date and time
+    current_date_time = datetime.now()
+    ## Access Key ID
+    access_key_id = access_key.get('Access Key Id')
+    ## Get the last used details
+    key_last_used = client.get_access_key_last_used(
+        AccessKeyId=access_key_id
+    )['AccessKeyLastUsed']
 
-  ## Check if key has ever been used, else use creation time
-  if 'LastUsedDate' in key_last_used:
-    return (current_date_time - key_last_used['LastUsedDate'].replace(tzinfo=None)).days
-  else:
-    return (current_date_time - access_key['CreateDate'].replace(tzinfo=None)).days
+    ## Check if key has ever been used, else use creation time
+    if 'LastUsedDate' in key_last_used:
+        return (current_date_time - key_last_used['LastUsedDate'].replace(tzinfo=None)).days
+    else:
+        return (current_date_time - access_key['CreateDate'].replace(tzinfo=None)).days
 
 
-def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
-  """ Attempts to delete default policy and set to the LATEST
+def hyperglance_automation(boto_session, resource: dict, automation_params=''):
+    """ Attempts to delete default policy and set to the LATEST
 
   Parameters
   ----------
@@ -55,45 +55,50 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     Automation parameters passed from the Hyperglance UI
   """
 
-  client = boto_session.client('iam')
-  iam_username = resource['attributes']['User Name']
+    client = boto_session.client('iam')
+    iam_username = resource['attributes']['User Name']
 
-  max_days_unused = automation_params.get('MaxDaysUsed')
+    max_days_unused = automation_params.get('MaxDaysUsed')
 
-  ## Get all the access keys for the user
-  iam_user_access_keys = client.list_access_keys(
-    UserName=iam_username
-  )
+    ## Get all the access keys for the user
+    iam_user_access_keys = client.list_access_keys(
+        UserName=iam_username
+    )
 
-  for key in iam_user_access_keys['AccessKeyMetadata']:
-    ## Get access key ID
-    access_key_id = key['AccessKeyId']
-    ## Get number of days since last use
-    days_since_last_use = days_last_used(client=client, access_key=access_key_id)
+    for key in iam_user_access_keys['AccessKeyMetadata']:
+        ## Get access key ID
+        access_key_id = key['AccessKeyId']
+        ## Get number of days since last use
+        days_since_last_use = days_last_used(client=client, access_key=access_key_id)
 
-    if days_since_last_use > max_days_unused:
-      ## Deactivate the Key
-      client.update_access_key(
-        UserName=iam_username,
-        AccessKeyId=access_key_id,
-        Status='Inactive'
-      )
+        if days_since_last_use > max_days_unused:
+            ## Deactivate the Key
+            client.update_access_key(
+                UserName=iam_username,
+                AccessKeyId=access_key_id,
+                Status='Inactive'
+            )
 
 
 def info() -> dict:
-  INFO = {
-    "displayName": "Deactivate Keys",
-    "description": "Deactivates Unused Access Keys",
-    "resourceTypes": [
-      "IAM User"
-    ],
-    "params": [
-      {
-        "name": "MaxDaysUsed",
-        "type": "Number",
-        "default": "90"
-      }
-    ]
-  }
+    INFO = {
+        "displayName": "Deactivate Keys",
+        "description": "Deactivates Unused Access Keys",
+        "resourceTypes": [
+            "IAM User"
+        ],
+        "params": [
+            {
+                "name": "MaxDaysUsed",
+                "type": "Number",
+                "default": "90"
+            }
+        ],
+        "permissions": [
+            "iam:ListAccessKeys",
+            "iam:UpdateAccessKey",
+            "iam:GetAccessKeyLastUsed"
+        ]
+    }
 
-  return INFO
+    return INFO

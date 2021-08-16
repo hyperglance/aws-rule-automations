@@ -41,6 +41,9 @@ def info() -> dict:
     ],
     "params": [
 
+    ],
+    "permissions": [
+      "workspaces:StopWorkspaces"
     ]
   }
 

@@ -44,6 +44,10 @@ def info() -> dict:
     ],
     "params": [
 
+    ],
+    "permissions": [
+      "iam:ListAccessKeys",
+      "iam:DeleteAccessKey"
     ]
   }
 

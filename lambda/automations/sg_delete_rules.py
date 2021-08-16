@@ -70,6 +70,11 @@ def info() -> dict:
     ],
     "params": [
 
+    ],
+    "permissions": [
+      "ec2:DescribeSecurityGroups",
+      "ec2:RevokeSecurityGroupEgress",
+      "ec2:RevokeSecurityGroupIngress"
     ]
   }
 

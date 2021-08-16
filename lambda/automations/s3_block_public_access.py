@@ -46,6 +46,9 @@ def info() -> dict:
     ],
     "params": [
 
+    ],
+    "permissions": [
+      "s3:PutBucketPublicAccessBlock"
     ]
   }
 

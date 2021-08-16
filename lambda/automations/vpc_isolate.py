@@ -148,6 +148,14 @@ def info() -> dict:
     ],
     "params": [
 
+    ],
+    "permissions": [
+      "ec2:ModifyVpcAttribute",
+      "iam:CreatePolicy",
+      "ec2:DescribeNetworkAcls",
+      "ec2:CreateNetworkAcl",
+      "ec2:ReplaceNetworkAclAssociation",
+      "iam:ListUsers"
     ]
   }
 

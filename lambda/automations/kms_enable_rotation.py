@@ -41,6 +41,9 @@ def info() -> dict:
         "type": "string",
         "default": ""
       }
+    ],
+    "permissions": [
+      "kms:EnableKeyRotation"
     ]
   }
 

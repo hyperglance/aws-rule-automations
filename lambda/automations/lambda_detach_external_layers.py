@@ -49,6 +49,10 @@ def info() -> dict:
     ],
     "params": [
 
+    ],
+    "permissions": [
+      "lambda:GetFunction",
+      "lambda:UpdateFunctionConfiguration"
     ]
   }
 

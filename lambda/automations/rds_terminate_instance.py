@@ -54,6 +54,9 @@ def info() -> dict:
         "type": "boolean",
         "default": "false"
       }
+    ],
+    "permissions": [
+      "rds:DeleteDBInstance"
     ]
   }
 

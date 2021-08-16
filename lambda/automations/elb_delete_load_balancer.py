@@ -7,8 +7,9 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 
-def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
-  """ Attempts to Delete and ELB Load Balancer
+
+def hyperglance_automation(boto_session, resource: dict, automation_params=''):
+    """ Attempts to Delete and ELB Load Balancer
 
   Parameters
   ----------
@@ -19,26 +20,30 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
   automation_params : str
     Automation parameters passed from the Hyperglance UI
   """
-  ## TODO: Add conditional logic for Classic ELB 
-  client = boto_session.client('elbv2')
-  load_balancer = resource['id']
+    ## TODO: Add conditional logic for Classic ELB
+    client = boto_session.client('elbv2')
+    load_balancer = resource['id']
 
-  client.delete_load_balancer(
-    LoadBalancerArn=load_balancer
-  )
+    client.delete_load_balancer(
+        LoadBalancerArn=load_balancer
+    )
 
 
 def info() -> dict:
-  INFO = {
-    "displayName": "Delete Load Balancer",
-    "description": "Destroys ALB/NLB Elastic Load Balancer (v2)",
-    "resourceTypes": [
-      "Application Load Balancer",
-      "Network Load Balancer"
-    ],
-    "params": [
+    INFO = {
+        "displayName": "Delete Load Balancer",
+        "description": "Destroys ALB/NLB Elastic Load Balancer (v2)",
+        "resourceTypes": [
+            "Application Load Balancer",
+            "Network Load Balancer"
+        ],
+        "params": [
 
-    ]
-  }
+        ],
+        "permissions": [
+          "elasticloadbalancing:DeleteLoadBalancer"
+        ]
 
-  return INFO
+    }
+
+    return INFO
