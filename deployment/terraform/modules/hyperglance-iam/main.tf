@@ -25,9 +25,9 @@ locals {
 # GET THE POLICIES FROM THE AVAILABLE AUTOMATIONS
 # ---------------------------------------------------------------------------------------------------------------------
 
-//data "external" "policy_json" {
-//    program = local.is_windows ? ["py -3", var.generate_permissions_script] : ["python3", var.generate_permissions_script]
-//}
+data "external" "policy_json" {
+    program = local.is_windows ? ["py -3", var.generate_permissions_script] : ["python3", var.generate_permissions_script]
+}
 
 # ---------------------------------------------------------------------------------------------------------------------
 # CREATE AN AWS IAM POLICY FOR automations EXECUTION
@@ -42,92 +42,7 @@ resource "aws_iam_policy" "hyperglance_automation_policy" {
     Version = "2012-10-17"
     Statement = [
       {
-        Action = [
-          "dynamodb:DeleteTable",
-          "ec2:AssociateIamInstanceProfile",
-          "ec2:AuthorizeSecurityGroupEgress",
-          "ec2:AuthorizeSecurityGroupIngress",
-          "ec2:CreateNetworkAcl",
-          "ec2:CreateSecurityGroup",
-          "ec2:CreateSnapshots",
-          "ec2:CreateTags",
-          "ec2:DeleteSecurityGroup",
-          "ec2:DeleteInternetGateway",
-          "ec2:DeleteKeyPair",
-          "ec2:DeleteNatGateway",
-          "ec2:DeleteSnapshot",
-          "ec2:DeleteTags",
-          "ec2:DeleteVolume",
-          "ec2:DetachInternetGateway",
-          "ec2:DescribeAddresses",
-          "ec2:DescribeNetworkAcls",
-          "ec2:DescribeSecurityGroups",
-          "ec2:DescribeInstances",
-          "ec2:DescribeVolumes",
-          "ec2:DescribeVolumeStatus",
-          "ec2:DescribeSnapshots",
-          "ec2:DisassociateAddress",
-          "ec2:ModifyInstanceAttribute",
-          "ec2:ModifyImageAttribute",
-          "ec2:ModifyVpcAttribute",
-          "ec2:ReleaseAddress",
-          "ec2:RevokeSecurityGroupEgress",
-          "ec2:RevokeSecurityGroupIngress",
-          "ec2:StopInstances",
-          "ec2:TerminateInstances",
-          "ecs:ListTasks",
-          "ecs:DescribeTasks",
-          "ecs:DescribeTaskDefinition",
-          "ecs:StopTask",
-          "ecs:UpdateContainerInstancesState",
-          "kms:CreateAlias",
-          "kms:CreateKey",
-          "kms:EnableKeyRotation",
-          "iam:AttachRolePolicy",
-          "iam:AttachUserPolicy",
-          "iam:DetachRolePolicy",
-          "iam:CreatePolicy",
-          "iam:CreateRole",
-          "iam:DeleteAccessKey",
-          "iam:DeleteLoginProfile",
-          "iam:GetPolicy",
-          "iam:GetUser",
-          "iam:ListAccessKeys",
-          "iam:PassRole",
-          "iam:RemoveRoleFromInstanceProfile",
-          "iam:RemoveUserFromGroup",
-          "iam:ListInstanceProfilesForRole",
-          "iam:UpdateAccountPasswordPolicy",
-          "iam:UpdateLoginProfile",
-          "lambda:GetFunction",
-          "lambda:UpdateFunctionConfiguration",
-          "lambda:PutFunctionConcurrency",
-          "elasticloadbalancing:DeleteLoadBalancer",
-          "rds:DeleteDBCluster",
-          "rds:DeleteDBInstance",
-          "rds:ModifyDBInstance",
-          "redshift:DeleteCluster",
-          "s3:CreateBucket",
-          "s3:DeleteBucket",
-          "s3:DeleteBucketPolicy",
-          "s3:DeleteObject",
-          "s3:GetBucketAcl",
-          "s3:GetBucketPolicy",
-          "s3:GetObject",
-          "s3:ListBucket",
-          "s3:PutBucketAcl",
-          "s3:PutBucketLogging",
-          "s3:PutBucketPolicy",
-          "s3:PutBucketVersioning",
-          "s3:PutEncryptionConfiguration",
-          "s3:PutBucketPublicAccessBlock",
-          "s3:PutObject",
-          "sts:AssumeRole",
-          "sts:GetCallerIdentity",
-          "workspaces:StartWorkspaces",
-          "workspaces:StopWorkspaces",
-          "workspaces:TerminateWorkspaces"
-        ]
+        Action = values(data.external.policy_json.result)
         Effect   = "Allow"
         Resource = "*"
       },
