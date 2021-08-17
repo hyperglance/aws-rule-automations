@@ -9,3 +9,8 @@ variable "tags" {
     Source      = "https://github.com/hyperglance/aws-rule-automations"
   }
 }
+
+variable "generate_permissions_script" {
+  type        = string
+  description = "Path to permissions json generator"
+}

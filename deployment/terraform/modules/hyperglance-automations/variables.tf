@@ -17,5 +17,10 @@ variable "lambda_package" {
 
 variable "generate_automations_script" {
   type        = string
-  description = "Path to automation_list.py"
+  description = "Path to HyperglanceAutomations.json generator"
+}
+
+variable "generate_permissions_script" {
+  type        = string
+  description = "Path to permissions json generator"
 }
