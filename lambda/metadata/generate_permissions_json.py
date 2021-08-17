@@ -7,6 +7,7 @@ import importlib
 import json
 import os
 import pathlib
+import sys
 
 
 def fetch_permissions_list(lambda_root) -> list:
@@ -24,14 +25,17 @@ def fetch_permissions_list(lambda_root) -> list:
 
     for index, automation in enumerate(automations):
         automation_module = importlib.import_module(''.join(['automations.', automation]), package=None)
-        print(automation)
-        print(json.dumps(automation_module.info()))
         permissions.extend(automation_module.info()['permissions'])
-        print("x")
     return permissions
 
 
+def insert(source_str, insert_str, pos):
+    return source_str[:pos]+insert_str+source_str[pos:]
+
+
 lambda_root = pathlib.Path(os.path.abspath(__file__)).parents[1]
+sys.path.append(str(lambda_root))
+
 permissions = {
     'Version': '2021-08-17',
     'Statement': [
@@ -42,5 +46,6 @@ permissions = {
         }
     ]
 }
+permission_dump = json.dumps(permissions)
 
-print(json.dumps(permissions))
+print(insert(permission_dump, ',', len(permission_dump) - 2))
