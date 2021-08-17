@@ -41,6 +41,9 @@ def info() -> dict:
     ],
     "params": [
       "s3:PutBucketVersioning"
+    ],
+    "permissions": [
+      "s3:PutBucketVersioning"
     ]
   }
 

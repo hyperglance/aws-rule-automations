@@ -10,7 +10,7 @@ module "hyperglance_automations" {
   source = "../modules/hyperglance-automations"
 
   lambda_package = "../../../lambda"
-  generate_automations_script = "../../../lambda/processing/automation_list.py"
+  generate_automations_script = "../../../lambda/metadata/generate_automations_json.py"
 }
 
 
