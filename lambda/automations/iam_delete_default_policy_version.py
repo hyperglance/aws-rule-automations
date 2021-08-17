@@ -51,7 +51,7 @@ def info() -> dict:
     "displayName": "Delete Default Policy Version",
     "description": "Deletes the default policy version, and sets latest version as active",
     "resourceTypes": [
-      "IAM Policy"
+      "Policy"
     ],
     "params": [
 

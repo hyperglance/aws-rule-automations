@@ -52,7 +52,10 @@ def info() -> dict:
     ],
     "permissions": [
       "lambda:GetFunction",
-      "lambda:UpdateFunctionConfiguration"
+      "lambda:UpdateFunctionConfiguration",
+      "s3:GetObject",
+      "s3:PutObject",
+      "s3:DeleteObject"
     ]
   }
 
