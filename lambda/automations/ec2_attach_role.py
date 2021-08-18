@@ -6,6 +6,10 @@ by Hyperglance Rule(s)
 This automation will operate across accounts, where the appropriate IAM Role exists.
 
 """
+import logging
+
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
 
 
 def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
@@ -21,15 +25,20 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     Automation parameters passed from the Hyperglance UI
   """
 
-  client = boto_session.client('ec2')
+  ec2 = boto_session.client('ec2')
 
   instance = resource['attributes']['Instance ID']
-  role_arn = automation_params.get('Role')
-  
-  client.associate_iam_instance_profile(
+  role_name = automation_params.get('Role')
+  iam = boto_session.resource('iam')
+  role = iam.Role(role_name)
+  role_arn = role.arn
+
+  logger.debug(role_arn)
+  logger.debug(role_name)
+  ec2.associate_iam_instance_profile(
     IamInstanceProfile={
       'Arn': role_arn,
-      'Name': role_arn.split('/')[1]
+      'Name': role_name
     },
     InstanceId=instance
   )
@@ -49,7 +58,8 @@ def info() -> dict:
       }
     ],
     "permissions": [
-      "ec2:AssociateIamInstanceProfile"
+      "ec2:AssociateIamInstanceProfile",
+      "iam:GetRole"
     ]
   }
 

@@ -61,17 +61,7 @@ def add_tag(boto_session, key, value, resource):
                 key: value
             }
         )
-    elif resource['type'] == 'VPC' \
-            or resource['type'] == 'Security Group' \
-            or resource['type'] == 'Subnet' \
-            or resource['type'] == 'EC2 Snapshot' \
-            or resource['type'] == 'Route Table' \
-            or resource['type'] == 'Network Interface' \
-            or resource['type'] == 'Network ACL' \
-            or resource['type'] == 'Internet Gateway' \
-            or resource['type'] == 'EC2 Image' \
-            or resource['type'] == 'EC2 Instance' \
-            or resource['type'] == 'Security Group':
+    elif parse_arn(resource['arn'])['service'] == 'ec2':
         client = boto3.client('ec2')
         client.create_tags(
             Resources=[
@@ -103,16 +93,7 @@ def remove_tag(boto_session, key, resource):
                 key,
             ]
         )
-    elif resource['type'] == 'VPC' \
-            or resource['type'] == 'Subnet' \
-            or resource['type'] == 'EC2 Snapshot' \
-            or resource['type'] == 'Route Table' \
-            or resource['type'] == 'Network Interface' \
-            or resource['type'] == 'Network ACL' \
-            or resource['type'] == 'Internet Gateway' \
-            or resource['type'] == 'EC2 Image' \
-            or resource['type'] == 'EC2 Instance' \
-            or resource['type'] == 'Security Group':
+    elif parse_arn(resource['arn'])['service'] == 'ec2':
         client = boto_session.client('ec2')
         client.delete_tags(
             Resources=[
