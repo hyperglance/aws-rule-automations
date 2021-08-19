@@ -75,7 +75,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
 def info() -> dict:
   INFO = {
     "displayName": "Delete EBS Volume",
-    "description": "Deletes a specified EBS Volume",
+    "description": "Deletes a specified EBS Volume - Must not be attached to a spot request instance",
     "resourceTypes": [
       "EBS Volume"
     ],

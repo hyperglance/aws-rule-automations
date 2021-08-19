@@ -10,9 +10,6 @@ import logging
 import random
 import time
 
-logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
-
 
 def hyperglance_automation(boto_session, resource: dict, automation_params=''):
     """ Attempts to attach an IAM policy to an EC2 Instance
@@ -31,30 +28,29 @@ def hyperglance_automation(boto_session, resource: dict, automation_params=''):
     iam = boto_session.client('iam')
     ec2_instance = resource['attributes']['Instance ID']
     role_name = automation_params.get('Role')
-    instance_profile_name = role_name + str(random.randint(10000, 99999))
+    instance_profile_name = role_name + str(random.randint(10000, 99999))  # no conflicts
+    waiter = iam.get_waiter('instance_profile_exists')
 
     instance_profile = iam.create_instance_profile(
         InstanceProfileName=instance_profile_name
     )
-    logger.info(instance_profile)
 
-    instance_profile_arn = instance_profile['InstanceProfile']['Arn']
+    waiter.wait(InstanceProfileName=instance_profile_name)
 
-    response1 = iam.add_role_to_instance_profile(
+    role_profile = iam.list_instance_profiles_for_role(RoleName=role_name)['InstanceProfiles']
+
+    iam.add_role_to_instance_profile(
         InstanceProfileName=instance_profile_name,
         RoleName=role_name
     )
 
-    logger.info(response1)
-
     response2 = ec2.associate_iam_instance_profile(
         IamInstanceProfile={
-            'Arn': instance_profile_arn,  # invalid arn!!!
+            'Arn': role_profile[0]['Arn'],
             'Name': instance_profile_name
         },
         InstanceId=ec2_instance
     )
-    logger.info(response2)
 
 
 def info() -> dict:
@@ -76,7 +72,9 @@ def info() -> dict:
             "iam:GetRole",
             "iam:CreateInstanceProfile",
             "iam:PassRole",
-            "iam:AddRoleToInstanceProfile"
+            "iam:AddRoleToInstanceProfile",
+            "iam:GetInstanceProfile",
+            "iam:ListInstanceProfilesForRole"
         ]
     }
 
