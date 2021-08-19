@@ -31,6 +31,7 @@ resource "aws_s3_bucket" "hyperglance_automations_bucket" {
   bucket = random_pet.hyperglance_automations_name.id
   acl    = "private"
   tags   = var.tags
+  force_destroy = true
 }
 
 # ---------------------------------------------------------------------------------------------------------------------

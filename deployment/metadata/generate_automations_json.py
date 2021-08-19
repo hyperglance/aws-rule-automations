@@ -32,7 +32,7 @@ def generate_json(lambda_root) -> str:
 
 
 automations_file = pathlib.Path(os.path.abspath(__file__)).parents[2].joinpath("files/HyperglanceAutomations.json")
-lambda_root = pathlib.Path(os.path.abspath(__file__)).parents[1]
+lambda_root = pathlib.Path(os.path.abspath(__file__)).parents[2].joinpath('lambda')
 
 file = open(automations_file, "w")
 sys.path.append(str(lambda_root))

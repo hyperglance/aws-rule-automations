@@ -32,7 +32,7 @@ def fetch_permissions_list(lambda_root) -> dict:
     return permissions
 
 
-lambda_root = pathlib.Path(os.path.abspath(__file__)).parents[1]
+lambda_root = pathlib.Path(os.path.abspath(__file__)).parents[2].joinpath('lambda')
 sys.path.append(str(lambda_root))
 
 print(json.dumps(fetch_permissions_list(lambda_root)))

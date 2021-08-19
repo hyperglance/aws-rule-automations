@@ -7,9 +7,11 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 import logging
+import random
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
+
 
 
 def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
@@ -26,21 +28,30 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
   """
 
   ec2 = boto_session.client('ec2')
-
-  instance = resource['attributes']['Instance ID']
+  iam = boto_session.client('iam')
+  ec2_instance = resource['attributes']['Instance ID']
   role_name = automation_params.get('Role')
-  iam = boto_session.resource('iam')
-  role = iam.Role(role_name)
-  role_arn = role.arn
+  instance_profile_name = role_name + str(random.randint(10000, 99999))
 
-  logger.debug(role_arn)
-  logger.debug(role_name)
+  instance_profile = iam.create_instance_profile(
+    InstanceProfileName=instance_profile_name
+  )
+
+
+  instance_profile_arn = instance_profile['InstanceProfile']['Arn']
+
+
+  iam.add_role_to_instance_profile(
+    InstanceProfileName=instance_profile_name,
+    RoleName=role_name
+  )
+
   ec2.associate_iam_instance_profile(
     IamInstanceProfile={
-      'Arn': role_arn,
-      'Name': role_name
+      'Arn': instance_profile_arn,
+      'Name': instance_profile_name
     },
-    InstanceId=instance
+    InstanceId=ec2_instance
   )
 
 def info() -> dict:
@@ -59,7 +70,10 @@ def info() -> dict:
     ],
     "permissions": [
       "ec2:AssociateIamInstanceProfile",
-      "iam:GetRole"
+      "iam:GetRole",
+      "iam:CreateInstanceProfile",
+      "iam:PassRole",
+      "iam:AddRoleToInstanceProfile"
     ]
   }
 

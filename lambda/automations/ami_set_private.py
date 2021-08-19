@@ -42,7 +42,7 @@ def info() -> dict:
     "displayName": "Set AMI to Private",
     "description": "Sets and AMI to Private if it is currently Public",
     "resourceTypes": [
-      "EC2 Instance"
+      "AMI"
     ],
     "params": [
 
