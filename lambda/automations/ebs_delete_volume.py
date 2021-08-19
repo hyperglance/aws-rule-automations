@@ -20,15 +20,26 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
   automation_params : str
     Automation parameters passed from the Hyperglance UI
   """
-  client = boto_session.client('ec2')
+  ec2_client = boto_session.client('ec2')
   ebs_volume = resource['attributes']['Volume ID']
+  volume = ec2_client.Volume(ebs_volume)
 
-  client.delete_volume(
+
+  for instance in volume.attachments:
+
+    response = volume.detach_from_instance(
+      Device=instance['Device'],
+      Force=True,
+      VolumeId=instance['VolumeId'],
+      InstanceId=instance['InstanceId']
+    )
+
+  ec2_client.delete_volume(
     VolumeId=ebs_volume
   )
 
   ## Wait for the deletion to finish
-  client.get_waiter('volume_deleted').wait(
+  ec2_client.get_waiter('volume_deleted').wait(
     VolumeIds=[ebs_volume]
   )
 
