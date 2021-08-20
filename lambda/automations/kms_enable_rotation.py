@@ -33,11 +33,11 @@ def info() -> dict:
     "displayName": "Enable KMS Rotation",
     "description": "Enables rotations of KMS Keys",
     "resourceTypes": [
-      "IAM"
+      "Region"
     ],
     "params": [
       {
-        "name": "KMS Key",
+        "name": "KMS Key Id",
         "type": "string",
         "default": ""
       }

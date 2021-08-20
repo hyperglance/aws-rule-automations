@@ -34,12 +34,13 @@ def days_last_used(client, access_key) -> int:
     ## Get current date and time
     current_date_time = datetime.now()
     ## Access Key ID
-    logger.info(access_key)
-    access_key_id = access_key.get('Access Key Id')
+    access_key_id = access_key.get('AccessKeyId')
+
     ## Get the last used details
     key_last_used = client.get_access_key_last_used(
         AccessKeyId=access_key_id
-    )['AccessKeyLastUsed']
+    )
+
 
     ## Check if key has ever been used, else use creation time
     if 'LastUsedDate' in key_last_used:
@@ -64,7 +65,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params=''):
     client = boto_session.client('iam')
     iam_username = resource['attributes']['User Name']
 
-    max_days_unused = automation_params.get('MaxDaysUsed')
+    max_days_unused = int(automation_params.get('MaxDaysUsed'))
 
     ## Get all the access keys for the user
     iam_user_access_keys = client.list_access_keys(
