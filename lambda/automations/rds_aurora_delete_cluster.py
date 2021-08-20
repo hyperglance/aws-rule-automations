@@ -8,10 +8,15 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 """
 
 import uuid
+import logging
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
 
 ## Delete RDS Aurora DB Cluster
-def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
-  """ Attempts to Delete and Aurora Backed RDS Instance
+def hyperglance_automation(boto_session, resource: dict, automation_params=''):
+    """ Attempts to Delete and Aurora Backed RDS Instance
 
   Parameters
   ----------
@@ -23,35 +28,54 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     Automation parameters passed from the Hyperglance UI
   """
 
-  client = boto_session.client('rds')
-  rds_instance = resource['id']
+    client = boto_session.client('rds')
+    rds_instance = resource['id']
 
-  skip_snapshot = automation_params.get('SkipAuroraSnapshot').lower() in ['true', 'y', 'yes']
+    skip_snapshot = automation_params.get('SkipAuroraSnapshot').lower() in ['true', 'y', 'yes']
 
-  client.delete_db_cluster(
-    DBClusterIdentifier=rds_instance,
-    SkipFinalSnapshot=skip_snapshot,
-    FinalDBSnapshotIdentifier=None if skip_snapshot else 'Snapshot-{}'.format(str(uuid.uuid5(uuid.NAMESPACE_DNS, 'hyperglance')))
-  )
+    response = client.describe_db_clusters(
+        DBClusterIdentifier=resource['id']
+    )
+
+    cluster_members = response['DBClusters'][0]['DBClusterMembers']
+
+    logger.info(cluster_members)
+
+    db_identifiers = [db['DBInstanceIdentifier'] for db in cluster_members]
+
+    logger.info(db_identifiers)
+
+    for identifier in db_identifiers:
+        response = client.delete_db_instance(
+            DBInstanceIdentifier=identifier
+        )
+
+    client.delete_db_cluster(
+        DBClusterIdentifier=rds_instance,
+        SkipFinalSnapshot=skip_snapshot,
+        FinalDBSnapshotIdentifier=None if skip_snapshot else 'Snapshot-{}'.format(
+            str(uuid.uuid5(uuid.NAMESPACE_DNS, 'hyperglance')))
+    )
 
 
 def info() -> dict:
-  INFO = {
-    "displayName": "Delete Aurora Cluster",
-    "description": "Deletes and Aurora DB Cluster",
-    "resourceTypes": [
-      "Aurora DB Cluster"
-    ],
-    "params": [
-      {
-        "name": "SkipAuroraSnapshot",
-        "type": "boolean",
-        "default": "false"
-      }
-    ],
-    "permissions": [
-      "rds:DeleteDBCluster"
-    ]
-  }
+    INFO = {
+        "displayName": "Delete Aurora Cluster",
+        "description": "Deletes and Aurora DB Cluster",
+        "resourceTypes": [
+            "Aurora DB Cluster"
+        ],
+        "params": [
+            {
+                "name": "SkipAuroraSnapshot",
+                "type": "boolean",
+                "default": "false"
+            }
+        ],
+        "permissions": [
+            "rds:DeleteDBCluster",
+            "rds:DescribeDBClusters"
+        ]
+    }
 
-  return INFO
+    return INFO

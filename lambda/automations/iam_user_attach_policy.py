@@ -26,6 +26,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
   user_name = resource['attributes']['User Name']
   policy_arn = automation_params.get('Policy')
 
+
   client.attach_user_policy(
     UserName=user_name,
     PolicyArn=policy_arn
@@ -36,7 +37,7 @@ def info() -> dict:
     "displayName": "Attach policy to User",
     "description": "Attaches an existing policy to an IAM User.",
     "resourceTypes": [
-      "IAM"
+      "IAM User"
     ],
     "params": [
       {
