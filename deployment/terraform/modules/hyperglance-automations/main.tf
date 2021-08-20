@@ -46,7 +46,7 @@ locals {
 # GENERATE THE HYPERGLANCE AUTOMATIONS JSON
 #----------------------------------------------------------------------------------------------------------------------
 data "external" "hyperglance_automations_json" {
-  program = local.is_windows ? ["py -3", var.generate_automations_script] : ["python3", var.generate_automations_script]
+  program = local.is_windows ? ["py", "-3", var.generate_automations_script] : ["python3", var.generate_automations_script]
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
