@@ -3,8 +3,6 @@ Miscellaneous resources to help with processing Hyperglance automations
 """
 import logging
 
-import boto3
-
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
