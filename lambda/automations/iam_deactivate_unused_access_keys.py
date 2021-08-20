@@ -6,7 +6,12 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 
+import logging
+
 from datetime import datetime
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 
 def days_last_used(client, access_key) -> int:
@@ -29,6 +34,7 @@ def days_last_used(client, access_key) -> int:
     ## Get current date and time
     current_date_time = datetime.now()
     ## Access Key ID
+    logger.info(access_key)
     access_key_id = access_key.get('Access Key Id')
     ## Get the last used details
     key_last_used = client.get_access_key_last_used(
@@ -69,7 +75,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params=''):
         ## Get access key ID
         access_key_id = key['AccessKeyId']
         ## Get number of days since last use
-        days_since_last_use = days_last_used(client=client, access_key=access_key_id)
+        days_since_last_use = days_last_used(client=client, access_key=key)
 
         if days_since_last_use > max_days_unused:
             ## Deactivate the Key
@@ -90,7 +96,7 @@ def info() -> dict:
         "params": [
             {
                 "name": "MaxDaysUsed",
-                "type": "Number",
+                "type": "number",
                 "default": "90"
             }
         ],
