@@ -26,7 +26,7 @@ locals {
 # ---------------------------------------------------------------------------------------------------------------------
 
 data "external" "policy_json" {
-    program = local.is_windows ? ["py -3", var.generate_permissions_script] : ["python3", var.generate_permissions_script]
+    program = local.is_windows ? ["py", "-3", var.generate_permissions_script] : ["python3", var.generate_permissions_script]
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
