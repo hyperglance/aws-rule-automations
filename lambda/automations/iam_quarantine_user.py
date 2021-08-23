@@ -7,6 +7,10 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 """
 
 import json
+import logging
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 
 POLICY_NAME = 'hyperglance_quarantine_users'
@@ -43,10 +47,11 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
   policy_arn = user_arn.replace(':user/', ':policy/') + '_user_quarantined_by_hyperglance'
 
   try:
-    client.create_policy(
+    response = client.create_policy(
       PolicyName=POLICY_NAME,
       PolicDocument=DENY_POLICY
     )
+    logger.info(response)
   except:
     pass # Policy might already exist
 

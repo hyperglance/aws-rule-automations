@@ -6,7 +6,6 @@ import logging
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-
 def parse_arn(arn) -> dict:
     """
 
@@ -38,6 +37,12 @@ def parse_arn(arn) -> dict:
         result['resource_type'], result['resource'] = result['resource'].split(':', 1)
     return result
 
+def generate_arn(service, resource, resource_type = None, account = '', region = '', partition='aws', resource_delimiter = ':') -> str:
+    return
+    'arn:' + partition + ':' + service + ':' + region + ':' + account + ':' + resource \
+    if resource_type == None else \
+    'arn:' + partition + ':' + service + ':' + region + ':' + account + ':' + resouce_type + resource_delimiter + resource
+
 
 def add_tag(boto_session, key, value, resource):
     if resource['type'] == 'SNS Topic':
@@ -60,7 +65,7 @@ def add_tag(boto_session, key, value, resource):
             }
         )
     elif parse_arn(resource['arn'])['service'] == 'ec2':
-        client = boto3.client('ec2')
+        client = boto_session.client('ec2')
         client.create_tags(
             Resources=[
                 resource['id'],
@@ -76,7 +81,7 @@ def add_tag(boto_session, key, value, resource):
 
 def remove_tag(boto_session, key, resource):
     if resource['type'] == 'SNS Topic':
-        client = boto3.client('sns')
+        client = boto_session.client('sns')
         response = client.untag_resource(
             ResourceArn=resource['arn'],
             TagKeys=[
