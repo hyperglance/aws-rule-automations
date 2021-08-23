@@ -37,11 +37,10 @@ def parse_arn(arn) -> dict:
         result['resource_type'], result['resource'] = result['resource'].split(':', 1)
     return result
 
-def generate_arn(service, resource, resource_type = None, account = '', region = '', partition='aws', resource_delimiter = ':') -> str:
-    return
-    'arn:' + partition + ':' + service + ':' + region + ':' + account + ':' + resource \
-    if resource_type == None else \
-    'arn:' + partition + ':' + service + ':' + region + ':' + account + ':' + resouce_type + resource_delimiter + resource
+def generate_arn(service, resource, partition, account, region, resource_delimiter = ':', resource_type = None) -> str:
+    return 'arn:' + partition + ':' + service + ':' + region + ':' + account + ':' + resource \
+    if (resource_type == None) else \
+    'arn:' + partition + ':' + service + ':' + region + ':' + account + ':' + resource_type + resource_delimiter + resource
 
 
 def add_tag(boto_session, key, value, resource):
