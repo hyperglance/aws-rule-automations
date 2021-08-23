@@ -52,6 +52,8 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
       VpcId=vpc_id
     )
 
+    rds_client.stop_db_instance(DBInstanceIdentifier=rds_db)
+
     ## Remove default security group rules
     created_security_group = ec2_resource.SecurityGroup(response['GroupId'])
     created_security_group.revoke_egress(
