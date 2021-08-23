@@ -48,9 +48,9 @@ def get_boto_session(target_account_id: str, target_region: str='us-east-1') -> 
 
     except ClientError as err:
       if err.response['Error']['Code'] == 'AccessDenied':
-        raise RuntimeError('Unable to Assume role on account: %s, please check that the role exists on the target account', target_account_id)
+        raise RuntimeError(f'Unable to Assume role on account: {target_account_id}, please check that the role exists on the target account')
       else:
-        raise RuntimeError('An unexpected error occured attempting to assume role for account: %s', target_account_id)
+        raise RuntimeError(f'An unexpected error occured attempting to assume role for account: {target_account_id}')
 
   return boto3.Session(
     aws_access_key_id=automation_credentials['AccessKeyId'],
