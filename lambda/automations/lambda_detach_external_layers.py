@@ -6,6 +6,8 @@ by Hyperglance Rule(s)
 This automation will operate across accounts, where the appropriate IAM Role exists.
 
 """
+import logging
+
 
 def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
   """ Attempts to remove external layers from a Lambda
@@ -25,19 +27,11 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
   account_id = resource['account']
   lambda_function = resource['attributes']['Function Name']
 
+  response = client.update_function_configuration(
+    FunctionName=lambda_function,
+    Layers=[]
+  )
 
-  lambda_layers = client.get_function(
-    FunctionName=lambda_function
-  )['Configuration'].get('Layers', [])
-
-  ## Remove layers....
-  new_lambda_layers = [layer.get('Arn') for layer in lambda_layers if account_id not in layer['Arn']]
-
-  if len(lambda_layers) != len(new_lambda_layers):
-    client.update_function_configuration(
-      FunctionName=lambda_function,
-      Layers=new_lambda_layers
-    )
 
 
 def info() -> dict:
