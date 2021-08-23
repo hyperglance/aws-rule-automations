@@ -8,6 +8,10 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 """
 
 import uuid
+import logging
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
   """ Attempts to Delete and RDS DB Instance
@@ -26,12 +30,18 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
 
   rds_instance = resource['id']
 
+  logger.info('rds_instance ' + str(rds_instance))
+
   skip_snapshot = automation_params.get('SkipSnapshot').lower() in ['true', 'y', 'yes']
 
   client.delete_db_instance(
     DBInstanceIdentifier=rds_instance,
     SkipFinalSnapshot=skip_snapshot,
-    FinalDBSnapshotIdentifier=None if skip_snapshot else 'Snapshot-{}'.format(str(uuid.uuid5(uuid.NAMESPACE_DNS, 'hyperglance'))),
+    DeleteAutomatedBackups=automation_params.get('DeleteBackups').lower() in ['true', 'y', 'yes']
+  ) if skip_snapshot else client.delete_db_instance(
+    DBInstanceIdentifier=rds_instance,
+    SkipFinalSnapshot=skip_snapshot,
+    FinalDBSnapshotIdentifier='Snapshot-{}'.format(str(uuid.uuid5(uuid.NAMESPACE_DNS, 'hyperglance'))),
     DeleteAutomatedBackups=automation_params.get('DeleteBackups').lower() in ['true', 'y', 'yes']
   )
 

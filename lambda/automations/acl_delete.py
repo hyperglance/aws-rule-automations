@@ -29,7 +29,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
 def info() -> dict:
   INFO = {
     "displayName": "Delete ACL",
-    "description": "Deletes and Access Control List",
+    "description": "Deletes an Access Control List",
     "resourceTypes": [
       "Network ACL"
     ],
