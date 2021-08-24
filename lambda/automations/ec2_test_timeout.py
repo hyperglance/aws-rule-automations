@@ -1,14 +1,17 @@
-"""S3 Enable Versioning
+"""EC2 Delete Key Pair
 
-This automation Enables versioning on S3 Buckets, identified as above or below the configured threshold
+This automation Deletes a Key Pair, identified as above or below the configured threshold
 by Hyperglance Rule(s)
 
 This automation will operate across accounts, where the appropriate IAM Role exists.
 
 """
 
+from time import sleep
+
+
 def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
-  """ Attempts to Enable versioning on an S3 Bucket
+  """ Attempts to Delete a Key Pair
 
   Parameters
   ----------
@@ -20,27 +23,20 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
     Automation parameters passed from the Hyperglance UI
   """
 
-  client = boto_session.client('s3')
-  bucket_name = resource['id']
-
-  client.put_bucket_versioning(
-    Bucket=bucket_name,
-    VersioningConfiguration={
-      'MFADelete': 'Disabled',
-      'Status': 'Enabled'
-    },
-  )
+  sleep(60)
 
 
 def info() -> dict:
   INFO = {
-    "displayName": "Enable S3 Versioning",
-    "description": "Enables Object Versioning",
+    "displayName": "Zzzzzz",
+    "description": "Does nothing for a minute",
     "resourceTypes": [
-      "S3 Bucket"
+      "EC2"
+    ],
+    "params": [
+
     ],
     "permissions": [
-      "s3:PutBucketVersioning"
     ]
   }
 
