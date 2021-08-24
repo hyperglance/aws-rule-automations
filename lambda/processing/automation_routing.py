@@ -36,6 +36,8 @@ def process_event(automation_data, outputs):
     logger.debug('Payload From S3 %s', automation_data)
     logger.info('Triggered For Hyperglance Rule: %s', automation_data['name'])
 
+    time_elapsed = 0.0
+
     ## For each chunk of results, execute the automation
     for chunk in automation_data['results']:
         if not 'automation' in chunk:
@@ -61,12 +63,11 @@ def process_event(automation_data, outputs):
             automation['critical_error'] = msg
             return
 
-        time_elapsed = 0.0
 
         ## For each of Resource, execute the automation
         for index, resource in enumerate(resources):
             if time_elapsed > time_threshold:
-                for errored in resources[index:len(resources)]:
+                for errored in resources[index:]:
                     errored['error'] = 'Resource exceeded 15 minute time limit'
                     automation['errored'].append(errored)
                 break
