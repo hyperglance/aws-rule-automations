@@ -1,6 +1,6 @@
 import importlib
 import logging
-import time
+from time import perf_counter
 
 from processing.automation_session import *
 
@@ -67,7 +67,7 @@ def process_event(automation_data, outputs):
         for resource in resources:
             if time_elapsed > time_threshold:
                 break
-            before = time.clock()
+            before = perf_counter()
             try:
                 action_params = automation.get('params', {})
 
@@ -80,6 +80,4 @@ def process_event(automation_data, outputs):
                 logger.exception('Automation %s failed on resource %s', automation_name, resource['id'])
                 resource['error'] = str(err)  # augment resource with an error field
                 automation['errored'].append(resource)
-
-            after = time.clock()
-            time_elapsed += (after-before)
+            time_elapsed += (perf_counter()-before)

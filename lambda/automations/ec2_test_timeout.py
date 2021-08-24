@@ -31,7 +31,8 @@ def info() -> dict:
     "displayName": "Zzzzzz",
     "description": "Does nothing for a minute",
     "resourceTypes": [
-      "EC2"
+      "EC2 Instance",
+      "Security Group"
     ],
     "params": [
 
