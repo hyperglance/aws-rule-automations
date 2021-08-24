@@ -33,7 +33,7 @@ def info() -> dict:
     "displayName": "Delete EC2 Key Pair",
     "description": "Deletes a specified EC2 Key Pair",
     "resourceTypes": [
-      "EC2"
+      "EC2 Instance"
     ],
     "params": [
       {

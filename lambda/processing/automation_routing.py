@@ -35,9 +35,19 @@ def execute_on_resource(automation_to_execute, resource, action_params):
 def process_event(automation_data, outputs):
     logger.debug('Payload From S3 %s', automation_data)
     logger.info('Triggered For Hyperglance Rule: %s', automation_data['name'])
+    time_elapsed = 0.0
+
+    for chunk in automation_data['results']:  # set all automations to erroneous, once processed these will be changed
+        automation = chunk['automation']
+        automation['errored'] = [resource for resource in chunk['entities']]
+        automation['processed'] = []
+        automation['critical_error'] = None
+        outputs.append(automation)
+
 
     ## For each chunk of results, execute the automation
     for chunk in automation_data['results']:
+
         if not 'automation' in chunk:
             continue
 
@@ -46,11 +56,6 @@ def process_event(automation_data, outputs):
         automation_name = automation['name']
         logger.debug('Begin processing automation: %s', automation_name)
 
-        ## Augment the automation dict to track errors and add to the output, this gets reported back to Hyperglance
-        automation['processed'] = []
-        automation['errored'] = []
-        automation['critical_error'] = None
-        outputs.append(automation)
 
         ## Dynamically load the module that will handle this automation
         try:
@@ -61,12 +66,11 @@ def process_event(automation_data, outputs):
             automation['critical_error'] = msg
             return
 
-        time_elapsed = 0.0
 
         ## For each of Resource, execute the automation
         for resource in resources:
             if time_elapsed > time_threshold:
-                break
+                return
             before = perf_counter()
             try:
                 action_params = automation.get('params', {})
@@ -74,6 +78,7 @@ def process_event(automation_data, outputs):
                 automation_to_execute_output = execute_on_resource(automation_to_execute, resource, action_params)
 
                 automation['processed'].append(resource)
+                automation['errored'].remove(resource)
                 logger.info('Executed %s successfully %s', automation_name, automation_to_execute_output)
 
             except Exception as err:
@@ -81,3 +86,4 @@ def process_event(automation_data, outputs):
                 resource['error'] = str(err)  # augment resource with an error field
                 automation['errored'].append(resource)
             time_elapsed += (perf_counter()-before)
+
