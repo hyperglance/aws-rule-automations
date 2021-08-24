@@ -83,7 +83,7 @@ resource "aws_lambda_function" "hyperglance_automations_lambda" {
   handler          = "index.lambda_handler"
   source_code_hash = data.archive_file.hyperglance_automations_release.output_base64sha256
   runtime          = "python3.8"
-  timeout          = 120
+  timeout          = 900
 
   tags = var.tags
 }
