@@ -39,23 +39,31 @@ def hyperglance_automation(boto_session, resource: dict, automation_params=''):
 
     cluster_members = response['DBClusters'][0]['DBClusterMembers']
 
-    logger.info(cluster_members)
 
     db_identifiers = [db['DBInstanceIdentifier'] for db in cluster_members]
 
-    logger.info(db_identifiers)
 
     for identifier in db_identifiers:
         response = client.delete_db_instance(
             DBInstanceIdentifier=identifier
         )
-
-    client.delete_db_cluster(
+    response = client.modify_db_cluster(
         DBClusterIdentifier=rds_instance,
-        SkipFinalSnapshot=skip_snapshot,
-        FinalDBSnapshotIdentifier=None if skip_snapshot else 'Snapshot-{}'.format(
-            str(uuid.uuid5(uuid.NAMESPACE_DNS, 'hyperglance')))
+        ApplyImmediately=True,
+        DeletionProtection=False
     )
+    try:
+        client.delete_db_cluster(
+            DBClusterIdentifier=rds_instance,
+            SkipFinalSnapshot=skip_snapshot,
+            FinalDBSnapshotIdentifier=None if skip_snapshot else 'Snapshot-{}'.format(
+                str(uuid.uuid5(uuid.NAMESPACE_DNS, 'hyperglance')))
+        )
+    except:
+        client.delete_db_cluster(
+            DBClusterIdentifier=rds_instance,
+            SkipFinalSnapshot=True
+        )
 
 
 def info() -> dict:
@@ -74,7 +82,8 @@ def info() -> dict:
         ],
         "permissions": [
             "rds:DeleteDBCluster",
-            "rds:DescribeDBClusters"
+            "rds:DescribeDBClusters",
+            "rds:ModifyDBCluster"
         ]
     }
 
