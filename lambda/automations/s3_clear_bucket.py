@@ -7,6 +7,11 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 
+import logging
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
 
 def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
   """ Attempts to clear an EC2 Instance
@@ -24,6 +29,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
   client = boto_session.client('s3')
   bucket_name = resource['id']
   response = client.list_objects(Bucket=bucket_name)
+  logger.info(response)
 
 
 def info() -> dict:
@@ -37,6 +43,7 @@ def info() -> dict:
 
     ],
     "permissions": [
+        "s3:ListBucket"
     ]
   }
 
