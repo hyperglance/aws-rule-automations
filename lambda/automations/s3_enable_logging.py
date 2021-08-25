@@ -36,7 +36,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
       Bucket=target_log_bucket
     )
 
-  except ClientError:
+  except:
     ## Bucket doesn't exists, or permissions are invalid, try creating it
     # LocationConstraint should not be set for us-east-1
     # LocationConstraint should not be set to EU for eu-west-1

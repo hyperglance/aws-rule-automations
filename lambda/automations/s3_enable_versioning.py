@@ -39,6 +39,9 @@ def info() -> dict:
     "resourceTypes": [
       "S3 Bucket"
     ],
+    "params":[
+
+    ],
     "permissions": [
       "s3:PutBucketVersioning"
     ]

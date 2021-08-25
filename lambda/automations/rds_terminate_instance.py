@@ -46,7 +46,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
       DeleteAutomatedBackups=automation_params.get('DeleteBackups').lower() in ['true', 'y', 'yes']
     )
   except:
-    raise Exception("cannot delete DB instance when it is part of a cluster")
+    raise Exception("cannot take snapshot of DB instance when it is part of a cluster")
 
 
 def info() -> dict:

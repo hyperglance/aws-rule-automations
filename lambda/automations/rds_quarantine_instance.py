@@ -75,13 +75,14 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
 
 
   ## Finally attach the RDS Instance to the Quarantine SG
-
-  rds_client.modify_db_instance(
-    DBInstanceIdentifier=rds_db,
-    VpcSecurityGroupIds=[hyperglance_quarantine_sg],
-    ApplyImmediately=True
-  )
-
+  try:
+    rds_client.modify_db_instance(
+      DBInstanceIdentifier=rds_db,
+      VpcSecurityGroupIds=[hyperglance_quarantine_sg],
+      ApplyImmediately=True
+    )
+  except:
+    raise Exception("cannot modify DB instance - it is a member of a cluster")
 
 def info() -> dict:
   INFO = {
@@ -97,7 +98,8 @@ def info() -> dict:
       "ec2:DescribeSecurityGroups",
       "ec2:CreateSecurityGroup",
       "ec2:RevokeSecurityGroupEgress",
-      "rds:ModifyDBInstance"
+      "rds:ModifyDBInstance",
+      "rds:StopDBInstance"
     ]
   }
 
