@@ -11,13 +11,13 @@ TEST_MODE = False
 
 # MAIN ENTRY POINT
 def lambda_handler(event, context):
-  # Lambda is triggered by SNS
-  snsMessage = event if TEST_MODE else json.loads(event['Records'][0]['Sns']['Message'])
-  logger.debug('%s', snsMessage)
+  # Lambda is triggered by S3 object subscription
+  s3Event = event if TEST_MODE else event['Records'][0]['s3']
+  logger.debug('%s', s3Event)
 
   # Extract details about the S3 bucket and the event payload file
-  bucket = snsMessage['data']['s3bucket']
-  bucket_key = snsMessage['data']['key']
+  bucket = s3Event['bucket']['name']
+  bucket_key = s3Event['object']['key']
 
   # Vars used for reporting back to S3
   outputs_per_automation = [];

@@ -30,7 +30,7 @@ data "external" "policy_json" {
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
-# CREATE AN AWS IAM POLICY FOR automations EXECUTION
+# CREATE AN AWS IAM POLICY FOR AUTOMATIONS EXECUTION
 # ---------------------------------------------------------------------------------------------------------------------
 
 resource "aws_iam_policy" "hyperglance_automation_policy" {
@@ -52,7 +52,7 @@ resource "aws_iam_policy" "hyperglance_automation_policy" {
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-# CREATE AN ASSUME ROLE POLICY, FOR LAMBDA AND X-ACCOUNT EXECUTION
+# ALLOW LAMBDA SERVICE TO USE THIS ROLE
 # ---------------------------------------------------------------------------------------------------------------------
 
 data "aws_iam_policy_document" "hyperglance_automation_assume_policy" {
