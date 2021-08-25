@@ -34,16 +34,19 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
 
   skip_snapshot = automation_params.get('SkipSnapshot').lower() in ['true', 'y', 'yes']
 
-  client.delete_db_instance(
-    DBInstanceIdentifier=rds_instance,
-    SkipFinalSnapshot=skip_snapshot,
-    DeleteAutomatedBackups=automation_params.get('DeleteBackups').lower() in ['true', 'y', 'yes']
-  ) if skip_snapshot else client.delete_db_instance(
-    DBInstanceIdentifier=rds_instance,
-    SkipFinalSnapshot=skip_snapshot,
-    FinalDBSnapshotIdentifier='Snapshot-{}'.format(str(uuid.uuid5(uuid.NAMESPACE_DNS, 'hyperglance'))),
-    DeleteAutomatedBackups=automation_params.get('DeleteBackups').lower() in ['true', 'y', 'yes']
-  )
+  try:
+    client.delete_db_instance(
+      DBInstanceIdentifier=rds_instance,
+      SkipFinalSnapshot=skip_snapshot,
+      DeleteAutomatedBackups=automation_params.get('DeleteBackups').lower() in ['true', 'y', 'yes']
+    ) if skip_snapshot else client.delete_db_instance(
+      DBInstanceIdentifier=rds_instance,
+      SkipFinalSnapshot=skip_snapshot,
+      FinalDBSnapshotIdentifier='Snapshot-{}'.format(str(uuid.uuid5(uuid.NAMESPACE_DNS, 'hyperglance'))),
+      DeleteAutomatedBackups=automation_params.get('DeleteBackups').lower() in ['true', 'y', 'yes']
+    )
+  except:
+    raise Exception("cannot delete DB instance when it is part of a cluster")
 
 
 def info() -> dict:

@@ -24,7 +24,6 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
   client = boto_session.client('s3')
   bucket_name = resource['id']
   response = client.list_objects(Bucket=bucket_name)
-  #incomplete
 
 
 def info() -> dict:
@@ -38,8 +37,6 @@ def info() -> dict:
 
     ],
     "permissions": [
-      "s3:DeleteObjects",
-      "s3:ListObjects"
     ]
   }
 
