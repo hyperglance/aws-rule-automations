@@ -7,6 +7,11 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 """
 
 import json
+import logging
+from processing import automation_utils
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 
 def attach_policy_to_all_users(client, policy_arn: str):
@@ -31,7 +36,6 @@ def create_deny_policy(client, region: str, vpc_id: str):
   vpc_id: str
     ID of the target VPC
   """
-
     ## Policy Definition
     policy = {
         "Version": "2012-10-17",
@@ -40,12 +44,11 @@ def create_deny_policy(client, region: str, vpc_id: str):
                 "Action": "ec2:*",
                 "Effect": "Deny",
                 "Resource": [
-                    "arn:aws:ec2:{}:*vpc/{}".format(region, vpc_id),
-                    "arn:aws:ec2:{}:*:security-group/*".format(region)
+                    automation_utils.generate_arn('ec2', vpc_id, 'aws', '*', region, '/', 'vpc')
                 ],
                 "Condition": {
-                    "ArnEquals": {
-                        "ec2:Vpc": "arn:aws:ec2:{}:*:vpc/{}".format(region, vpc_id)
+                    "ForAnyValue:ArnEquals": {
+                        automation_utils.generate_arn('ec2', vpc_id, 'aws', '*', region, '/', 'vpc')
                     }
                 }
             }
@@ -53,10 +56,12 @@ def create_deny_policy(client, region: str, vpc_id: str):
     }
 
     ## Create the policy
-    client.create_policy(
+    response = client.create_policy(
         PolicyName="isolate_{}_access_policy".format(vpc_id),
         PolicyDocument=json.dumps(policy)
     )
+
+    logger.info(response)
 
 
 def create_isolation_acl(client, vpc_id: str):
@@ -110,8 +115,18 @@ def hyperglance_automation(boto_session, resource: dict, automation_params=''):
     vpc_id = resource['attributes']['VPC ID']
     vpc_arn = resource['arn']
     region = resource['region']
+    account = resource['account']
+    policy_arn = automation_utils.generate_arn(
+        'iam',
+        'isolate_{}_access_policy'.format(vpc_id),
+        'aws',
+        account,
+        '',
+        '/',
+        'policy'
+    )
 
-    policy_arn = vpc_arn.replace(':vpc/', ':policy/').replace(region, '') + '_vpc_quarantined_by_hyperglance'
+    logger.info(policy_arn)
 
     ## Disable DNS
     ec2_client.modify_vpc_attribute(
@@ -130,7 +145,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params=''):
             region=region,
             vpc_id=vpc_id
         )
-    except:
+    except Exception as err:
         pass  # Policy might already exist
 
     attach_policy_to_all_users(

@@ -35,7 +35,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
 def info() -> dict:
   INFO = {
     "displayName": "Start Workspace",
-    "description": "Starts a Workspacee",
+    "description": "Starts a Workspace",
     "resourceTypes": [
       "Workspace"
     ],
