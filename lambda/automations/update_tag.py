@@ -28,11 +28,13 @@ def hyperglance_automation(boto_session, resource: dict, automation_params=''):
 
     client = boto_session.client('ec2')
 
-    for old_key, value in resource['matchedAttributes'].items():
-        # only interested in tags
-        if old_key not in resource['tags']:
-            continue
+    matched_tag_attrs = [attr for attr in resource['matchedAttributes'].items() if attr[0] in resource['tags']]
 
+    if (len(matched_tag_attrs) == 0):
+        res_id = resource['id']
+        raise RuntimeError(f'No tags to update on {res_id} because none of its tags matched the search criteria.')
+
+    for old_key, value in matched_tag_attrs:
         # tag might already be 'good'
         if old_key == new_key:
             continue
