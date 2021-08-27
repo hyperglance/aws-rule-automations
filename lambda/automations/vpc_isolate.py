@@ -48,7 +48,7 @@ def create_deny_policy(client, region: str, vpc_id: str):
                 ],
                 "Condition": {
                     "ForAnyValue:ArnEquals": {
-                        automation_utils.generate_arn('ec2', vpc_id, 'aws', '*', region, '/', 'vpc')
+                        "ec2:Vpc": automation_utils.generate_arn('ec2', vpc_id, 'aws', '*', region, '/', 'vpc')
                     }
                 }
             }
@@ -61,7 +61,6 @@ def create_deny_policy(client, region: str, vpc_id: str):
         PolicyDocument=json.dumps(policy)
     )
 
-    logger.info(response)
 
 
 def create_isolation_acl(client, vpc_id: str):
@@ -126,7 +125,6 @@ def hyperglance_automation(boto_session, resource: dict, automation_params=''):
         'policy'
     )
 
-    logger.info(policy_arn)
 
     ## Disable DNS
     ec2_client.modify_vpc_attribute(
@@ -145,7 +143,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params=''):
             region=region,
             vpc_id=vpc_id
         )
-    except Exception as err:
+    except:
         pass  # Policy might already exist
 
     attach_policy_to_all_users(
