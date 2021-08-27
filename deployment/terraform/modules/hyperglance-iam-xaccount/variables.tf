@@ -14,3 +14,8 @@ variable "lambda_account_id" {
   type        = string
   description = "Account ID of the AWS Account where the automation lamnda is deployed"
 }
+
+variable "generate_permissions_script" {
+  type        = string
+  description = "The script used to generate an aggregated list of the permissions needed for each automation"
+}

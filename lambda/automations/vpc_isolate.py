@@ -117,7 +117,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params=''):
     account = resource['account']
     policy_arn = automation_utils.generate_arn(
         'iam',
-        'isolate_{}_access_policy'.format(vpc_id),
+        f'isolate_{vpc_id}_access_policy',
         'aws',
         account,
         '',
