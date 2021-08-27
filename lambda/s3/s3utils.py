@@ -8,11 +8,16 @@ def get_payload_from_s3(bucket, key):
   return json.loads(payload_content)
 
 def put_report_to_s3(bucket, key_prefix, report):
+  processed_resources = report['processed']
+  errored_resources = report['errored']
+  all_resources = processed_resources + errored_resources
+
   automation_name = report['name']
-  num_successful = len(report['processed'])
-  num_errored = len(report['errored'])
+  num_successful = len(processed_resources)
+  num_errored = len(errored_resources)
   total = num_successful + num_errored
-  report_name = f'report_{automation_name}_total({total})_success({num_successful})_error({num_errored}).json'
+  accounts = ','.join(set(map(lambda resource: resource['account'], all_resources)))
+  report_name = f'report_{automation_name}_total({total})_success({num_successful})_error({num_errored})_accounts({accounts}).json'
 
   payload_json = json.dumps(report)
   s3 = boto3.resource('s3')
