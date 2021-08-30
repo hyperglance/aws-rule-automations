@@ -100,7 +100,7 @@ data "aws_iam_policy_document" "hyperglance_automation_assume_policy" {
 # ---------------------------------------------------------------------------------------------------------------------
 
 resource "aws_iam_role" "hyperglance_automation_role" {
-  name_prefix = "Hyperglance_Automations"
+  name = var.automation_unique_name
   assume_role_policy = data.aws_iam_policy_document.hyperglance_automation_assume_policy.json
   managed_policy_arns = [
     aws_iam_policy.hyperglance_automation_policy.arn,

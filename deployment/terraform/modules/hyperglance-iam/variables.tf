@@ -14,3 +14,8 @@ variable "generate_permissions_script" {
   type        = string
   description = "Path to permissions json generator"
 }
+
+variable "automation_unique_name" {
+  type        = string
+  description = "The random pet name prefixed with hyperglance-automations used in the automation naming convention"
+}

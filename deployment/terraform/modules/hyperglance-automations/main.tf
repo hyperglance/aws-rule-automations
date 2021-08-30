@@ -70,6 +70,7 @@ resource "aws_s3_bucket_object" "hyperglance_automation_list" {
 module "automations_lambda_role" {
   source = "../hyperglance-iam"
   generate_permissions_script = var.generate_permissions_script
+  automation_unique_name = random_pet.hyperglance_automations_name.id
 }
 
 # ---------------------------------------------------------------------------------------------------------------------

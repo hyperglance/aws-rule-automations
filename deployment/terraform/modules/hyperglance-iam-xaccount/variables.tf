@@ -20,7 +20,7 @@ variable "generate_permissions_script" {
   description = "The script used to generate an aggregated list of the permissions needed for each automation"
 }
 
-variable "function_name" {
+variable "automation_unique_name" {
   type        = string
-  description = "The name of the lambda function in the lambda account"
+  description = "The unique name used for the hyperglance automation entities"
 }

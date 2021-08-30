@@ -92,17 +92,11 @@ data "aws_iam_policy_document" "hyperglance_automation_assume_policy" {
       ]
     }
 
-    Condition {
-    StringLike: {
-        "aws:userid": "*:${var.function_name}"
-    }
-}
-
-
     principals {
       type        = "AWS"
-      identifiers = ["arn:${data.aws_partition.current.partition}:iam::${var.lambda_account_id}:root"]
+      identifiers = ["arn:${data.aws_partition.current.partition}:iam::${var.lambda_account_id}:role/${var.automation_unique_name}"]
     }
+
   }
 }
 
@@ -111,7 +105,7 @@ data "aws_iam_policy_document" "hyperglance_automation_assume_policy" {
 # ---------------------------------------------------------------------------------------------------------------------
 
 resource "aws_iam_role" "hyperglance_automation_role" {
-  name               = "Hyperglance_Automations"
+  name               = "${var.automation_unique_name}-x-account"
   assume_role_policy = data.aws_iam_policy_document.hyperglance_automation_assume_policy.json
   managed_policy_arns = [
     aws_iam_policy.hyperglance_automation_policy.arn,
