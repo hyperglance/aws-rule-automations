@@ -24,15 +24,14 @@ def hyperglance_automation(boto_session, resource: dict, automation_params=''):
   """
 
     new_key = automation_params.get('New Key')
-    dry_run = automation_params.get('DryRun').lower() in ['true', 'y', 'yes']
 
-    client = boto_session.client('ec2')
+    matched_tag_attrs = [attr for attr in resource['matchedAttributes'].items() if attr[0] in resource['tags']]
 
-    for old_key, value in resource['matchedAttributes'].items():
-        # only interested in tags
-        if old_key not in resource['tags']:
-            continue
+    if (len(matched_tag_attrs) == 0):
+        res_id = resource['id']
+        raise RuntimeError(f'No tags to update on {res_id} because none of its tags matched the search criteria.')
 
+    for old_key, value in matched_tag_attrs:
         # tag might already be 'good'
         if old_key == new_key:
             continue
@@ -41,7 +40,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params=''):
         utils.add_tag(boto_session, new_key, value, resource)
 
         ## Remove the old offending tag (we make sure to do the destructive action 2nd!)
-        utils.remove_tag(boto_session, old_key, value)
+        utils.remove_tag(boto_session, old_key, resource)
 
 
 def info() -> dict:
@@ -69,11 +68,6 @@ def info() -> dict:
                 "name": "New Key",
                 "type": "string",
                 "default": ""
-            },
-            {
-                "name": "DryRun",
-                "type": "boolean",
-                "default": "true"
             }
         ],
         "permissions": [
