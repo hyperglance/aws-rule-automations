@@ -25,6 +25,10 @@ locals {
 # GET THE POLICIES FROM THE AVAILABLE AUTOMATIONS
 # ---------------------------------------------------------------------------------------------------------------------
 
+data "aws_arn" "lambda_arn" {
+  arn=var.lambda_arn
+}
+
 data "external" "policy_json" {
     program = local.is_windows ? ["py", "-3", var.generate_permissions_script] : ["python3", var.generate_permissions_script]
 }
@@ -94,7 +98,7 @@ data "aws_iam_policy_document" "hyperglance_automation_assume_policy" {
 
     principals {
       type        = "AWS"
-      identifiers = ["arn:${data.aws_partition.current.partition}:iam::${var.lambda_account_id}:role/${var.automation_unique_name}"]
+      identifiers = ["arn:${data.aws_partition.current.partition}:iam::${data.aws_arn.lambda_arn.account}:role/${split(":", data.aws_arn.lambda_arn.resource)[1]}"]
     }
 
   }
@@ -105,7 +109,7 @@ data "aws_iam_policy_document" "hyperglance_automation_assume_policy" {
 # ---------------------------------------------------------------------------------------------------------------------
 
 resource "aws_iam_role" "hyperglance_automation_role" {
-  name               = "${var.automation_unique_name}-x-account"
+  name               = "${split(":", data.aws_arn.lambda_arn.resource)[1]}-x-account"
   assume_role_policy = data.aws_iam_policy_document.hyperglance_automation_assume_policy.json
   managed_policy_arns = [
     aws_iam_policy.hyperglance_automation_policy.arn,
