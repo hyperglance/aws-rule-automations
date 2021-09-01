@@ -4,7 +4,7 @@
 
 > Enable Hyperglance to automate, fix and optimize your cloud.
 
-This repository contains terraform configurations, that deploy an SNS Topic and Lambda function that you connect with your Hyperglance EC2 Instance. Giving you the power to automate your cloud and fix configuration issues quickly & easily.
+This repository contains terraform configurations, that deploy an S3 Bucket and Lambda function that you connect with your Hyperglance EC2 Instance. Giving you the power to automate your cloud and fix configuration issues quickly & easily.
 
 ## Pre-Requisites
 
@@ -18,7 +18,6 @@ Before you can deploy automations you will need:
 The IAM Policy on the Role associated with the Hyperglance EC2 Instance will need the following permissions added:
 
 ```json
-"sns:Publish",
 "s3:PutObject",
 "s3:GetObject",
 "s3:ListBucket",
