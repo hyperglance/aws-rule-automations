@@ -52,18 +52,20 @@ The IAM Policy on the Role associated with the Hyperglance EC2 Instance will nee
 	$ terraform apply
 	```
 
-5. Once complete, the bucket name and Topic ARN required by Hyperglance will be returned:
+5. Once complete, the bucket name and lambda function ARN will be returned:
 	```bash
 	Apply complete! Resources: 8 added, 0 changed, 0 destroyed.
 
 	Outputs:
 
 	bucket_name = "hyperglance-automations-lucky-marmoset"
-	topic_arn = "arn:aws:sns:us-east-1:001234567891011:hyperglance-automations-lucky-marmoset"
+	lambda_arn = "arn:aws:lambda:us-east-1:0123456789:function:hyperglance-automations-stinky-fish"
 	```
+ 
+   *The lambda ARN is required to configure automations across accounts* 
 	
-	Copy these into the Hyperglance UI:  __Settings ➔ Notification Configuration ➔ AWS SNS__
-	or visit this URL: https://YOUR_HYPERGLANECE_IP/#/admin/notification-configuration?edit=AWS-SNS
+	Copy these into the Hyperglance UI:  __Settings ➔ Automations ➔ S3 Bucket Name__
+	or visit this URL: http://<your-hyperglance-ip>/#/admin/automations
 	
 	> __Note:__ Leave the 'Role ARN' field blank.
 	This is only needed if you deploy the stack to a different AWS account from the Hyperglance Instance.
@@ -77,7 +79,7 @@ The IAM Policy on the Role associated with the Hyperglance EC2 Instance will nee
 To grant the automations Lambda access to resources in __other__ AWS accounts you will need to create a special cross-account role in each of those accounts:
 
 1. Edit `aws-rule-automations/deployment/terraform/xaccount_role/main.tf`
-	* Set the `lambda_account_id` to AWS Account ID where automations Lambda __is hosted__.
+	* Set the `lambda_arn` to the arn of the lambda function which was given as an output in the main account configuration.
 2. Connect to an AWS Account where you wish to deploy the Role:
 	* Run: `aws configure`
 	* You will need [AWS IAM access and secret keys](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-creds) for this account.
