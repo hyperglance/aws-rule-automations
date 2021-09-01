@@ -42,8 +42,8 @@ def lambda_handler(event, context):
     put_report_to_s3(bucket, report_key_prefix, error_report)
   finally:
     # Report back to Hyperglance, a file in S3 for each automation
-    for report in outputs_per_automation:
-      put_report_to_s3(bucket, report_key_prefix, report)
+    for index, report in enumerate(outputs_per_automation):
+      put_report_to_s3(bucket, report_key_prefix, report, index)
 
     # Remove the pending signal file
     remove_pending_status_from_s3(bucket, report_key_prefix)
