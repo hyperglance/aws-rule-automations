@@ -64,7 +64,7 @@ The IAM Policy on the Role associated with the Hyperglance EC2 Instance will nee
    *The lambda ARN is required to configure automations across accounts* 
 	
 	Copy these into the Hyperglance UI:  __Settings ➔ Automations ➔ S3 Bucket Name__
-	or visit this URL: http://<your-hyperglance-ip>/#/admin/automations
+	or visit this URL: https://your-hyperglance-ip/#/admin/automations
 	
 	> __Note:__ Leave the 'Role ARN' field blank.
 	This is only needed if you deploy the stack to a different AWS account from the Hyperglance Instance.
