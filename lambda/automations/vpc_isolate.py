@@ -1,5 +1,5 @@
 """
-This automation Qurantines a VPC, identified as above or below the configured threshold
+This automation Quarantines a VPC, identified as above or below the configured threshold
 by Hyperglance Rule(s)
 
 This automation will operate across accounts, where the appropriate IAM Role exists.
@@ -25,7 +25,7 @@ def attach_policy_to_all_users(client, policy_arn: str):
 
 
 def create_deny_policy(client, region: str, vpc_id: str):
-    """ Attempts to Create a deny policy for User attachment
+    """ Attempts to Create a Deny all policy on EC2 and Security Group resources that are within the given VPC
 
   Parameters
   ----------
@@ -44,7 +44,8 @@ def create_deny_policy(client, region: str, vpc_id: str):
                 "Action": "ec2:*",
                 "Effect": "Deny",
                 "Resource": [
-                    automation_utils.generate_arn('ec2', vpc_id, 'aws', '*', region, '/', 'vpc')
+                    automation_utils.generate_arn('ec2', vpc_id, 'aws', '*', region, '/', 'vpc'),
+                    automation_utils.generate_arn('ec2', '*', 'aws', '*', region, '/', 'security-group')
                 ],
                 "Condition": {
                     "ForAnyValue:ArnEquals": {
@@ -56,7 +57,7 @@ def create_deny_policy(client, region: str, vpc_id: str):
     }
 
     ## Create the policy
-    response = client.create_policy(
+    client.create_policy(
         PolicyName="isolate_{}_access_policy".format(vpc_id),
         PolicyDocument=json.dumps(policy)
     )
@@ -96,7 +97,7 @@ def create_isolation_acl(client, vpc_id: str):
 
 
 def hyperglance_automation(boto_session, resource: dict, automation_params=''):
-    """ Attempts to Qurantine and EC2 Instance
+    """ Attempts to Quarantine a VPC
 
   Parameters
   ----------
@@ -112,7 +113,6 @@ def hyperglance_automation(boto_session, resource: dict, automation_params=''):
     iam_client = boto_session.client('iam')
 
     vpc_id = resource['attributes']['VPC ID']
-    vpc_arn = resource['arn']
     region = resource['region']
     account = resource['account']
     policy_arn = automation_utils.generate_arn(
@@ -151,11 +151,10 @@ def hyperglance_automation(boto_session, resource: dict, automation_params=''):
         policy_arn=policy_arn
     )
 
-
 def info() -> dict:
     INFO = {
         "displayName": "Isolate VPC",
-        "description": "Isolates an Entire VPC by applying Deny ALL security group rules",
+        "description": "Isolates an Entire VPC by applying a Deny ALL Network ACL and attaching a Deny All IAM Policy to all users",
         "resourceTypes": [
             "VPC"
         ],
