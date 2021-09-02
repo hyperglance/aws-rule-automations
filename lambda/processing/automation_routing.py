@@ -13,10 +13,17 @@ time_threshold = 780  # 13 minutes
 def execute_on_resource(automation_to_execute, resource, action_params):
     ## Grab the account and region (some resources don't have a region, default to us-east-1)
     automation_account_id = resource['account']
-    automation_region = resource['region'] if 'region' in resource else 'us-east-1'
+    is_govcloud = 'gov-cloud' in resource['uid']
+    
+    if 'region' in resource and resource['region'] != '': 
+        automation_region = resource['region']
+    elif is_govcloud:
+        automation_region = 'us-gov-east-1' 
+    else:
+        automation_region = 'us-east-1'
 
-    logger.debug('Begin resource %s in account %s for region %s', resource['uid'], automation_account_id,
-                 automation_region)
+
+    logger.debug('Begin resource %s in account %s for region %s', resource['uid'], automation_account_id,automation_region)
 
     ## Get session
     boto_session = get_boto_session(
