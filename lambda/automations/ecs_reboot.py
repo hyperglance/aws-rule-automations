@@ -36,7 +36,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params=''):
         described_task = client.describe_tasks(
             cluster=cluster_arn,
             tasks=[task, ]
-        )['running_tasks'][0]
+        )['tasks'][0]
 
         task_definition = described_task.get('taskDefinitionArn')
 
