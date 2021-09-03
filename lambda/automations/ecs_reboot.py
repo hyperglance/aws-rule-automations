@@ -1,7 +1,6 @@
 """ECS Reboot
 
-This automation attempts to reboot and ECS Cluster, identified as above or below the configured threshold
-by Hyperglance Rule(s)
+This automation attempts to stop tasks in an ECS Cluster identified as above or below the configured threshold by Hyperglance Rule(s). Tasks started by ECS Services will be recreated and come back running if configured.
 
 This automation will operate across accounts, where the appropriate IAM Role exists.
 
@@ -55,7 +54,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params=''):
 def info() -> dict:
     INFO = {
         "displayName": "Restart Privileged ECS Tasks",
-        "description": "Restarts ECS Tasks that have Privileged Access Permissions",
+        "description": "Stops ECS Tasks that have Privileged Access Permissions. Tasks started by ECS Services will be recreated and come back running if configured.",
         "resourceTypes": [
             "ECS Cluster"
         ],
