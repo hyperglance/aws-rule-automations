@@ -1,7 +1,7 @@
 import importlib
 import logging
 from time import perf_counter
-
+from processing.automation_utils import parse_arn
 from processing.automation_session import *
 
 logger = logging.getLogger()
@@ -12,7 +12,7 @@ time_threshold = 780  # 13 minutes
 
 def execute_on_resource(automation_to_execute, resource, action_params):
     ## Grab the account and region (some resources don't have a region, default to us-east-1)
-    automation_account_id = resource['account']
+    automation_account_id = parse_arn(resource['arn'])['account']
     is_govcloud = 'aws-us-gov' in resource['arn']
     
     if 'region' in resource and resource['region'] != '': 

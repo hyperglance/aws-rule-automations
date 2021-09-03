@@ -33,7 +33,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
   ## If default version is not the only version, then use latest version
   if len(policy_versions) > 1:
     ## Get the last version number
-    new_version_id = policy_versions[1] if policy_versions[0]['IsDefaultVersion'] else policy_versions[0]
+    new_version_id = policy_versions[1]['VersionId'] if policy_versions[0]['IsDefaultVersion'] else policy_versions[0]['VersionId']
 
     client.set_default_policy_version(
       PolicyArn=policy_arn,
