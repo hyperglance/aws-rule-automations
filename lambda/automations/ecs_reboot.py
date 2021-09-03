@@ -47,7 +47,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params=''):
         if definition.get('executionRoleArn') == role_arn:
             client.stop_task(
                 cluster=cluster_arn,
-                task=described_task,
+                task=task,
                 reason='Privileged tasks are dangerous'
             )
 
