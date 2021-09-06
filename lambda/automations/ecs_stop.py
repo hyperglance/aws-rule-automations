@@ -9,7 +9,7 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 
 def hyperglance_automation(boto_session, resource: dict, automation_params=''):
-    """ Attempts to reboot running ecs tasks
+    """ Attempts to stop running ecs tasks
 
   Parameters
   ----------
@@ -25,6 +25,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params=''):
 
     cluster_arn = resource['arn']
     role_arn = automation_params.get('Role')
+    drain_ec2instance = automation_params.get('DrainEC2Instance')
 
     ## Get a list of running tasks for the cluster
     running_tasks = client.list_tasks(
@@ -36,7 +37,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params=''):
         described_task = client.describe_tasks(
             cluster=cluster_arn,
             tasks=[task, ]
-        )['running_tasks'][0]
+        )['tasks'][0]
 
         task_definition = described_task.get('taskDefinitionArn')
 
@@ -45,7 +46,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params=''):
         )['taskDefinition']
 
         if definition.get('executionRoleArn') == role_arn:
-            if 'EC2' in described_task.get('launchType'):
+            if 'EC2' in described_task.get('launchType') and drain_ec2instance:
                 client.update_container_instance_state(
                     cluster=cluster_arn,
                     containerInstances=[described_task.get('containerInstanceArn')],
@@ -54,15 +55,15 @@ def hyperglance_automation(boto_session, resource: dict, automation_params=''):
 
             client.stop_task(
                 cluster=cluster_arn,
-                task=described_task,
-                reason='Privileged tasks are dangerous'
+                task=task,
+                reason='Stop task triggered by automation rule'
             )
 
 
 def info() -> dict:
     INFO = {
         "displayName": "Stop ECS Cluster",
-        "description": "Stops ECS Cluster",
+        "description": "Stops ECS Tasks with the given Role parameter. Tasks started by ECS Services will be recreated and come back running if configured. Passing true for the DrainEC2Instance parameter will drain the instance and prevent it from recreating the tasks.",
         "resourceTypes": [
             "ECS Cluster"
         ],
@@ -71,6 +72,11 @@ def info() -> dict:
                 "name": "Role",
                 "type": "string",
                 "default": " "
+            },
+            {
+                "name": "DrainEC2Instance",
+                "type": "boolean",
+                "default": "false"
             }
         ],
         "permissions": [
