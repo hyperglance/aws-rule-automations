@@ -33,8 +33,9 @@ resource "aws_s3_bucket" "hyperglance_automations_bucket" {
   acl    = "private"
   tags   = var.tags
   force_destroy = true
+  # NB. do not change the indentation in the follow section!!
   policy = <<POLICY
-{
+{ 
     "Version": "2012-10-17",
     "Statement": [
       {
