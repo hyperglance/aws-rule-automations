@@ -34,23 +34,24 @@ resource "aws_s3_bucket" "hyperglance_automations_bucket" {
   tags   = var.tags
   force_destroy = true
   # NB. do not change the indentation in the follow section!!
-  policy = <<POLICY
-{ 
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Action": "s3:*",
-        "Effect": "Deny",
-        "Resource": "arn:aws:s3:::${random_pet.hyperglance_automations_name.id}",
-        "Principal": { "AWS": ["${data.aws_caller_identity.account.id}" ]},
-        "Condition": {
-          "StringNotEquals": {
-            "aws:PrincipalArn": "arn:aws:iam::${data.aws_caller_identity.account.id}:role/${random_pet.hyperglance_automations_name.id}"}}
-      }  
-    ]
+#   policy = <<POLICY
+# { 
+#     "Version": "2012-10-17",
+#     "Statement": [
+#       {
+#         "Action": "s3:*",
+#         "Effect": "Deny",
+#         "Resource": "arn:aws:s3:::${random_pet.hyperglance_automations_name.id}",
+#         "Principal": { "AWS": ["*"]},
+#         "Condition": {
+#           "StringNotEquals": {
+#             "aws:PrincipalArn": "arn:aws:iam::${data.aws_caller_identity.account.id}:role/${random_pet.hyperglance_automations_name.id}"}}
+#       }  
+#     ]
+# }
+# POLICY
 }
-POLICY
-}
+
 
 # ---------------------------------------------------------------------------------------------------------------------
 # IS WINDOWS?
