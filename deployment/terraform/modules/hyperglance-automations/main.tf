@@ -23,6 +23,7 @@ data "archive_file" "hyperglance_automations_release" {
 #----------------------------------------------------------------------------------------------------------------------
 
 
+
 # ---------------------------------------------------------------------------------------------------------------------
 # CREATE AN S3 BUCKET
 # ---------------------------------------------------------------------------------------------------------------------
@@ -32,7 +33,48 @@ resource "aws_s3_bucket" "hyperglance_automations_bucket" {
   acl    = "private"
   tags   = var.tags
   force_destroy = true
+  # NB. do not change the indentation in the follow section!!
+  policy = <<POLICY
+{ 
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Action": "s3:*",
+        "Effect": "Deny",
+        "Resource": "arn:aws:s3:::${random_pet.hyperglance_automations_name.id}",
+        "Principal": { "AWS": ["${data.aws_caller_identity.account.id}" ]},
+        "Condition": {
+          "StringNotEquals": {
+            "aws:PrincipalArn": "arn:aws:iam::${data.aws_caller_identity.account.id}:role/${random_pet.hyperglance_automations_name.id}"}}
+      }  
+    ]
 }
+POLICY
+}
+
+# {
+#   "Id": "Policy1631004463220",
+#   "Version": "2012-10-17",
+#   "Statement": [
+#     {
+#       "Sid": "Stmt1631004459894",
+#       "Action": "s3:*",
+#       "Effect": "Allow",
+#       "Resource": "arn:aws:s3:::asd",
+#       "Principal": {
+#         "AWS": [
+#           "123456879012"
+#         ]
+#       },
+#       "Condition": {
+#         "ArnNotEquals": {
+#           "aws:PrincipalArn": "arn:aws:iam::123456789012:role/hyper-role"
+#         }
+#       }
+
+#     }
+#   ]
+# }
 
 # ---------------------------------------------------------------------------------------------------------------------
 # IS WINDOWS?
@@ -50,9 +92,14 @@ data "external" "hyperglance_automations_json" {
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
-# UPLOAD ACTION LIST TO THE S3 BUCKET
+# WHAT IS MY ACCOUNT ID? OTHER METADATA ..
 # ---------------------------------------------------------------------------------------------------------------------
 
+data "aws_caller_identity" "account" {}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# UPLOAD ACTION LIST TO THE S3 BUCKET
+# ---------------------------------------------------------------------------------------------------------------------
 
 
 resource "aws_s3_bucket_object" "hyperglance_automation_list" {
