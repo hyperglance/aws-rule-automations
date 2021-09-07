@@ -18,11 +18,6 @@ data "archive_file" "hyperglance_automations_release" {
   output_path = "Hyperglance_Automations_Lambda.zip"
 }
 
-# ---------------------------------------------------------------------------------------------------------------------
-# GENERATE THE HYPERGLANCE AUTOMATIONS JSON
-#----------------------------------------------------------------------------------------------------------------------
-
-
 
 # ---------------------------------------------------------------------------------------------------------------------
 # CREATE AN S3 BUCKET
@@ -33,25 +28,49 @@ resource "aws_s3_bucket" "hyperglance_automations_bucket" {
   acl    = "private"
   tags   = var.tags
   force_destroy = true
-  # NB. do not change the indentation in the follow section!!
-#   policy = <<POLICY
-# { 
-#     "Version": "2012-10-17",
-#     "Statement": [
-#       {
-#         "Action": "s3:*",
-#         "Effect": "Deny",
-#         "Resource": "arn:aws:s3:::${random_pet.hyperglance_automations_name.id}",
-#         "Principal": { "AWS": ["*"]},
-#         "Condition": {
-#           "StringNotEquals": {
-#             "aws:PrincipalArn": "arn:aws:iam::${data.aws_caller_identity.account.id}:role/${random_pet.hyperglance_automations_name.id}"}}
-#       }  
-#     ]
-# }
-# POLICY
 }
 
+resource "aws_s3_bucket_policy" "hyperglance_bucket_policy" {
+  bucket = aws_s3_bucket.hyperglance_automations_bucket.id
+  # NB. do not change the indentation in the following section!!
+  policy = <<POLICY
+{ 
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Action": "s3:*",
+        "Effect": "Deny",
+        "Resource": "arn:aws:s3:::${random_pet.hyperglance_automations_name.id}",
+        "Principal": { "AWS": ["*"]},
+        "Condition": {
+          "ArnNotEquals": {
+            "aws:SourceArn": "arn:aws:iam::${data.aws_caller_identity.account.id}:role/${random_pet.hyperglance_automations_name.id}"}}
+      },
+      {
+        "Action": "s3:*",
+        "Effect": "Allow",
+        "Resource": "arn:aws:s3:::${random_pet.hyperglance_automations_name.id}",
+        "Principal": { "AWS": ["*"]},
+        "Condition": {
+          "ArnEquals": {
+            "aws:SourceArn": [
+              "arn:aws:iam::${data.aws_caller_identity.account.id}:role/${random_pet.hyperglance_automations_name.id}",
+                    
+              ]
+            }
+          }
+      },
+      {
+        "Action": "s3:DeleteBucket",
+        "Effect": "Allow",
+        "Resource": "arn:aws:s3:::${random_pet.hyperglance_automations_name.id}",
+        "Principal": { "AWS": "arn:aws:iam::${aws_caller_identity.account.id}:user/${aws_caller_identity.account.user_id}"}
+      } 
+    ]
+}
+POLICY
+  depends_on = [aws_s3_bucket_object.hyperglance_automation_list, aws_s3_bucket_notification.bucket_notification]
+}
 
 # ---------------------------------------------------------------------------------------------------------------------
 # IS WINDOWS?

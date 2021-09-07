@@ -24,3 +24,8 @@ variable "generate_permissions_script" {
   type        = string
   description = "Path to permissions json generator"
 }
+
+variable "hyperglance_identity_arn" {
+  type        = string
+  description = "The arn of the identity under which hyperglance runs" 
+}
