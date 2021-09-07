@@ -32,6 +32,20 @@ resource "aws_s3_bucket" "hyperglance_automations_bucket" {
   acl    = "private"
   tags   = var.tags
   force_destroy = true
+  policy = <<POLICY
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Action": "s3:*",
+        "Effect": "Deny",
+        "Resource": "arn:aws:s3:::${random_pet.hyperglance_automations_name.id}",
+        "Principal": { "AWS": "${data.aws_caller_identity.account.id}" },
+        "Condition": {"StringNotEquals": { "aws:PrincipalArn": "arn:aws:iam::${data.aws_caller_identity.account.id}"}}
+      }  
+    ]
+  }
+POLICY
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -65,23 +79,7 @@ resource "aws_s3_bucket_object" "hyperglance_automation_list" {
   key    = "HyperglanceAutomations.json"
   source = data.external.hyperglance_automations_json.result["automation_file"]
   etag   = filemd5(data.external.hyperglance_automations_json.result["automation_file"])
-  policy = <<POLICY
-  {
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Action": "s3:*,
-        "Effect": "Deny",
-        "Resource": "arn:aws:s3:::${aws_s3_bucket.hyperglance_automations_bucket.id}
-        "Principal": { "AWS": "${data.aws_caller_identity.account.id}" }    
-        "Condition": {
-        "StringNotEquals": {
-          "aws:PrincipalArn": "arn:aws:iam::${data.aws_caller_identity.account.id}"
-        }
-      }
-  ]
-}
-POLICY
+
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -123,9 +121,6 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
     events              = ["s3:ObjectCreated:*"]
     filter_suffix       = "event.json"
   }
-
-  resource "aws_iam_policy" "replication" {
-  name = "tf-iam-role-policy-replication-12345"
 
   depends_on = [aws_lambda_permission.hyperglance_automation_permissions]
 }
