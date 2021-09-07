@@ -56,14 +56,6 @@ data "external" "hyperglance_automations_json" {
 data "aws_caller_identity" "account" {}
 
 # ---------------------------------------------------------------------------------------------------------------------
-# MORE METADATA DETAILS 
-# ---------------------------------------------------------------------------------------------------------------------
-
-data "external" "arn_constituents" {
-  
-}
-
-# ---------------------------------------------------------------------------------------------------------------------
 # UPLOAD ACTION LIST TO THE S3 BUCKET
 # ---------------------------------------------------------------------------------------------------------------------
 
@@ -74,25 +66,22 @@ resource "aws_s3_bucket_object" "hyperglance_automation_list" {
   source = data.external.hyperglance_automations_json.result["automation_file"]
   etag   = filemd5(data.external.hyperglance_automations_json.result["automation_file"])
   policy = <<POLICY
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "s3:*,
-      "Effect": "Deny",
-      "Resource": "arn:aws:s3:::${aws_s3_bucket.hyperglance_automations_bucket.id}
-      "Principal": { "AWS": "${data.aws_caller_identity.account.id}" }    
-      "Condition": {
-
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Action": "s3:*,
+        "Effect": "Deny",
+        "Resource": "arn:aws:s3:::${aws_s3_bucket.hyperglance_automations_bucket.id}
+        "Principal": { "AWS": "${data.aws_caller_identity.account.id}" }    
+        "Condition": {
         "StringNotEquals": {
-          "aws:PrincipalArn": "arn:aws:iam::${}"
+          "aws:PrincipalArn": "arn:aws:iam::${data.aws_caller_identity.account.id}"
         }
       }
   ]
 }
 POLICY
-}
-
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
