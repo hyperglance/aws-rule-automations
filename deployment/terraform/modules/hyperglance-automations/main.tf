@@ -52,30 +52,6 @@ resource "aws_s3_bucket" "hyperglance_automations_bucket" {
 POLICY
 }
 
-# {
-#   "Id": "Policy1631004463220",
-#   "Version": "2012-10-17",
-#   "Statement": [
-#     {
-#       "Sid": "Stmt1631004459894",
-#       "Action": "s3:*",
-#       "Effect": "Allow",
-#       "Resource": "arn:aws:s3:::asd",
-#       "Principal": {
-#         "AWS": [
-#           "123456879012"
-#         ]
-#       },
-#       "Condition": {
-#         "ArnNotEquals": {
-#           "aws:PrincipalArn": "arn:aws:iam::123456789012:role/hyper-role"
-#         }
-#       }
-
-#     }
-#   ]
-# }
-
 # ---------------------------------------------------------------------------------------------------------------------
 # IS WINDOWS?
 # ---------------------------------------------------------------------------------------------------------------------
