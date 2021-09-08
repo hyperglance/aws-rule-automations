@@ -50,7 +50,7 @@ def info() -> dict:
         "resourceTypes": [
             "Security Group",
             "EC2 Instance",
-            "EC2 Image",
+            "AMI",
             "Internet Gateway",
             "Network Acl",
             "Network Interface",
@@ -58,7 +58,7 @@ def info() -> dict:
             "Route Table",
             "EC2 Snapshot",
             "Subnet",
-            "EBS Volume",
+            "EBS Snapshot",
             "VPC",
             "SNS Topic",
             "SQS Queue"
