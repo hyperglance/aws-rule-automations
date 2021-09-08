@@ -36,7 +36,7 @@ resource "aws_s3_bucket_policy" "hyperglance_bucket_policy" {
   policy = <<POLICY
 { 
     "Version": "2012-10-17",
-    "Statement": [
+    "Statement":[
       {
         "Action": "s3:*",
         "Effect": "Deny",
@@ -44,32 +44,31 @@ resource "aws_s3_bucket_policy" "hyperglance_bucket_policy" {
         "Principal": { "AWS": ["*"]},
         "Condition": {
           "ArnNotEquals": {
-            "aws:SourceArn": "arn:aws:iam::${data.aws_caller_identity.account.id}:role/${random_pet.hyperglance_automations_name.id}"}}
+            "aws:SourceArn": [
+              "${module.automations_lambda_role.automation_role_arn}",
+              "${var.hyperglance_identity_arn}",
+              "${data.aws_caller_identity.current.arn}"]
+          }
+        }
       },
       {
         "Action": "s3:*",
         "Effect": "Allow",
         "Resource": "arn:aws:s3:::${random_pet.hyperglance_automations_name.id}",
-        "Principal": { "AWS": ["*"]},
-        "Condition": {
-          "ArnEquals": {
-            "aws:SourceArn": [
-              "arn:aws:iam::${data.aws_caller_identity.account.id}:role/${random_pet.hyperglance_automations_name.id}",
-                    
-              ]
-            }
-          }
-      },
-      {
-        "Action": "s3:DeleteBucket",
-        "Effect": "Allow",
-        "Resource": "arn:aws:s3:::${random_pet.hyperglance_automations_name.id}",
-        "Principal": { "AWS": "arn:aws:iam::${aws_caller_identity.account.id}:user/${aws_caller_identity.account.user_id}"}
-      } 
-    ]
+        "Principal": { "AWS": [
+          "${module.automations_lambda_role.automation_role_arn}",
+          "${var.hyperglance_identity_arn}",
+          "${data.aws_caller_identity.current.arn}"
+        ]}
+      }
+]
 }
 POLICY
-  depends_on = [aws_s3_bucket_object.hyperglance_automation_list, aws_s3_bucket_notification.bucket_notification]
+  depends_on = [
+    aws_s3_bucket_object.hyperglance_automation_list,
+    aws_s3_bucket_notification.bucket_notification,
+    module.automations_lambda_role
+    ]
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -91,7 +90,7 @@ data "external" "hyperglance_automations_json" {
 # WHAT IS MY ACCOUNT ID? OTHER METADATA ..
 # ---------------------------------------------------------------------------------------------------------------------
 
-data "aws_caller_identity" "account" {}
+data "aws_caller_identity" "current" {}
 
 # ---------------------------------------------------------------------------------------------------------------------
 # UPLOAD ACTION LIST TO THE S3 BUCKET
