@@ -92,9 +92,9 @@ def remove_tag(boto_session, key, resource):
         client = boto_session.client('sqs')
         client.untag_queue(
             QueueUrl=resource['attributes']['Queue Url'],
-            Tags={
-                key: value
-            }
+            TagKeys=[
+                key
+            ]
         )
     elif parse_arn(resource['arn'])['service'] == 'ec2':
         client = boto_session.client('ec2')
