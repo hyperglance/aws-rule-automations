@@ -66,7 +66,8 @@ resource "aws_iam_policy" "hyperglance_automation_core_policy" {
         Action = [
           "sts:AssumeRole",
           "s3:GetObject",
-          "s3:PutObject"
+          "s3:PutObject",
+          "s3:DeleteObject",
         ]
         Effect   = "Allow"
         Resource = "*"
