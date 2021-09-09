@@ -56,9 +56,10 @@ def add_tag(boto_session, key, value, resource):
             ]
         )
     elif resource['type'] == 'SQS Queue':
+        logger.info('resource ' + str(resource))
         client = boto_session.client('sqs')
         client.tag_queue(
-            QueueUrl=resource['Queue Url'],
+            QueueUrl=resource['attributes']['Queue Url'],
             Tags={
                 key: value
             }
@@ -90,7 +91,7 @@ def remove_tag(boto_session, key, resource):
     elif resource['type'] == 'SQS Queue':
         client = boto_session.client('sqs')
         client.untag_queue(
-            QueueUrl=resource['Queue Url'],
+            QueueUrl=resource['attributes']['Queue Url'],
             Tags={
                 key: value
             }
