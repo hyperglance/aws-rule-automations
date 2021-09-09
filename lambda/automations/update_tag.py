@@ -59,6 +59,7 @@ def info() -> dict:
             "EC2 Snapshot",
             "Subnet",
             "EBS Snapshot",
+            "EBS Volume",
             "VPC",
             "SNS Topic",
             "SQS Queue"

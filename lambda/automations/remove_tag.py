@@ -51,6 +51,7 @@ def info() -> dict:
             "Network Interface",
             "Route Table",
             "EBS Snapshot",
+            "EBS Volume"
             "Subnet",
             "VPC",
             "SQS Queue",
