@@ -58,7 +58,7 @@ The IAM Policy on the Role associated with the Hyperglance EC2 Instance will nee
 	Outputs:
 
 	bucket_name = "hyperglance-automations-lucky-marmoset"
-	lambda_arn = "arn:aws:lambda:us-east-1:0123456789:function:hyperglance-automations-stinky-fish"
+	lambda_arn = "arn:aws:lambda:us-east-1:0123456789:function:hyperglance-automations-lucky-marmoset"
 	```
  
    *The lambda ARN is required to configure automations across accounts* 
@@ -73,7 +73,7 @@ The IAM Policy on the Role associated with the Hyperglance EC2 Instance will nee
 	* Within Hyperglance click on any rule or visit the Advanced Search page to start exploring automations features.
 	* If you need automations to run on resources from _other_ AWS Accounts then continue on to follow our multi-account guide below.
 
-## Multiple Accounts - Usage
+## Cross-Account Deployment for Multiple Accounts
 
 To grant the automations Lambda access to resources in __other__ AWS accounts you will need to create a special cross-account role in each of those accounts:
 
@@ -89,6 +89,28 @@ To grant the automations Lambda access to resources in __other__ AWS accounts yo
 	$ terraform init
 	$ terraform apply
 	```
+
+## Keeping The Deployment Up-To-Date
+__Note:__ When you first ran `terraform apply` Terraform created a tfstate file in the local directory to track the resources it created. In order to update the existing deployment you need that tfstate file to be in the `deployment/terraform/automations` directory.
+
+To update your deployment you will need to:
+
+1. Pull the latest updates from git (or [download the latest zip](https://github.com/hyperglance/aws-rule-automations/archive/refs/heads/master.zip) but make sure to copy over the same tfstate - see note above).
+	```bash
+	$ cd aws-rule-automations
+	$ git pull
+	```
+2. If not still authenticated with AWS then re-run `aws configure`
+3. Re-apply the terraform stack:
+	```bash
+	$ cd deployment/terraform/automations
+	$ terraform apply
+	```
+
+Terraform will apply any updates to the cloud resources it already created.
+
+It is a good idea to also [update the Hyperglance application](https://support.hyperglance.com/knowledge/upgrading-hyperglance-to-a-newer-version) at the same time.
+
 
 ## Customizing Automations
 __Easily add your own automations or modify existing ones!__
