@@ -13,11 +13,11 @@ time_threshold = 780  # 13 minutes
 def execute_on_resource(automation_to_execute, resource, action_params):
     ## Grab the account and region (some resources don't have a region, default to us-east-1)
     automation_account_id = resource['account']
-    logger.info('resource ' + str(resource))
+    # look at arn not region - s3 does not have a region 
     try:
-        is_govcloud = ':aws-us-gov:' in resource['arn']
+        is_govcloud = ':aws-us-gov:' in resource['arn'] 
     except KeyError:
-        is_govcloud = 'us-gov' in resource['region']
+        is_govcloud = 'us-gov' in resource['region'] # is case the arn is not present - this branch should not be reached
         
     
     if 'region' in resource and resource['region'] != '': 
