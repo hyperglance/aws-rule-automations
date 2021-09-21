@@ -37,7 +37,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
 def info() -> dict:
   INFO = {
     "displayName": "Remove Layers",
-    "description": "Removes Layers from a Lambda Function.",
+    "description": "Removes layers from a Lambda Function",
     "resourceTypes": [
       "Lambda Function"
     ],

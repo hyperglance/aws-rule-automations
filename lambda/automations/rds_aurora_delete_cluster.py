@@ -69,7 +69,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params=''):
 def info() -> dict:
     INFO = {
         "displayName": "Delete Aurora Cluster",
-        "description": "Deletes and Aurora DB Cluster",
+        "description": "Deletes an Aurora DB Cluster",
         "resourceTypes": [
             "Aurora DB Cluster"
         ],

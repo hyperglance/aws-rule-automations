@@ -56,7 +56,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params=''):
 def info() -> dict:
     INFO = {
         "displayName": "Attach IAM Role",
-        "description": "Attaches and IAM role to an Instance",
+        "description": "Attaches an IAM role to an Instance",
         "resourceTypes": [
             "EC2 Instance"
         ],

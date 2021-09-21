@@ -50,7 +50,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params=''):
 def info() -> dict:
     INFO = {
         "displayName": "Attach policy to User",
-        "description": "Attaches an existing policy to an IAM User.",
+        "description": "Attaches an existing policy to an IAM User",
         "resourceTypes": [
             "IAM User"
         ],

@@ -58,7 +58,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
 def info() -> dict:
   INFO = {
     "displayName": "Release Elastic IP",
-    "description": "Releases and Elastic IP from associated EC2 Instance",
+    "description": "Releases an Elastic IP from its associated EC2 Instance",
     "resourceTypes": [
       "EC2 Instance"
     ],

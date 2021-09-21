@@ -46,13 +46,13 @@ def hyperglance_automation(boto_session, resource: dict, automation_params=''):
 def info() -> dict:
     INFO = {
         "displayName": "Update Tag",
-        "description": "Replaces a tags key but keeps its value",
+        "description": "Replaces a tag's key but keeps its value",
         "resourceTypes": [
             "Security Group",
             "EC2 Instance",
             "AMI",
             "Internet Gateway",
-            "Network Acl",
+            "Network ACL",
             "Network Interface",
             "Placement Group",
             "Route Table",

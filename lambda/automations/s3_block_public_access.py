@@ -40,7 +40,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
 def info() -> dict:
   INFO = {
     "displayName": "Block S3 Public Access",
-    "description": "Blocks all public access to S3 Bucket",
+    "description": "Blocks all public access to an S3 Bucket",
     "resourceTypes": [
       "S3 Bucket"
     ],

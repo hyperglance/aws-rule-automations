@@ -41,17 +41,17 @@ def hyperglance_automation(boto_session, resource: dict, automation_params=''):
 def info() -> dict:
     INFO = {
         "displayName": "Remove Tag",
-        "description": "Removes a tag",
+        "description": "Removes a tag from a resource",
         "resourceTypes": [
             "Security Group",
             "EC2 Instance",
             "AMI",
             "Internet Gateway",
-            "Network Acl",
+            "Network ACL",
             "Network Interface",
             "Route Table",
             "EBS Snapshot",
-            "EBS Volume"
+            "EBS Volume",
             "Subnet",
             "VPC",
             "SQS Queue",

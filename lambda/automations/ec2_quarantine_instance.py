@@ -82,7 +82,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params=''):
 def info() -> dict:
     INFO = {
         "displayName": "Quarantine EC2 Instance",
-        "description": "Quarantines and EC2 Instance by attaching it to a Security group with no Ingress or Egress rules",
+        "description": "Quarantines an EC2 Instance by attaching it to a Security Group with no Ingress or Egress rules",
         "resourceTypes": [
             "EC2 Instance"
         ],

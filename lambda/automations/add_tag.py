@@ -44,7 +44,7 @@ def info() -> dict:
             "EC2 Instance",
             "AMI",
             "Internet Gateway",
-            "Network Acl",
+            "Network ACL",
             "Network Interface",
             "Route Table",
             "EBS Snapshot",

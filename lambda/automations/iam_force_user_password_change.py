@@ -33,7 +33,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
 def info() -> dict:
   INFO = {
     "displayName": "Force Password Change",
-    "description": "Forces user to change their password on next login",
+    "description": "Forces an IAM User to change their password on next login",
     "resourceTypes": [
       "IAM User"
     ],

@@ -43,7 +43,7 @@ def hyperglance_automation(boto_session, resource: dict, automation_params = '')
 def info() -> dict:
   INFO = {
     "displayName": "Terminate Instance",
-    "description": "Terminates EC2 Instance",
+    "description": "Terminates an EC2 Instance",
     "resourceTypes": [
       "EC2 Instance"
     ],
