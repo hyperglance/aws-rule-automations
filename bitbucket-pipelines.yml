@@ -1,0 +1,20 @@
+definitions:
+  steps:
+    - step: &terraform-tfsec
+        name: Run TFSec scan
+        image: 
+          name: aquasec/tfsec
+          username: $DOCKER_HUB_RO_USER
+          password: $DOCKER_HUB_RO_PASSWORD
+        script:
+          - mkdir $BITBUCKET_CLONE_DIR/test-results # dir for test results     
+          - tfsec $BITBUCKET_CLONE_DIR --out $BITBUCKET_CLONE_DIR/test-results/test.xml --format junit --include-passed
+
+pipelines:
+  custom:
+    run-tfsec-scan:
+      - step: *terraform-tfsec
+
+  branches:
+    master:
+      - step: *terraform-tfsec
