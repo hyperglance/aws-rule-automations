@@ -9,7 +9,7 @@ provider "aws" {
 module "hyperglance_automations" {
   source = "../modules/hyperglance-automations"
   generate_permissions_script = "../../metadata/generate_permissions_json.py"
-  lambda_package = "../../../lambda"
+  src_package = "../../../src"
   generate_automations_script = "../../metadata/generate_automations_json.py"
 }
 

@@ -10,9 +10,9 @@ variable "tags" {
   }
 }
 
-variable "lambda_package" {
+variable "src_package" {
   type        = string
-  description = "Path to lambda code"
+  description = "Path to src directory"
 }
 
 variable "generate_automations_script" {

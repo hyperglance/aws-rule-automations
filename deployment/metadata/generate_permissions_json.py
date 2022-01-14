@@ -10,7 +10,7 @@ import pathlib
 import sys
 
 
-def fetch_permissions_list(lambda_root) -> dict:
+def fetch_permissions_list(src_root) -> dict:
     """ Generates the HyperglanceAutomations.json file
 
   Returns
@@ -19,7 +19,7 @@ def fetch_permissions_list(lambda_root) -> dict:
     A json formatted list containing the available automations
 
   """
-    automation_files = os.listdir(os.path.join(lambda_root, "actions"))
+    automation_files = os.listdir(os.path.join(src_root, "actions"))
     automations = [os.path.splitext(f)[0] for f in automation_files if f.endswith('.py')]
 
     # remove duplicates and present to terraform in the required 'shallow' string map
@@ -32,7 +32,7 @@ def fetch_permissions_list(lambda_root) -> dict:
     return permissions
 
 
-lambda_root = pathlib.Path(os.path.abspath(__file__)).parents[2].joinpath('lambda')
-sys.path.append(str(lambda_root))
+src_root = pathlib.Path(os.path.abspath(__file__)).parents[2].joinpath('src')
+sys.path.append(str(src_root))
 
-print(json.dumps(fetch_permissions_list(lambda_root)))
+print(json.dumps(fetch_permissions_list(src_root)))

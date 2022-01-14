@@ -14,7 +14,7 @@ resource "random_pet" "hyperglance_automations_name" {
 
 data "archive_file" "hyperglance_automations_release" {
   type        = "zip"
-  source_dir  = var.lambda_package
+  source_dir  = var.src_package
   output_path = "Hyperglance_Automations_Lambda.zip"
 }
 
@@ -33,23 +33,7 @@ resource "aws_s3_bucket" "hyperglance_automations_bucket" {
   acl    = "private"
   tags   = var.tags
   force_destroy = true
-  # NB. do not change the indentation in the follow section!!
-#   policy = <<POLICY
-# { 
-#     "Version": "2012-10-17",
-#     "Statement": [
-#       {
-#         "Action": "s3:*",
-#         "Effect": "Deny",
-#         "Resource": "arn:aws:s3:::${random_pet.hyperglance_automations_name.id}",
-#         "Principal": { "AWS": ["*"]},
-#         "Condition": {
-#           "StringNotEquals": {
-#             "aws:PrincipalArn": "arn:aws:iam::${data.aws_caller_identity.account.id}:role/${random_pet.hyperglance_automations_name.id}"}}
-#       }  
-#     ]
-# }
-# POLICY
+ 
 }
 
 
