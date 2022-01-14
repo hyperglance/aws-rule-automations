@@ -7,7 +7,7 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 
-import automations.ec2_snapshot_instance
+import actions.ec2_snapshot_instance
 
 
 ## Stop EC2 Instance
