@@ -14,7 +14,7 @@ resource "random_pet" "hyperglance_automations_name" {
 
 data "archive_file" "hyperglance_automations_release" {
   type        = "zip"
-  source_dir  = var.lambda_package
+  source_dir  = var.src_package
   output_path = "Hyperglance_Automations_Lambda.zip"
 }
 
