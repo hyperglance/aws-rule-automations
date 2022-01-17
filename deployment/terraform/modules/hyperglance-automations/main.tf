@@ -113,6 +113,11 @@ resource "aws_lambda_function" "hyperglance_automations_lambda" {
   tags = var.tags
 }
 
+resource "aws_cloudwatch_log_group" "logs" {
+  name              = "/aws/lambda/${random_pet.hyperglance_automations_name.id}"
+  retention_in_days = 14
+}
+
 # ---------------------------------------------------------------------------------------------------------------------
 # SUBSCRIBE THE LAMBDA TO S3 OBJECT EVENTS
 # Hyperglance will create event.json files in the bucket that we need to subscribe to
