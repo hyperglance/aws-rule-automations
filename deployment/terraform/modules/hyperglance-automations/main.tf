@@ -46,7 +46,7 @@ resource "aws_s3_bucket_policy" "hyperglance_bucket_policy" {
             "Resource": "arn:aws:s3:::${random_pet.hyperglance_automations_name.id}/*",
             "Condition": {
                 "ArnNotEquals": {
-                    "aws:SourceArn": [
+                    "aws:PrincipalArn": [
                       "${module.automations_lambda_role.automation_role_arn}",
                       "${var.hyperglance_identity_arn}",
                       "${data.aws_caller_identity.current.arn}"
