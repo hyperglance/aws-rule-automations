@@ -91,3 +91,6 @@ __pycache__
 
 # Ignore Hyperglance specific build artifacts
 HyperglanceAutomations.json
+
+# Bitbucket Pipelines yaml
+# bitbucket-pipelines.yml
