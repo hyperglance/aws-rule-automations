@@ -32,36 +32,29 @@ resource "aws_s3_bucket" "hyperglance_automations_bucket" {
 
 resource "aws_s3_bucket_policy" "hyperglance_bucket_policy" {
   bucket = aws_s3_bucket.hyperglance_automations_bucket.id
-  # NB. do not change the indentation in the following section!!
+  # NB. do not change the indentation in the following section
   policy = <<POLICY
 { 
     "Version": "2012-10-17",
-    "Statement":[
-      {
-        "Action": "s3:*",
-        "Effect": "Deny",
-        "Resource": "arn:aws:s3:::${random_pet.hyperglance_automations_name.id}",
-        "Principal": { "AWS": ["*"]},
-        "Condition": {
-          "ArnNotEquals": {
-            "aws:SourceArn": [
-              "${module.automations_lambda_role.automation_role_arn}",
-              "${var.hyperglance_identity_arn}",
-              "${data.aws_caller_identity.current.arn}"]
-          }
+    "Statement": [
+        {
+            "Effect": "Deny",
+            "Principal": {
+                "AWS": "*"
+            },
+            "Action": "s3:PutObject",
+            "Resource": "arn:aws:s3:::${random_pet.hyperglance_automations_name.id}/*",
+            "Condition": {
+                "ArnNotEquals": {
+                    "aws:SourceArn": [
+                      "${module.automations_lambda_role.automation_role_arn}",
+                      "${var.hyperglance_identity_arn}",
+                      "${data.aws_caller_identity.current.arn}"
+                      ]
+                }
+            }
         }
-      },
-      {
-        "Action": "s3:*",
-        "Effect": "Allow",
-        "Resource": "arn:aws:s3:::${random_pet.hyperglance_automations_name.id}",
-        "Principal": { "AWS": [
-          "${module.automations_lambda_role.automation_role_arn}",
-          "${var.hyperglance_identity_arn}",
-          "${data.aws_caller_identity.current.arn}"
-        ]}
-      }
-]
+        ]
 }
 POLICY
   depends_on = [
