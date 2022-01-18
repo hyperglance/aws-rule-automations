@@ -6,7 +6,7 @@ This automation will operate across accounts, where the appropriate IAM Role exi
 
 """
 
-import automations.s3_delete_acls
+import actions.s3_delete_acls
 
 def hyperglance_automation(boto_session, resource: dict, automation_params = ''):
   """ Attempts to ACLS and Policies from an S3 bucket

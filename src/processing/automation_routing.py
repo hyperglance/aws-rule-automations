@@ -68,7 +68,7 @@ def process_event(automation_data, outputs):
 
         ## Dynamically load the module that will handle this automation
         try:
-            automation_to_execute = importlib.import_module(''.join(['automations.', automation_name]), package=None)
+            automation_to_execute = importlib.import_module(''.join(['actions.', automation_name]), package=None)
         except:
             msg = 'Unable to find or load an automation called: %s' % automation_name
             logger.exception(msg)
