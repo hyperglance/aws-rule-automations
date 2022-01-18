@@ -28,4 +28,11 @@ variable "generate_permissions_script" {
 variable "hyperglance_identity_arn" {
   type        = string
   description = "The arn of the identity under which hyperglance runs" 
+
+    validation {
+
+      condition = length(var.hyperglance_identity_arn)  != 0
+      error_message = "The arn of the role under which Hyperglance is running must be set."
+
+    }
 }
