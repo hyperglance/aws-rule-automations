@@ -156,5 +156,5 @@ resource "aws_lambda_permission" "hyperglance_automation_permissions" {
   function_name = aws_lambda_function.hyperglance_automations_lambda.arn
   principal     = "s3.amazonaws.com"
   source_arn    = aws_s3_bucket.hyperglance_automations_bucket.arn
-  source_account = data.aws_caller_identity.account.id
+  source_account = data.aws_caller_identity.current.id
 }
