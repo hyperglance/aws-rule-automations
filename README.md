@@ -44,8 +44,13 @@ The IAM Policy on the Role associated with the Hyperglance EC2 Instance will nee
 	```
 
 4. Configure the stack:
+
 	Edit: aws-rule-automations/deployment/terraform/automations/main.tf
-	Set the `hyperglance_identity_arn` equal to the ARN of the IAM Role that is attached to your Hyperglance EC2 instance. It might be something like `arn:aws:iam::012345678901:role/HGRole`
+
+	Set the `hyperglance_identity_arn` equal to the ARN of the IAM Role that is attached to your Hyperglance EC2 instance.
+	
+	It might be something like `arn:aws:iam::012345678901:role/HGRole`
+	
 	(This is a security feature that helps limits access to the S3 bucket to the Hyperglance instance)
 
 5. Deploy the stack:
