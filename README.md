@@ -43,7 +43,12 @@ The IAM Policy on the Role associated with the Hyperglance EC2 Instance will nee
 	$ git clone https://github.com/hyperglance/aws-rule-automations.git
 	```
 
-4. Deploy the stack:
+4. Configure the stack:
+	Edit: aws-rule-automations/deployment/terraform/automations/main.tf
+	Set the `hyperglance_identity_arn` equal to the ARN of the IAM Role that is attached to your Hyperglance EC2 instance. It might be something like `arn:aws:iam::012345678901:role/HGRole`
+	(This is a security feature that helps limits access to the S3 bucket to the Hyperglance instance)
+
+5. Deploy the stack:
 	> Terraform will prompt for the region you wish to deploy to and for final confirmation.
 	```bash
 	$ cd aws-rule-automations/deployment/terraform/automations
@@ -51,7 +56,7 @@ The IAM Policy on the Role associated with the Hyperglance EC2 Instance will nee
 	$ terraform apply
 	```
 
-5. Once complete, the bucket name and lambda function ARN will be returned:
+6. Once complete, the bucket name and lambda function ARN will be returned:
 	```bash
 	Apply complete! Resources: 8 added, 0 changed, 0 destroyed.
 
@@ -69,7 +74,7 @@ The IAM Policy on the Role associated with the Hyperglance EC2 Instance will nee
 	> __Note:__ Leave the 'Role ARN' field blank.
 	This is only needed if you deploy the stack to a different AWS account from the Hyperglance Instance.
 
-6. __That's it - Automations are now enabled!__
+7. __That's it - Automations are now enabled!__
 	* Within Hyperglance click on any rule or visit the Advanced Search page to start exploring automations features.
 	* If you need automations to run on resources from _other_ AWS Accounts then continue on to follow our multi-account guide below.
 
