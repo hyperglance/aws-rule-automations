@@ -18,6 +18,12 @@ data "archive_file" "hyperglance_automations_release" {
   output_path = "Hyperglance_Automations_Lambda.zip"
 }
 
+# ---------------------------------------------------------------------------------------------------------------------
+# WE MUST BE MINDFUL OF GOVCLOUD
+# ---------------------------------------------------------------------------------------------------------------------
+
+data "aws_partition" "current" {}
+
 
 # ---------------------------------------------------------------------------------------------------------------------
 # CREATE AN S3 BUCKET
@@ -43,7 +49,7 @@ resource "aws_s3_bucket_policy" "hyperglance_bucket_policy" {
                 "AWS": "*"
             },
             "Action": "s3:PutObject",
-            "Resource": "arn:aws:s3:::${random_pet.hyperglance_automations_name.id}/*",
+            "Resource": "arn:${data.aws_partition.current.partition}:s3:::${random_pet.hyperglance_automations_name.id}/*",
             "Condition": {
                 "ArnNotEquals": {
                     "aws:PrincipalArn": [
